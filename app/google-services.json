@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "468559780234",
+    "firebase_url": "https://fechaconta-app.firebaseio.com",
+    "project_id": "fechaconta-app",
+    "storage_bucket": "fechaconta-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468559780234:android:a253fdc95ac974ba4d5073",
+        "android_client_info": {
+          "package_name": "com.example.fechaconta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "468559780234-2ij7vit1fdmu539b2k5r4c0uu1h89g6a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fechaconta",
+            "certificate_hash": "832b57d769d1cafa634af93a02ba7096d23b0aa0"
+          }
+        },
+        {
+          "client_id": "468559780234-2luhclh4j3m1coqvf7kh4k2al8b7lshd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYwmTTef2pcgRW55AImSFYDsRKY2jCrKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "468559780234-2luhclh4j3m1coqvf7kh4k2al8b7lshd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
