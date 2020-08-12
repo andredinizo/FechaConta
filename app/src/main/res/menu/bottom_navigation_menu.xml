@@ -1,22 +1,16 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/page_1"
-        android:enabled="true"
+        android:id="@+id/search"
+        android:contentDescription="@string/inicio"
         android:icon="@drawable/ic_inicio_bottom"
-        android:title="@string/inicio"/>
-    <item
-        android:id="@+id/page_2"
-        android:enabled="true"
-        android:icon="@drawable/ic_busca_bottom"
-        android:title="@string/busca"/>
-    <item
-        android:id="@+id/page_3"
-        android:enabled="true"
-        android:icon="@drawable/ic_comanda_bottom"
-        android:title="@string/comanda"/>
+        android:title="@string/inicio"
+
+        app:showAsAction="always"
+        />
     <item
         android:id="@+id/page_4"
-        android:enabled="true"
         android:icon="@drawable/ic_perfil_bottom"
-        android:title="@string/perfil"/>
+        android:title="@string/perfil"
+        app:showAsAction="always" />
 </menu>
