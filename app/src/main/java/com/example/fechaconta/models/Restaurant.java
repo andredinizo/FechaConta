@@ -1,87 +1,87 @@
 package com.example.fechaconta.models;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 public class Restaurant {
 
     //Atributos
-    private String ID_restaurant;
-    private String name;
-    private String description;
-    private String address;
-    private String city;
-    private String state;
-    private String avgRating;
-    private String totalRating;
+    private String ID_restaurante;
+    private String nome;
+    private String des;
+    private String ender;
+    private String cidade;
+    private String estado;
+    private float media;
+    private int taval;
     private String urlheader;
-    private String urlIcon;
+    private String urlicon;
+
+
+
+
 
     //Getters e Setters
 
-    public String getID_restaurant() {
-        return ID_restaurant;
+    public String getID_restaurante() {
+        return ID_restaurante;
     }
 
-    public void setID_restaurant(String ID_restaurant) {
-        this.ID_restaurant = ID_restaurant;
+    public void setID_restaurante(String ID_restaurante) {
+        this.ID_restaurante = ID_restaurante;
     }
 
-    public String getName() {
-        return name;
+    public String getNome() {
+        return nome;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDes() {
+        return des;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDes(String des) {
+        this.des = des;
     }
 
-    public String getAddress() {
-        return address;
+    public String getEnder() {
+        return ender;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setEnder(String ender) {
+        this.ender = ender;
     }
 
-    public String getCity() {
-        return city;
+    public String getCidade() {
+        return cidade;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
     }
 
-    public String getState() {
-        return state;
+    public String getEstado() {
+        return estado;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
-    public String getAvgRating() {
-        return avgRating;
+    public float getMedia() {
+        return media;
     }
 
-    public void setAvgRating(String avgRating) {
-        this.avgRating = avgRating;
+    public void setMedia(float media) {
+        this.media = media;
     }
 
-    public String getTotalRating() {
-        return totalRating;
+    public int getTaval() {
+        return taval;
     }
 
-    public void setTotalRating(String totalRating) {
-        this.totalRating = totalRating;
+    public void setTaval(int taval) {
+        this.taval = taval;
     }
 
     public String getUrlheader() {
@@ -92,12 +92,12 @@ public class Restaurant {
         this.urlheader = urlheader;
     }
 
-    public String getUrlIcon() {
-        return urlIcon;
+    public String getUrlicon() {
+        return urlicon;
     }
 
-    public void setUrlIcon(String urlIcon) {
-        this.urlIcon = urlIcon;
+    public void setUrlicon(String urlicon) {
+        this.urlicon = urlicon;
     }
 
 }

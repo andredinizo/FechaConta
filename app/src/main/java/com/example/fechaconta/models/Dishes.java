@@ -15,7 +15,6 @@ public class Dishes {
 
     //Getters e Setters
 
-
     public String getName() {
         return name;
     }
