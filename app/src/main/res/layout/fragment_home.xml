@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="#e8e8e8">
+    android:background="#e8e8e8"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,67 +14,97 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:layout_weight="0.9"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:fontFamily="@font/overpass_light"
                 android:text="Localização"
                 android:textColor="#000000"
-                android:textStyle="bold"
                 android:textSize="18dp"
 
-                android:layout_marginStart="5dp"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_userlocation"
                 android:fontFamily="@font/overpass_light"
-                android:textColor="#494949"
                 android:gravity="center_vertical"
                 android:text="Brasil, São Carlos"
-                android:textSize="16dp"/>
+                android:textColor="#494949"
+                android:textSize="16dp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
             android:layout_weight="0.2"
-            android:layout_marginTop="8dp"
-            android:paddingEnd="4dp"
-            android:gravity="end">
+            android:gravity="end"
+            android:paddingEnd="4dp">
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:cardCornerRadius="30dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="#FFFFFF"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"
-            >
-
-            <de.hdodenhof.circleimageview.CircleImageView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@mipmap/ic_launcher"
-                app:civ_border_width="2dp"
-                app:civ_border_color="#FFFFFF"/>
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="16dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="30dp"
+                app:cardElevation="8dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@mipmap/ic_launcher"
+                    app:civ_border_color="#FFFFFF"
+                    app:civ_border_width="2dp" />
 
 
-
-        </com.google.android.material.card.MaterialCardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
     </LinearLayout>
+
+    <EditText
+
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:drawablePadding="4dp"
+        android:text="Pesquise por prato ou restaurante"
+        android:drawableStart="@drawable/ic_search_searchbar"
+        android:drawableTint="@color/hinttext"
+        android:textColor="@color/hinttext"
+        android:textSize="16sp"
+
+        android:background="@drawable/searchview_background"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        android:text="Explore Categorias"
+        android:textStyle="bold"/>
+
+    <include layout="@layout/adapter_categorias"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_categorias"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 
 

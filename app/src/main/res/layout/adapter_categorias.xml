@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:cardCornerRadius="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="0dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:strokeWidth="2dp"
+        app:strokeColor="#FFFFFF"
+        app:cardElevation="4dp"
+        >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cropToPadding="true"
+            android:scaleType="centerInside"
+
+            android:src="@drawable/ic_microphone_black_48dp" />
+
+    </com.google.android.material.card.MaterialCardView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lanches"
+        android:layout_marginTop="4dp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"/>
+
+
+</LinearLayout>
