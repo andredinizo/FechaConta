@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">FechaConta</string>
+    <string name="criar_conta">Criar conta</string>
+    <string name="login_email">Login com email</string>
+    <string name="digite_email">Digite seu email</string>
+    <string name="digite_senha">Digite a senha</string>
+    <string name="botao_entrar">Entrar</string>
 </resources>

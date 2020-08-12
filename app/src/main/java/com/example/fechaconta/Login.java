@@ -10,7 +10,9 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);  //consertar aqui
+        setContentView(R.layout.activity_login);
+
+        //getSupportFragmentManager().beginTransaction().add(R.id.FragContainer) //add classe da frag
     }
 
     //Inicia Atividade Entrar
