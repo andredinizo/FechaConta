@@ -3,29 +3,31 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:layout_marginEnd="4dp"
+    android:id="@+id/adaptercategorias_layout"
+    >
 
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
         app:cardCornerRadius="15dp"
         android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginBottom="0dp"
         app:cardBackgroundColor="#FFFFFF"
-        app:strokeWidth="2dp"
         app:strokeColor="#FFFFFF"
         app:cardElevation="4dp"
         >
 
         <ImageView
+            android:id="@+id/imagemcategoria"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:cropToPadding="true"
-            android:scaleType="centerInside"
-
-            android:src="@drawable/ic_microphone_black_48dp" />
+             />
 
     </com.google.android.material.card.MaterialCardView>
     <TextView
@@ -35,6 +37,7 @@
         android:text="Lanches"
         android:layout_marginTop="4dp"
         android:textStyle="bold"
+        android:fontFamily="@font/overpass"
         android:layout_gravity="center_horizontal"/>
 
 
