@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
         recyclerViewCategory.setHasFixedSize(true);
         recyclerViewCategory.isNestedScrollingEnabled();
         recyclerViewRestaurant.setLayoutManager(layManagerRes);
-        recyclerViewRestaurant.setHasFixedSize(true);
+        recyclerViewRestaurant.setHasFixedSize(false);
         recyclerViewRestaurant.isNestedScrollingEnabled();
 
         //Recupera os Restaurantes Ordenados pela media do Firestore

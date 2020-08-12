@@ -9,7 +9,8 @@
         android:layout_marginStart="16dp"
         android:layout_width="360dp"
         android:layout_height="150dp"
-        app:cardCornerRadius="15dp">
+        app:cardCornerRadius="15dp"
+        android:elevation="4dp">
 
         <ImageView
             android:id="@+id/imagempromo"
