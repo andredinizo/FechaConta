@@ -12,11 +12,13 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_weight="0.9"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -40,28 +42,40 @@
                 android:textSize="16dp"/>
 
         </LinearLayout>
-        
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:layout_marginTop="8dp"
+            android:paddingEnd="4dp"
+            android:gravity="end">
+
         <com.google.android.material.card.MaterialCardView
-            android:layout_width="30dp"
-            style="@style/Widget.MaterialComponents.CardView"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             app:cardCornerRadius="30dp"
             app:cardElevation="8dp"
             app:cardBackgroundColor="#FFFFFF"
             android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
             >
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@mipmap/ic_launcher"
                 app:civ_border_width="2dp"
                 app:civ_border_color="#FFFFFF"/>
 
 
+
         </com.google.android.material.card.MaterialCardView>
-        
+
+        </LinearLayout>
+
     </LinearLayout>
+
 
 
 </LinearLayout>
