@@ -11,6 +11,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Iniciar();
 
         //getSupportFragmentManager().beginTransaction().add(R.id.FragContainer) //add classe da frag
     }
@@ -18,7 +19,7 @@ public class Login extends AppCompatActivity {
     //Inicia Atividade Entrar
     public void Iniciar() {
         Intent intent = new Intent(
-                Login.this, com.example.fechaconta.Principal.class
+                Login.this, MainActivity.class
         );
         startActivity(intent);
         finish();
