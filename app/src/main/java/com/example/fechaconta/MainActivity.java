@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fechaconta.models.Restaurant;
+import com.example.fechaconta.models.WriteDB;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
