@@ -8,7 +8,8 @@ public class Restaurant {
     private String des;
     private String ender;
     private String cidade;
-    private String estado;
+    private String estado
+            , categoria;
     private float media;
     private int taval;
     private String urlheader;
@@ -99,5 +100,14 @@ public class Restaurant {
     public void setUrlicon(String urlicon) {
         this.urlicon = urlicon;
     }
+
+    public void setCategoria (String categoria){
+        this.categoria = categoria;
+    }
+
+    public String getCategoria (){
+        return this.categoria;
+    }
+
 
 }

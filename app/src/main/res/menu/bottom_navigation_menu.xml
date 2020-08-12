@@ -9,7 +9,7 @@
         app:showAsAction="always"
         />
     <item
-        android:id="@+id/page_4"
+        android:id="@+id/perfil"
         android:icon="@drawable/ic_perfil_bottom"
         android:title="@string/perfil"
         app:showAsAction="always" />
