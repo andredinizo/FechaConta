@@ -3,111 +3,139 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e8e8e8"
+    android:background="@color/Cor1"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:paddingBottom="16dp"
+        android:background="@color/Cor1"
+       >
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_weight="0.9"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:fontFamily="@font/overpass_light"
-                android:text="Localização"
-                android:textColor="#000000"
-                android:textSize="18dp"
-
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_userlocation"
-                android:fontFamily="@font/overpass_light"
-                android:gravity="center_vertical"
-                android:text="Brasil, São Carlos"
-                android:textColor="#494949"
-                android:textSize="16dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
-            android:layout_weight="0.2"
-            android:gravity="end"
-            android:paddingEnd="4dp">
+            android:orientation="horizontal">
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="16dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="30dp"
-                app:cardElevation="8dp">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="0.9"
+                android:orientation="vertical">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:fontFamily="@font/overpass_light"
+                    android:text="Localização"
+                    android:textColor="#000000"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:drawableStart="@drawable/ic_userlocation"
+                    android:fontFamily="@font/overpass_light"
+                    android:gravity="center_vertical"
+                    android:text="Brasil, São Carlos"
+                    android:textColor="#494949"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_weight="0.2"
+                android:gravity="end"
+                android:paddingEnd="4dp">
+
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@mipmap/ic_launcher"
-                    app:civ_border_color="#FFFFFF"
-                    app:civ_border_width="2dp" />
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="16dp"
+                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardCornerRadius="30dp"
+                    app:cardElevation="8dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@mipmap/ic_launcher"
+                        app:civ_border_color="#FFFFFF"
+                        app:civ_border_width="2dp" />
 
 
-            </com.google.android.material.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>
 
+            </LinearLayout>
         </LinearLayout>
+
+        <EditText
+
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/searchview_background"
+            android:drawableStart="@drawable/ic_search_searchbar"
+            android:drawablePadding="4dp"
+            android:drawableTint="@color/hinttext"
+            android:fontFamily="@font/overpass_light"
+            android:paddingTop="8dp"
+            android:text="Pesquise por prato ou restaurante"
+            android:textColor="@color/hinttext"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
-    <EditText
-
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:paddingTop="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:drawablePadding="4dp"
-        android:text="Pesquise por prato ou restaurante"
-        android:drawableStart="@drawable/ic_search_searchbar"
-        android:drawableTint="@color/hinttext"
-        android:textColor="@color/hinttext"
-        android:textSize="16sp"
-        android:fontFamily="@font/overpass_light"
-        android:background="@drawable/searchview_background"/>
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/header_home_background">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:textSize="18sp"
-        android:textColor="#000000"
-        android:text="Explore Categorias"
+
         android:fontFamily="@font/overpass_light"
-        android:textStyle="bold"/>
+        android:text="Explore Categorias"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_categorias"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerpromo"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"/>
+
+    <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:spi_dotSize="6dp"
+        app:spi_visibleDotCount="5"
+
         />
 
-
+</LinearLayout>
 
 </LinearLayout>
