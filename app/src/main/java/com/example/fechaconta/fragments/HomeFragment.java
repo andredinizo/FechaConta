@@ -14,7 +14,7 @@ import com.example.fechaconta.R;
 public class HomeFragment extends Fragment {
 
 
-   HomeFragment(){
+   public HomeFragment(){
         //Construtor publico vazio (Necessário)
    }
 
