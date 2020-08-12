@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textColor="#3C0404"
+        android:textColor="#BD0B0B"
         android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -22,10 +22,13 @@
         app:layout_constraintVertical_bias="0.25" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/botao_google"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
+        android:background="#079FE4"
         android:text="Login Google"
+        android:textColor="#FFFFFF"
+        app:iconTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -34,11 +37,14 @@
         app:layout_constraintVertical_bias="0.411" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/botao_criar_conta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#079FE4"
         android:text="@string/criar_conta"
+        android:textColor="#FFFFFF"
         android:textSize="12sp"
+        app:iconTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -47,10 +53,13 @@
         app:layout_constraintVertical_bias="0.944" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/botao_facebook"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
+        android:background="#079FE4"
         android:text="Login Facebook"
+        android:textColor="#FFFFFF"
+        app:iconTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -59,10 +68,13 @@
         app:layout_constraintVertical_bias="0.519" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/botao_login_email"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
+        android:background="#079FE4"
         android:text="@string/login_email"
+        android:textColor="#FFFFFF"
+        app:iconTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -71,10 +83,13 @@
         app:layout_constraintVertical_bias="0.625" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/botao_desenvolvedor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#079FE4"
         android:text="Desenvolvedor -->"
+        android:textColor="#FFFFFF"
+        app:iconTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.842"
