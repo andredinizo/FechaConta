@@ -99,7 +99,6 @@
         android:text="Explore Categorias"
         android:textStyle="bold"/>
 
-    <include layout="@layout/adapter_categorias"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_categorias"

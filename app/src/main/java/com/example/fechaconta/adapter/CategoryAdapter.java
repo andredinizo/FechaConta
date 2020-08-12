@@ -3,11 +3,13 @@ package com.example.fechaconta.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fechaconta.R;
+import com.example.fechaconta.models.Category;
 import com.example.fechaconta.models.Dishes;
 import com.example.fechaconta.models.Restaurant;
 
@@ -15,11 +17,11 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>  {
     private final String TAG = "CATEGORYADAPTER";
-    private List<Restaurant> list;
+    private List<Category> list;
     private int intCount;
 
 
-    public CategoryAdapter (List<Restaurant> list, int intCount){
+    public CategoryAdapter (List<Category> list, int intCount){
         this.intCount = intCount;
         this.list = list;
     }
@@ -33,7 +35,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
+        holder.catnome.setText(this.list.get(position).getName());
     }
 
     @Override
@@ -43,10 +45,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView catnome;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
+
+            catnome = itemView.findViewById(R.id.catnome);
 
 
 

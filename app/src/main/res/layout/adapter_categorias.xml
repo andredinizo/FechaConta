@@ -29,6 +29,7 @@
 
     </com.google.android.material.card.MaterialCardView>
     <TextView
+        android:id="@+id/catnome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Lanches"
