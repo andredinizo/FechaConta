@@ -35,6 +35,13 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        botao_login_email = view.findViewById(R.id.botao_login_email);
+        botao_login_email.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ((Login) getActivity()).trocaFragmento();
+            }
+        });
+
         return view;
     }
 

@@ -26,11 +26,13 @@
             android:inputType="textPassword"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.247" />
 
         <Button
-            android:id="@+id/button6"
+            android:id="@+id/botao_entrar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/botao_entrar"
@@ -39,7 +41,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.601" />
+            app:layout_constraintVertical_bias="0.422" />
 
         <EditText
             android:id="@+id/editTextTextEmailAddress"
@@ -54,7 +56,7 @@
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.367" />
+            app:layout_constraintVertical_bias="0.091" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
