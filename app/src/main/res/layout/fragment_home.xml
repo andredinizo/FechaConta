@@ -12,6 +12,7 @@
         android:orientation="vertical"
         android:paddingBottom="16dp"
         android:background="@color/Cor1"
+
        >
 
         <LinearLayout
@@ -58,24 +59,17 @@
                 android:gravity="end"
                 android:paddingEnd="4dp">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="16dp"
-                    app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="30dp"
-                    app:cardElevation="8dp">
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@mipmap/ic_launcher"
-                        app:civ_border_color="#FFFFFF"
-                        app:civ_border_width="2dp" />
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/ic_settings"
+                        />
 
 
-                </com.google.android.material.card.MaterialCardView>
+
 
             </LinearLayout>
         </LinearLayout>
@@ -109,7 +103,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/header_home_background"
-            android:orientation="vertical">
+            android:orientation="vertical"
+
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -133,7 +129,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:fastScrollEnabled="false"/>
+                app:fastScrollEnabled="false"
+                android:elevation="10dp"/>
 
 
             <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
@@ -144,7 +141,7 @@
                 android:layout_marginTop="8dp"
                 app:spi_dotSize="6dp"
                 app:spi_visibleDotCount="5"
-
+                android:elevation="10dp"
                 />
 
             <TextView

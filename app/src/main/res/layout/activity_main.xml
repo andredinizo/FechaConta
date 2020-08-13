@@ -85,9 +85,10 @@
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_device"
+                android:src="@drawable/qrcode"
+                app:maxImageSize="35dp"
                 android:tint="#000000"
-                app:backgroundTint="#FF3030"
+                app:backgroundTint="@color/Cor1"
                 app:elevation="4dp"
                 app:fabCustomSize="60dp"
                 app:layout_anchor="@id/bottom_navigation"
