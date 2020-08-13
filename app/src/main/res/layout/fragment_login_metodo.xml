@@ -12,84 +12,108 @@
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:textColor="#BD0B0B"
-        android:textSize="36sp"
+        android:textSize="38sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.25" /><![CDATA[
 
-    <Button
+    />
+
+
+
+    ]]>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/botao_google"
-        android:layout_width="180dp"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:background="#079FE4"
         android:text="Login Google"
-        android:textColor="#FFFFFF"
-        app:iconTint="#FFFFFF"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:backgroundTint="#A8C4D1"
+        app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.411" />
+        app:layout_constraintVertical_bias="0.448"
+        app:strokeColor="#000000"
+        app:strokeWidth="1dp" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/botao_criar_conta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#079FE4"
         android:text="@string/criar_conta"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textSize="12sp"
-        app:iconTint="#FFFFFF"
+        app:backgroundTint="#A8C4D1"
+        app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.944" />
+        app:layout_constraintVertical_bias="0.944"
+        app:strokeColor="#000000"
+        app:strokeWidth="1dp" /><![CDATA[
 
-    <Button
+    />
+
+
+
+    ]]>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/botao_facebook"
-        android:layout_width="180dp"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:background="#079FE4"
         android:text="Login Facebook"
-        android:textColor="#FFFFFF"
-        app:iconTint="#FFFFFF"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:backgroundTint="#A8C4D1"
+        app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.519" />
+        app:layout_constraintVertical_bias="0.535"
+        app:strokeColor="#000000"
+        app:strokeWidth="1dp" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/botao_login_email"
-        android:layout_width="180dp"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:background="#079FE4"
         android:text="@string/login_email"
-        android:textColor="#FFFFFF"
-        app:iconTint="#FFFFFF"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:backgroundTint="#A8C4D1"
+        app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.625" />
+        app:layout_constraintVertical_bias="0.625"
+        app:strokeColor="#000000"
+        app:strokeWidth="1dp" />/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/botao_desenvolvedor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#079FE4"
+        android:shadowColor="#00FFFFFF"
         android:text="Desenvolvedor -->"
-        android:textColor="#FFFFFF"
-        app:iconTint="#FFFFFF"
+        android:textColor="#000000"
+        app:backgroundTint="#00A8C4D1"
+        app:elevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.842"
