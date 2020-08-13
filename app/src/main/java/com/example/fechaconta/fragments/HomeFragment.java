@@ -10,12 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fechaconta.R;
 import com.example.fechaconta.adapter.CategoryAdapter;
 import com.example.fechaconta.adapter.PromoAdapter;
 import com.example.fechaconta.adapter.RestaurantAdapter;
+import com.example.fechaconta.adapter.SnapHelperOneByOne;
 import com.example.fechaconta.models.Category;
 import com.example.fechaconta.models.Restaurant;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -47,7 +49,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        View view =inflater.inflate(R.layout.fragment_home, container,false);
 
-       PromoAdapter promoAdapter = new PromoAdapter();
+        PromoAdapter promoAdapter = new PromoAdapter();
 
         recyclerViewCategory = view.findViewById(R.id.recycler_categorias);
         recyclerViewRestaurant = view.findViewById(R.id.recycler_restaurantes);
@@ -70,6 +72,8 @@ public class HomeFragment extends Fragment {
         ScrollingPagerIndicator recyclerIndicator = view.findViewById(R.id.dotspromocao);
         recyclerIndicator.attachToRecyclerView(recyclerViewPromo);
 
+        LinearSnapHelper linearSnapHelper = new SnapHelperOneByOne();
+        linearSnapHelper.attachToRecyclerView(recyclerViewPromo);
 
 
         //Recupera os Restaurantes Ordenados pela media do Firestore
