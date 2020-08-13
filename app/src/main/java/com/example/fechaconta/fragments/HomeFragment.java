@@ -19,6 +19,7 @@ import com.example.fechaconta.adapter.PromoAdapter;
 import com.example.fechaconta.adapter.RestaurantAdapter;
 import com.example.fechaconta.adapter.SnapHelperOneByOne;
 import com.example.fechaconta.models.Category;
+import com.example.fechaconta.models.Promotion;
 import com.example.fechaconta.models.Restaurant;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -47,9 +48,7 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       View view =inflater.inflate(R.layout.fragment_home, container,false);
-
-        PromoAdapter promoAdapter = new PromoAdapter();
+       final View view =inflater.inflate(R.layout.fragment_home, container,false);
 
         recyclerViewCategory = view.findViewById(R.id.recycler_categorias);
         recyclerViewRestaurant = view.findViewById(R.id.recycler_restaurantes);
@@ -67,18 +66,40 @@ public class HomeFragment extends Fragment {
         recyclerViewRestaurant.setHasFixedSize(false);
         recyclerViewRestaurant.setNestedScrollingEnabled(false);
         recyclerViewPromo.setLayoutManager(layManagerPromo);
-        recyclerViewPromo.setAdapter(promoAdapter);
 
-        ScrollingPagerIndicator recyclerIndicator = view.findViewById(R.id.dotspromocao);
-        recyclerIndicator.attachToRecyclerView(recyclerViewPromo);
 
-        LinearSnapHelper linearSnapHelper = new SnapHelperOneByOne();
+
+        final LinearSnapHelper linearSnapHelper = new SnapHelperOneByOne();
         linearSnapHelper.attachToRecyclerView(recyclerViewPromo);
+
+
+        //Recupera as Promoções do Firestore
+        Query promoQuery = db.collection("Promotion").whereEqualTo("ativa", true)
+                .orderBy("relevancia", Query.Direction.DESCENDING);
+        promoQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    List<Promotion> promotionList = new ArrayList<>();
+                    for(DocumentSnapshot document : task.getResult()){
+                        promotionList.add(document.toObject(Promotion.class));
+                        Log.d(TAG, "onComplete: =======>" + document.getData());
+                    }
+
+                    recyclerViewPromo.setAdapter(new PromoAdapter(promotionList));
+                    ScrollingPagerIndicator recyclerIndicator = view.findViewById(R.id.dotspromocao);
+                    recyclerIndicator.attachToRecyclerView(recyclerViewPromo);
+
+                }else{
+                    Log.d(TAG, "onComplete: Falha ao Resgatar as Promoções");
+                }
+            }
+        });
 
 
         //Recupera os Restaurantes Ordenados pela media do Firestore
         Query queryRes = db.collection("Restaurant").orderBy("media", Query.Direction.DESCENDING);
-        queryRes.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+         queryRes.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
