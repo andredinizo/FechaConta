@@ -60,11 +60,16 @@ public class Login extends AppCompatActivity {
 
 
 
-    public void trocaFragmento(){
+    public void trocaFragParaEmail(){
         FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
         fragmentManager.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         fragmentManager.replace(R.id.FragContainer, new LoginEmailFragment()).commit();
+    }
 
+    public void trocaFragParaMetodo(){
+        FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
+        fragmentManager.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        fragmentManager.replace(R.id.FragContainer, new LoginFragment()).commit();
     }
 
 }
