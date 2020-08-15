@@ -28,10 +28,19 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_login_metodo, container,false);
 
+        //botão desenvolvedor manda direto para dentro do app
         botao_desenvolvedor = view.findViewById(R.id.botao_desenvolvedor);
         botao_desenvolvedor.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 entrar();
+            }
+        });
+
+        //botão login com email troca para fragmento com email e senha
+        botao_login_email = view.findViewById(R.id.botao_login_email);
+        botao_login_email.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ((Login) getActivity()).trocaFragParaEmail();
             }
         });
 

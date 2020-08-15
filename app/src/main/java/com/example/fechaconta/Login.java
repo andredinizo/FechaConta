@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.fechaconta.fragments.LoginEmailFragment;
 import com.example.fechaconta.fragments.LoginFragment;
 
 public class Login extends AppCompatActivity {
@@ -58,12 +59,17 @@ public class Login extends AppCompatActivity {
     };
 
 
-/*       CONTINUAR A TRANSIÃO DEPOIS
-    public void trocaFragmento(){
-        FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
-        fragmentManager.setCustomAnimations(R.anim.slide)
 
+    public void trocaFragParaEmail(){
+        FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
+        fragmentManager.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        fragmentManager.replace(R.id.FragContainer, new LoginEmailFragment()).commit();
     }
-*/
+
+    public void trocaFragParaMetodo(){
+        FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
+        fragmentManager.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        fragmentManager.replace(R.id.FragContainer, new LoginFragment()).commit();
+    }
 
 }
