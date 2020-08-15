@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +38,7 @@ import ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator;
 public class HomeFragment extends Fragment {
     private final String TAG = "HOMEFRAGMENT";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private EditText searchBar;
     private RecyclerView recyclerViewCategory;
     private RecyclerView recyclerViewRestaurant;
     private RecyclerView recyclerViewPromo;
@@ -48,7 +51,17 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       final View view =inflater.inflate(R.layout.fragment_home, container,false);
+
+        final View view =inflater.inflate(R.layout.fragment_home, container,false);
+
+        searchBar = view.findViewById(R.id.homefragment_searchbar);
+        searchBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, new SearchFragment()).commit();
+            }
+        });
+
 
         recyclerViewCategory = view.findViewById(R.id.recycler_categorias);
         recyclerViewRestaurant = view.findViewById(R.id.recycler_restaurantes);

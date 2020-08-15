@@ -13,4 +13,6 @@
     <string name="botao_entrar">Entrar</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_searchlabel">Pesquisa</string>
+    <string name="app_hintsearhlabel">Pesquisa</string>
 </resources>
