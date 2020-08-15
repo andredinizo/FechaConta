@@ -74,11 +74,11 @@ public class RestauranteFragment extends Fragment {
         restaurantCategoria.setText(restaurant.getCategoria());
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference imagem = storage.getReference().child("Restaurantes/Header"+ restaurant.getUrlheader());
+        StorageReference imagem = storage.getReference().child("Restaurantes/Header/"+ restaurant.getUrlheader());
         imagem.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).fit().into(imageView);
+                Picasso.get().load(uri).fit().centerCrop().into(imageView);
             }
         });
 
