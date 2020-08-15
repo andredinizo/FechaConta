@@ -1,6 +1,8 @@
 package com.example.fechaconta.adapter;
 
+import android.app.Activity;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fechaconta.R;
+import com.example.fechaconta.fragments.CategoriaFragment;
 import com.example.fechaconta.models.Category;
 import com.example.fechaconta.models.Dishes;
 import com.example.fechaconta.models.Restaurant;
@@ -30,6 +36,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
     public CategoryAdapter (List<Category> list, int intCount){
         this.intCount = intCount;
+
         this.list = list;
     }
 
@@ -37,11 +44,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_categorias, parent, false);
+
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         final StorageReference imagem = FirebaseStorage.getInstance().getReference().child("Categorias" + "/" + list.get(position).getUrlimage());
@@ -58,6 +66,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
 
         holder.catnome.setText(this.list.get(position).getName());
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, new CategoriaFragment(list.get(position))).commit();
+                Log.d(TAG, "onClick: ========> cliclou" );
+            }
+        });
     }
 
     @Override
@@ -71,13 +87,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
         TextView catnome;
         ImageView imagemView;
         LinearLayout linearlayout;
+        CardView cardView;
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             imagemView = itemView.findViewById(R.id.imagemcategoria);
             catnome = itemView.findViewById(R.id.catnome);
             linearlayout = itemView.findViewById(R.id.adaptercategorias_layout);
-
+            cardView = itemView.findViewById(R.id.categoria_cardview);
 
 
 

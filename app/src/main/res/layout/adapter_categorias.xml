@@ -10,6 +10,7 @@
     >
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/categoria_cardview"
         android:layout_width="100dp"
         android:layout_height="60dp"
         app:cardCornerRadius="15dp"

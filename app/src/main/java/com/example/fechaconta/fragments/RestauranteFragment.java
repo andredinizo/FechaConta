@@ -1,10 +1,13 @@
 package com.example.fechaconta.fragments;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,11 +25,15 @@ import com.example.fechaconta.models.Category;
 import com.example.fechaconta.models.Promotion;
 import com.example.fechaconta.models.Restaurant;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,125 +41,48 @@ import java.util.List;
 import ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator;
 
 public class RestauranteFragment extends Fragment {
-   /*
-    private final String TAG = "HOMEFRAGMENT";
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private RecyclerView recyclerViewCategory;
-    private RecyclerView recyclerViewRestaurant;
-    private RecyclerView recyclerViewPromo;
+    private Restaurant restaurant;
+    ImageView imageView;
+    TextView nomeRestaurant;
+    TextView endereçoRestaurant;
+    TextView restaurantRating;
+    TextView restaurantCategoria;
 
 
-   public RestauranteFragment(){
-        //Construtor publico vazio (Necessário)
-   }
+
+    public RestauranteFragment(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
+    public RestauranteFragment() {
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       final View view =inflater.inflate(R.layout.fragment_home, container,false);
+        View view = inflater.inflate(R.layout.fragment_restaurante, container, false);
 
-        recyclerViewCategory = view.findViewById(R.id.recycler_categorias);
-        recyclerViewRestaurant = view.findViewById(R.id.recycler_restaurantes);
-        recyclerViewPromo = view.findViewById(R.id.recyclerpromo);
+        imageView = view.findViewById(R.id.capa_restaurante);
+        nomeRestaurant = view.findViewById(R.id.nome_restaurante);
+        endereçoRestaurant = view.findViewById(R.id.endereço_restaurante);
+        restaurantRating = view.findViewById(R.id.restaurant_rating);
+        restaurantCategoria = view.findViewById(R.id.restaurante_categoria);
 
-        //Instancia os layout Manager e configura os recycler
-        RecyclerView.LayoutManager layManagerCat = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView.LayoutManager layManagerRes = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        RecyclerView.LayoutManager layManagerPromo = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        nomeRestaurant.setText(  restaurant.getNome());
+        endereçoRestaurant.setText(restaurant.getEnder()+ " - "+ restaurant.getCidade() +"/"+restaurant.getEstado() );
+        restaurantRating.setText(String.valueOf(restaurant.getMedia()));
+        restaurantCategoria.setText(restaurant.getCategoria());
 
-        recyclerViewCategory.setLayoutManager(layManagerCat);
-        recyclerViewCategory.setHasFixedSize(true);
-        recyclerViewCategory.setNestedScrollingEnabled(true);
-        recyclerViewRestaurant.setLayoutManager(layManagerRes);
-        recyclerViewRestaurant.setHasFixedSize(false);
-        recyclerViewRestaurant.setNestedScrollingEnabled(false);
-        recyclerViewPromo.setLayoutManager(layManagerPromo);
-
-
-
-        final LinearSnapHelper linearSnapHelper = new SnapHelperOneByOne();
-        linearSnapHelper.attachToRecyclerView(recyclerViewPromo);
-
-
-        //Recupera as Promoções do Firestore
-        Query promoQuery = db.collection("Promotion").whereEqualTo("ativa", true)
-                .orderBy("relevancia", Query.Direction.DESCENDING);
-        promoQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference imagem = storage.getReference().child("Restaurantes/Header"+ restaurant.getUrlheader());
+        imagem.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    List<Promotion> promotionList = new ArrayList<>();
-                    for(DocumentSnapshot document : task.getResult()){
-                        promotionList.add(document.toObject(Promotion.class));
-                        Log.d(TAG, "onComplete: =======>" + document.getData());
-                    }
-
-                    recyclerViewPromo.setAdapter(new PromoAdapter(promotionList));
-                    ScrollingPagerIndicator recyclerIndicator = view.findViewById(R.id.dotspromocao);
-                    recyclerIndicator.attachToRecyclerView(recyclerViewPromo);
-
-                }else{
-                    Log.d(TAG, "onComplete: Falha ao Resgatar as Promoções");
-                }
-            }
-        });
-
-
-        //Recupera os Restaurantes Ordenados pela media do Firestore
-        Query queryRes = db.collection("Restaurant").orderBy("media", Query.Direction.DESCENDING);
-         queryRes.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    List<Restaurant> listRes = new ArrayList<>();
-                    for(DocumentSnapshot document : task.getResult()){
-                        listRes.add(document.toObject(Restaurant.class));
-                        Log.d(TAG, "onComplete:  =====> " + document.getData() );
-
-                    }
-
-                    RestaurantAdapter restaurantAdapter = new RestaurantAdapter(listRes);
-                    recyclerViewRestaurant.setAdapter(restaurantAdapter);
-
-                }else{
-                    Log.d(TAG, "onFailure: Falha ao recuperar os Restaurantes");
-                }
-
-
-            }
-        });
-
-
-
-        //Recupera as Categorias do Firestore
-        db.collection("Category").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    List<Category> listCat = new ArrayList<>();
-                    for (DocumentSnapshot document : task.getResult()){
-                        //Joga as Categorias no List
-                        listCat.add(document.toObject(Category.class));
-                        Log.d(TAG, "onComplete: ======>" + document.getData().toString());
-                    }
-
-                    //Instancia e seta o Adapter com a lista de categorias
-                    CategoryAdapter categoryAdapter = new CategoryAdapter(listCat, listCat.size());
-                    recyclerViewCategory.setAdapter(categoryAdapter);
-
-
-                }else{
-                    Log.d(TAG, "onComplete: Se fudeu");
-                }
-
-
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).fit().into(imageView);
             }
         });
 
 
         return view;
     }
-
-
-    */
 }

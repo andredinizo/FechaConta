@@ -8,9 +8,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fechaconta.R;
+import com.example.fechaconta.fragments.RestauranteFragment;
 import com.example.fechaconta.models.Category;
 import com.example.fechaconta.models.Restaurant;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,7 +40,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference imagem = storage.getReference().child("Restaurantes/"+ this.restaurantList.get(position).getUrlicon());
         imagem.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -49,6 +52,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         holder.nomeTextView.setText(this.restaurantList.get(position).getNome());
         holder.categTextView.setText(this.restaurantList.get(position).getCategoria());
         holder.mediaTextView.setText(String.valueOf(this.restaurantList.get(position).getMedia()));
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                activity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frame_fragment, new RestauranteFragment(restaurantList.get(position))).commit();
+            }
+        });
 
 
     }
@@ -64,6 +76,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         TextView mediaTextView;
         TextView categTextView;
         ImageView iconImageView;
+        CardView cardView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,6 +85,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
             mediaTextView = itemView.findViewById(R.id.result_mediares);
             categTextView = itemView.findViewById(R.id.result_catres);
             iconImageView = itemView.findViewById(R.id.result_logo);
+            cardView = itemView.findViewById(R.id.searchrestaurant_cardview);
 
 
         }
