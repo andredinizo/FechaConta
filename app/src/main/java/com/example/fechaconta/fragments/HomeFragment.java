@@ -1,13 +1,17 @@
 package com.example.fechaconta.fragments;
 
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
@@ -23,6 +27,8 @@ import com.example.fechaconta.models.Promotion;
 import com.example.fechaconta.models.Restaurant;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -147,6 +153,27 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
+
+        //Diminui Opacidade do Header
+        final CollapsingToolbarLayout toolbar = view.findViewById(R.id.toolbar);
+        final AppBarLayout appbar = view.findViewById(R.id.headerlayout);
+        //final LinearLayout layout = view.findViewById(R.id.principahome);
+        appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+
+            int intColorCode=0;
+
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                float offsetAlpha = (appBarLayout.getY() / appbar.getTotalScrollRange());
+              // appBarLayout.setBackgroundColor(Color.argb(0,255,255,255));
+                //toolbar.setBackgroundColor(Color.argb(0,255,255,255));
+                //1 - (offsetAlpha * -1)
+            }
+        });
+
 
 
         return view;
