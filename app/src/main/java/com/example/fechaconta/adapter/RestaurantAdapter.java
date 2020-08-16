@@ -9,9 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fechaconta.R;
+import com.example.fechaconta.fragments.RestauranteFragment;
 import com.example.fechaconta.models.Restaurant;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -22,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.MyViewHolder> {
-    private final String TAG = "RESTAURANTATADAPTER";
+    private final String TAG = "RESTAURANTAT_ADAPTER";
     private List<Restaurant> list = new ArrayList<>();
 
     public RestaurantAdapter (List<Restaurant> list){
@@ -38,7 +41,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         final StorageReference imagem = storage.getReference().child("Restaurantes/"+ this.list.get(position).getUrlicon());
@@ -60,6 +63,16 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
         holder.nomeres.setText(this.list.get(position).getNome());
         holder.catres.setText(this.list.get(position).getCategoria());
         holder.mediares.setText(String.valueOf(this.list.get(position).getMedia()));
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment,
+                        new RestauranteFragment(list.get(position))).commit();
+            }
+        });
+
     }
 
     @Override
@@ -72,6 +85,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
         TextView mediares;
         ImageView imageView;
         LinearLayout linearLayout;
+        CardView cardView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,6 +95,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             mediares = itemView.findViewById(R.id.mediares);
             imageView = itemView.findViewById(R.id.logorestaurante);
             linearLayout = itemView.findViewById(R.id.linearlayout_restaurantes);
+            cardView = itemView.findViewById(R.id.restaurant_cardview);
         }
     }
 }

@@ -2,6 +2,8 @@ package com.example.fechaconta;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,12 +18,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private TextView inicioBottom;
+    private HomeFragment homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, new HomeFragment()).commit();
+        homeFragment = new HomeFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, homeFragment, homeFragment.getTag()).commit();
+
+        inicioBottom = findViewById(R.id.bottom_inicio);
+        inicioBottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(homeFragment != null && !homeFragment.isVisible()){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, new HomeFragment()).commit();
+                }
+            }
+        });
 
        /* WriteDB wdb = new WriteDB();
         List<Restaurant> reslist = new ArrayList<>();
