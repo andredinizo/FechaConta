@@ -15,73 +15,14 @@
 
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/CoordinatorFAB"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_gravity="bottom"
-            android:elevation="4dp">
-
-            <com.google.android.material.bottomappbar.BottomAppBar
-                android:id="@+id/bottom_navigation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                app:elevation="8dp"
-                app:fabAlignmentMode="center"
-                app:fabAnimationMode="scale"
-                app:fabCradleMargin="0dp"
-                app:fabCradleRoundedCornerRadius="10dp"
-                app:itemIconTint="#000000"
-                app:itemTextColor="#000000">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/bottom_inicio"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:drawableTop="@drawable/ic_inicio_bottom"
-                        android:text="@string/inicio"
-                        android:textAlignment="center" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:drawableTop="@drawable/ic_carteira_bottom"
-                        android:text="@string/carteira"
-                        android:textAlignment="center" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.5"
-                        android:textAlignment="center" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:drawableTop="@drawable/ic_comanda_bottom"
-                        android:text="@string/pedidos"
-                        android:textAlignment="center" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:drawableTop="@drawable/ic_perfil_bottom"
-                        android:text="@string/perfil"
-                        android:textAlignment="center" />
-
-                </LinearLayout>
+            android:elevation="4dp"
+            >
 
 
-            </com.google.android.material.bottomappbar.BottomAppBar>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
@@ -92,8 +33,9 @@
                 app:backgroundTint="@color/Cor1"
                 app:elevation="4dp"
                 app:fabCustomSize="60dp"
-                app:layout_anchor="@id/bottom_navigation"
-
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

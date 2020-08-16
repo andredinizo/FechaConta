@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/perfil"
-        android:icon="@drawable/ic_perfil_bottom"
+        android:icon="@drawable/ic_favorito"
         android:title="@string/perfil"
         app:showAsAction="always" />
 
@@ -11,8 +11,8 @@
         android:id="@+id/search"
         android:contentDescription="@string/inicio"
         android:icon="@drawable/ic_search_searchbar"
+        android:iconTint="#8F8D8C"
         android:title="@string/inicio"
-
         app:showAsAction="always"
         />
 </menu>

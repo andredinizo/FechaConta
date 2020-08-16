@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.fechaconta.fragments.CardapioFragment;
 import com.example.fechaconta.fragments.HomeFragment;
 import com.example.fechaconta.fragments.SearchFragment;
 import com.example.fechaconta.models.Restaurant;
@@ -28,15 +29,7 @@ public class MainActivity extends AppCompatActivity {
         homeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, homeFragment, homeFragment.getTag()).commit();
 
-        inicioBottom = findViewById(R.id.bottom_inicio);
-        inicioBottom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(homeFragment != null && !homeFragment.isVisible()){
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, new HomeFragment()).commit();
-                }
-            }
-        });
+
 
        /* WriteDB wdb = new WriteDB();
         List<Restaurant> reslist = new ArrayList<>();
