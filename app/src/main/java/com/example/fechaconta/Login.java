@@ -13,10 +13,17 @@ import android.widget.TextView;
 
 import com.example.fechaconta.fragments.LoginEmailFragment;
 import com.example.fechaconta.fragments.LoginFragment;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
 
     public TextView logo;
+    private FirebaseAuth mAuth;
 
 
     @Override
@@ -24,6 +31,7 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        mAuth = FirebaseAuth.getInstance();
         logo = findViewById(R.id.LogoSplash);
 
         //Chama o handler que abre LoginFragment com atraso
@@ -54,7 +62,8 @@ public class Login extends AppCompatActivity {
         @Override
         public void run() {
             // logo.setVisibility(View.GONE);
-            getSupportFragmentManager().beginTransaction().add(R.id.FragContainer, new LoginFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().add(R.id.FragContainer, new LoginFragment()).commit();
+            verifyAuth();
         }
     };
 
@@ -72,4 +81,21 @@ public class Login extends AppCompatActivity {
         fragmentManager.replace(R.id.FragContainer, new LoginFragment()).commit();
     }
 
+    public void verifyAuth () {
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if(currentUser != null){
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                this.finish();
+            }else{
+                getSupportFragmentManager().beginTransaction().add(R.id.FragContainer, new LoginFragment()).commit();
+            }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+
+    }
 }

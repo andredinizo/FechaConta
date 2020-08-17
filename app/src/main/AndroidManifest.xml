@@ -17,6 +17,11 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.fechaconta.MainActivity" android:theme="@style/HomeFragment">
+            android:noHistory="false">
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
 
         <meta-data
