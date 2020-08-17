@@ -9,7 +9,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarCardapio"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="250dp"
         android:background="#FFFFFF"
         android:fitsSystemWindows="true">
 
@@ -17,7 +17,7 @@
             android:id="@+id/colapse_cardapio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:collapsedTitleGravity="start"
+            app:collapsedTitleGravity="center"
             app:collapsedTitleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
@@ -38,14 +38,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/scrim"
-                android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax" />
+                android:fitsSystemWindows="true" />
 
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+                app:layout_collapseMode="pin"
                 app:menu="@menu/menu_cardapio_topbar"
+                app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
 
                 />
 
@@ -55,28 +55,67 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:animateLayoutChanges="true"
+        android:id="@+id/tablayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:behavior_overlapTop="80dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:layout_insetEdge="top">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/TabCategorias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="enterAlwaysCollapsed"
+            android:scrollbars="horizontal"
+            android:background="#FFFFFF"
+            app:tabSelectedTextColor="@color/Cor2"
+            app:tabIndicatorColor="@color/Cor2"
+            >
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Teste" />
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Teste" />
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Teste" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+
+        android:id="@+id/ScrollCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_anchor="@id/appBarCardapio"
         app:layout_anchorGravity="bottom"
+        android:orientation="vertical"
+        app:behavior_overlapTop="80dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
         <LinearLayout
-            android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="top"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/CardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="4dp">
 
@@ -169,25 +208,30 @@
                         android:textSize="12sp"
                         android:theme="@style/Widget.MaterialComponents.Button"
                         app:backgroundTint="#F35454"
-
                         app:icon="@drawable/ic_restaurante_location"
                         app:iconSize="20dp" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_restaurantes"
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/recyclerdishes"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_restaurantes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="80dp"
+
+                    />
+            </androidx.core.widget.NestedScrollView>
 
         </LinearLayout>
-
-
     </androidx.core.widget.NestedScrollView>
 
 
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-

@@ -1,5 +1,6 @@
 package com.example.fechaconta.fragments;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
@@ -27,6 +29,9 @@ import com.example.fechaconta.models.Restaurant;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -41,13 +46,16 @@ import java.util.List;
 import ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator;
 
 public class RestauranteFragment extends Fragment {
+    final String TAG = "RestauranteFragment";
     private Restaurant restaurant;
     ImageView imageView;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     TextView nomeRestaurant;
     TextView endereçoRestaurant;
     TextView restaurantRating;
     TextView restaurantCategoria;
-
+    TextView descriRestaurante;
+    RecyclerView recyclerViewRestaurant;
 
 
     public RestauranteFragment(Restaurant restaurant) {
@@ -56,6 +64,34 @@ public class RestauranteFragment extends Fragment {
 
     public RestauranteFragment() {
     }
+
+    public void AtualizaRestaurantes() {
+        //Recupera os Restaurantes Ordenados pela media do Firestore
+        Query queryRes = db.collection("Restaurant").orderBy("media", Query.Direction.DESCENDING);
+        queryRes.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    List<Restaurant> listRes = new ArrayList<>();
+                    for (DocumentSnapshot document : task.getResult()) {
+                        listRes.add(document.toObject(Restaurant.class));
+                        Log.d(TAG, "onComplete:  =====> " + document.getData());
+
+                    }
+
+                    RestaurantAdapter restaurantAdapter = new RestaurantAdapter(listRes);
+                    restaurantAdapter.notifyDataSetChanged();
+                    recyclerViewRestaurant.setAdapter(restaurantAdapter);
+
+                } else {
+                    Log.d(TAG, "onFailure: Falha ao recuperar os Restaurantes");
+                }
+
+
+            }
+        });
+    }
+
 
     @Nullable
     @Override
@@ -68,10 +104,19 @@ public class RestauranteFragment extends Fragment {
         restaurantRating = view.findViewById(R.id.restaurant_rating);
         restaurantCategoria = view.findViewById(R.id.restaurante_categoria);
 
+
+        recyclerViewRestaurant = view.findViewById(R.id.recycler_restaurantes);
+        RecyclerView.LayoutManager layManagerRes = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerViewRestaurant.setLayoutManager(layManagerRes);
+        recyclerViewRestaurant.setHasFixedSize(false);
+        recyclerViewRestaurant.setNestedScrollingEnabled(false);
+
         nomeRestaurant.setText(  restaurant.getNome());
         endereçoRestaurant.setText(restaurant.getEnder()+ " - "+ restaurant.getCidade() +"/"+restaurant.getEstado() );
         restaurantRating.setText(String.valueOf(restaurant.getMedia()));
         restaurantCategoria.setText(restaurant.getCategoria());
+
+        AtualizaRestaurantes();
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference imagem = storage.getReference().child("Restaurantes/Header/"+ restaurant.getUrlheader());
@@ -81,6 +126,46 @@ public class RestauranteFragment extends Fragment {
                 Picasso.get().load(uri).fit().centerCrop().into(imageView);
             }
         });
+
+
+
+
+        final AppBarLayout appBar;
+        final AppBarLayout tablayout;
+        final Toolbar materialToolbar;
+        final CollapsingToolbarLayout CollapsingToolbar;
+
+        CollapsingToolbar = view.findViewById(R.id.colapse_cardapio);
+        materialToolbar = view.findViewById(R.id.toolbar_cardapio);
+        tablayout = view.findViewById(R.id.tablayout);
+        CollapsingToolbar.setContentScrimColor(Color.WHITE);
+        CollapsingToolbar.setStatusBarScrimColor(Color.WHITE);
+        CollapsingToolbar.setTitleEnabled(true);
+        appBar = view.findViewById(R.id.appBarCardapio);
+
+        appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow=true;
+            int scrollRange =-1;
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+            float OffsetA = appBarLayout.getY()/appBar.getTotalScrollRange();
+
+            if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    CollapsingToolbar.setTitle(restaurant.getNome());
+                    tablayout.setVisibility(View.VISIBLE);
+                    isShow = true;
+                } else if(isShow) {
+                    CollapsingToolbar.setTitle(" ");//careful there should a space between double quote otherwise it wont work
+                    tablayout.setVisibility(View.GONE);
+                    isShow = false;
+                }
+            }
+
+        });
+
 
 
         return view;

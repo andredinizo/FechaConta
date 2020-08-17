@@ -147,6 +147,8 @@ public class HomeFragment extends Fragment {
         recyclerViewPromo = view.findViewById(R.id.recyclerpromo);
         swipe = view.findViewById(R.id.swipehome);
 
+
+
         //Instancia os layout Manager e configura os recycler
         RecyclerView.LayoutManager layManagerCat = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView.LayoutManager layManagerRes = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -189,7 +191,8 @@ public class HomeFragment extends Fragment {
         final AppBarLayout appbar = view.findViewById(R.id.headerlayout);
         final CoordinatorLayout header = view.findViewById(R.id.cordinatorheader);
         //final Toolbar toolbar_home = view.findViewById(R.id.toolbar_home);
-
+        //toolbar.setStatusBarScrimColor(Color.WHITE);
+        //toolbar.setContentScrimColor(Color.WHITE);
         //final LinearLayout layout = view.findViewById(R.id.principahome);
         appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
 
@@ -198,9 +201,14 @@ public class HomeFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                float offsetAlpha = (appBarLayout.getY() / appbar.getTotalScrollRange());
+                float offsetAlpha = (appBarLayout.getY() / appBarLayout.getTotalScrollRange());
+               // toolbar.setAlpha(1 - (offsetAlpha * -1));
+                //appbar.setAlpha(1 - (offsetAlpha * -1));
 
-                appbar.setBackgroundColor(Color.argb(1 - (offsetAlpha * -1), (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10));
+                Log.d(TAG, "onOffsetChanged: "+ offsetAlpha);
+
+                //appbar.setBackgroundColor(Color.argb(1 - (offsetAlpha * -1), (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10));
+              // appbar.setBackgroundColor(Color.argb(1, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10));
 
             }
         });

@@ -2,13 +2,10 @@ package com.example.fechaconta;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.fechaconta.fragments.CardapioFragment;
 import com.example.fechaconta.fragments.HomeFragment;
 import com.example.fechaconta.fragments.SearchFragment;
 import com.example.fechaconta.models.Restaurant;
@@ -19,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView inicioBottom;
+
     private HomeFragment homeFragment;
 
     @Override
@@ -29,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         homeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, homeFragment, homeFragment.getTag()).commit();
 
-
+//getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, new CardapioFragment()).commit();
 
        /* WriteDB wdb = new WriteDB();
         List<Restaurant> reslist = new ArrayList<>();

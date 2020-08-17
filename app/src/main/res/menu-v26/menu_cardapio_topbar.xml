@@ -7,12 +7,5 @@
         android:title="@string/perfil"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/search"
-        android:contentDescription="@string/inicio"
-        android:icon="@drawable/ic_search_searchbar"
-        android:iconTint="#8F8D8C"
-        android:title="@string/inicio"
-        app:showAsAction="always"
-        />
+
 </menu>
