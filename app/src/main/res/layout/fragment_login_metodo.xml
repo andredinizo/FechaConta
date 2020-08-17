@@ -16,7 +16,7 @@
         android:textColor="#ffffff"
         android:textSize="16sp"
         android:theme="@style/Widget.MaterialComponents.Button"
-        app:backgroundTint="#FF7700"
+        app:backgroundTint="@color/CorDestak"
         app:icon="@drawable/ic_baseline_input_24"
         app:iconPadding="12dp"
         app:iconGravity="textStart"
@@ -72,7 +72,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/criar_conta"
-
         android:textColor="@color/Cor2"
         app:icon="@drawable/ic_baseline_add_24"
         app:iconTint="@color/Cor2"
