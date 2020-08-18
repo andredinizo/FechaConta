@@ -1,15 +1,24 @@
 package com.example.fechaconta.adapter;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fechaconta.R;
 import com.example.fechaconta.models.Dishes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -63,15 +72,33 @@ public class CardapioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
 
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference imagem = storage.getReference()
+                .child("Restaurantes/Pratos/"+pratos.get(position).getUrlImagem());
 
         if (getItemViewType(position) == 0) {
+
             ((CategoriaViewHolder) holder).setViews(this.pratos.get(position));
+
+            imagem.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.get().load(uri).fit().centerCrop().into(((CategoriaViewHolder) holder).imagemPrato);
+                }
+            });
         }
 
         if (getItemViewType(position) == 1) {
             ((PratosViewHolder) holder).setViews(this.pratos.get(position));
+
+            imagem.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.get().load(uri).fit().centerCrop().into(((PratosViewHolder) holder).imagemPrato);
+                }
+            });
         }
 
 
@@ -88,6 +115,7 @@ public class CardapioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView nomeItem;
         TextView precoItem;
         TextView descricaoItem;
+        ImageView imagemPrato;
 
         public CategoriaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -96,6 +124,7 @@ public class CardapioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             nomeItem = itemView.findViewById(R.id.textView_nomeItem);
             precoItem = itemView.findViewById(R.id.textView_precoItem);
             descricaoItem = itemView.findViewById(R.id.textView_descricaoItem);
+            imagemPrato = itemView.findViewById(R.id.categorias_imagemPratos);
         }
 
         public void setViews(Dishes dishes) {
@@ -103,6 +132,8 @@ public class CardapioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             this.nomeItem.setText(dishes.getName());
             this.precoItem.setText(String.valueOf(dishes.getValue()));
             this.descricaoItem.setText(dishes.getDescription());
+
+
         }
     }
 
@@ -111,19 +142,24 @@ public class CardapioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView nomeItem;
         TextView precoItem;
         TextView descricaoItem;
-
+        ImageView imagemPrato;
         public PratosViewHolder(@NonNull View itemView) {
             super(itemView);
             nomeItem = itemView.findViewById(R.id.textView_nomeItem);
             precoItem = itemView.findViewById(R.id.textView_precoItem);
             descricaoItem = itemView.findViewById(R.id.textView_descricaoItem);
+            imagemPrato = itemView.findViewById(R.id.imagemPrato);
         }
 
         public void setViews(Dishes dishes) {
             this.nomeItem.setText(dishes.getName());
             this.precoItem.setText(String.valueOf(dishes.getValue()));
             this.descricaoItem.setText(dishes.getDescription());
+
+
         }
+
+
     }
 }
 

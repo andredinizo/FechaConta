@@ -52,6 +52,8 @@ public class RestauranteFragment extends Fragment {
     TextView restaurantCategoria;
     RecyclerView recyclerDestaques;
     RecyclerView recyclerPratos;
+    Toolbar toolbarRestaurante;
+
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     TabLayout TabCategorias;
@@ -155,6 +157,14 @@ public class RestauranteFragment extends Fragment {
         restaurantRating = view.findViewById(R.id.restaurant_rating);
         restaurantCategoria = view.findViewById(R.id.restaurante_categoria);
         TabCategorias = view.findViewById(R.id.TabCategorias);
+        toolbarRestaurante = view.findViewById(R.id.toolbar_restaurante);
+
+        toolbarRestaurante.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
 
         /*
          *

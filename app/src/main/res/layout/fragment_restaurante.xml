@@ -42,11 +42,13 @@
                 android:fitsSystemWindows="true" />
 
             <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_restaurante"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:menu="@menu/menu_cardapio_topbar"
                 app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+
 
                 />
 
@@ -235,7 +237,7 @@
                     android:id="@+id/recycler_pratos"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-
+                    android:paddingBottom="80dp"
 
                     />
             </androidx.core.widget.NestedScrollView>
