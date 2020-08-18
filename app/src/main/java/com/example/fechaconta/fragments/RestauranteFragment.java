@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,10 +21,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fechaconta.R;
 import com.example.fechaconta.adapter.CategoryAdapter;
+import com.example.fechaconta.adapter.HighlightsAdapter;
 import com.example.fechaconta.adapter.PromoAdapter;
 import com.example.fechaconta.adapter.RestaurantAdapter;
 import com.example.fechaconta.adapter.SnapHelperOneByOne;
 import com.example.fechaconta.models.Category;
+import com.example.fechaconta.models.Dishes;
 import com.example.fechaconta.models.Promotion;
 import com.example.fechaconta.models.Restaurant;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -54,7 +57,7 @@ public class RestauranteFragment extends Fragment {
     TextView endereçoRestaurant;
     TextView restaurantRating;
     TextView restaurantCategoria;
-    TextView descriRestaurante;
+    RecyclerView recyclerHighlights;
     RecyclerView recyclerViewRestaurant;
 
 
@@ -92,6 +95,48 @@ public class RestauranteFragment extends Fragment {
         });
     }
 
+    public void AtualizaCardapio(final Restaurant restaurante){
+        Query queryHighlights = db.collection("Restaurant").document(restaurante.getID_restaurante()).collection("Dishes");
+        queryHighlights.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                List<Dishes> cardapio = new ArrayList<>();
+                List<Dishes> highlights = new ArrayList<>();
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()){
+                        cardapio.add(document.toObject(Dishes.class));
+                        cardapio.get(cardapio.size()-1).setID(document.getId());
+                        Log.d("DISHES", "onComplete: "+document.getId());
+                        Log.d("DISHESnome", "onComplete: "+document.toObject(Dishes.class).getName());
+                        Log.d("DISHESid", "onComplete: "+document.toObject(Dishes.class).getID());
+                        Log.d("DISHEShigh", "onComplete: "+document.toObject(Dishes.class).getIsHighlight());
+                        ;
+                        if(cardapio.get(cardapio.size() - 1).getIsHighlight()==1){
+                            highlights.add(cardapio.get(cardapio.size()-1));
+                            Log.d("DISHESsize", "onComplete: "+highlights.size());
+                        }
+
+                    }
+
+                    HighlightsAdapter highlightsadapter = new HighlightsAdapter(highlights, restaurante.getID_restaurante());
+                    highlightsadapter.notifyDataSetChanged();
+                    recyclerHighlights.setAdapter(highlightsadapter);
+
+
+                }else {
+                    Toast.makeText(getActivity(), "Não foi possível atualizar o cardápio", Toast.LENGTH_LONG).show();
+
+                }
+
+
+
+            }
+
+
+        });
+    }
+
 
     @Nullable
     @Override
@@ -103,6 +148,19 @@ public class RestauranteFragment extends Fragment {
         endereçoRestaurant = view.findViewById(R.id.endereço_restaurante);
         restaurantRating = view.findViewById(R.id.restaurant_rating);
         restaurantCategoria = view.findViewById(R.id.restaurante_categoria);
+
+        /*
+        *
+        *  POPULA HIGHLIGHTS
+        *
+        * */
+
+        recyclerHighlights = view.findViewById(R.id.destaques_cardapio);
+        RecyclerView.LayoutManager horizontalManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerHighlights.setLayoutManager(horizontalManager);
+        recyclerHighlights.setHasFixedSize(false);
+        recyclerHighlights.setNestedScrollingEnabled(false);
+
 
 
         recyclerViewRestaurant = view.findViewById(R.id.recycler_restaurantes);
@@ -117,6 +175,7 @@ public class RestauranteFragment extends Fragment {
         restaurantCategoria.setText(restaurant.getCategoria());
 
         AtualizaRestaurantes();
+        AtualizaCardapio(restaurant);
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference imagem = storage.getReference().child("Restaurantes/Header/"+ restaurant.getUrlheader());

@@ -8,8 +8,7 @@ public class Restaurant {
     private String des;
     private String ender;
     private String cidade;
-    private String estado
-            , categoria;
+    private String estado, categoria;
     private float media;
     private int taval;
     private String urlheader;

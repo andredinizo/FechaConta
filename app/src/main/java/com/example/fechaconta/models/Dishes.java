@@ -3,17 +3,37 @@ package com.example.fechaconta.models;
 public class Dishes {
 
     //Atributos
+    private String ID;
     private String name;
     private String description;
-    private Boolean isVegan;
-    private Boolean isVeg;
-    private Boolean isGlutenFree;
+    private int isVegan;
+    private int isVeg;
+    private int isGlutenFree;
     private Float value;
     private String category;
     private Float avgrating;
     private int numratings;
-
+    private int isHighlight;
+    private String urlImagem;
     //Getters e Setters
+
+
+    public String getUrlImagem() {
+        return urlImagem;
+    }
+
+    public void setUrlImagem(String urlImagem) {
+        this.urlImagem = urlImagem;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
 
     public String getName() {
         return name;
@@ -31,28 +51,36 @@ public class Dishes {
         this.description = description;
     }
 
-    public Boolean getVegan() {
+    public int getIsVegan() {
         return isVegan;
     }
 
-    public void setVegan(Boolean vegan) {
-        isVegan = vegan;
+    public void setIsVegan(int isVegan) {
+        this.isVegan = isVegan;
     }
 
-    public Boolean getVeg() {
+    public int getIsVeg() {
         return isVeg;
     }
 
-    public void setVeg(Boolean veg) {
-        isVeg = veg;
+    public void setIsVeg(int isVeg) {
+        this.isVeg = isVeg;
     }
 
-    public Boolean getGlutenFree() {
+    public int getIsGlutenFree() {
         return isGlutenFree;
     }
 
-    public void setGlutenFree(Boolean glutenFree) {
-        isGlutenFree = glutenFree;
+    public void setIsGlutenFree(int isGlutenFree) {
+        this.isGlutenFree = isGlutenFree;
+    }
+
+    public int getIsHighlight() {
+        return isHighlight;
+    }
+
+    public void setIsHighlight(int isHighlight) {
+        this.isHighlight = isHighlight;
     }
 
     public Float getValue() {

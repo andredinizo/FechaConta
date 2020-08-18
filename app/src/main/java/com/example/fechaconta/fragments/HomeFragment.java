@@ -94,6 +94,7 @@ public class HomeFragment extends Fragment {
                     List<Restaurant> listRes = new ArrayList<>();
                     for (DocumentSnapshot document : task.getResult()) {
                         listRes.add(document.toObject(Restaurant.class));
+                        listRes.get(listRes.size()-1).setID_restaurante(document.getId());
                         Log.d(TAG, "onComplete:  =====> " + document.getData());
 
                     }

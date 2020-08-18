@@ -17,6 +17,11 @@
 
     </style>
 
+    <style name="AppBar" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/CorAppBar</item>
+    </style>
+
 
     <style name="Cardapio" parent="Theme.MaterialComponents.Light.NoActionBar">
 

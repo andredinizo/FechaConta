@@ -7,6 +7,7 @@
     <color name="Cor3">#7E7E7E</color>
     <color name="hinttext">#B8B8B8</color>
     <color name="Cor2">#494949</color>
+    <color name="CorAppBar">#8F8D8C</color>
     <color name="CorDestak">#FF7700</color>
     <color name="colorOnSurface">#7E7E7E</color>
     <color name="colorOnError">#FF0000</color>
