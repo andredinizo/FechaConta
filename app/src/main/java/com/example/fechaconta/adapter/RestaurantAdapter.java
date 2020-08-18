@@ -1,6 +1,7 @@
 package com.example.fechaconta.adapter;
 
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         final StorageReference imagem = storage.getReference().child("Restaurantes/"+ this.list.get(position).getUrlicon());
+
+        Log.d("URL", "onSuccess2: " + imagem);
         imagem.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -69,7 +72,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment,
-                        new RestauranteFragment(list.get(position))).commit();
+                        new RestauranteFragment(list.get(position))).addToBackStack("HOMEFRAGMENT").commit();
             }
         });
 
