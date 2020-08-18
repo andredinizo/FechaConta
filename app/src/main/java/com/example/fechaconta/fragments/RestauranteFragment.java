@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -41,16 +42,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RestauranteFragment extends Fragment {
+
     final static public String TAG = "RestauranteFragment";
     private Restaurant restaurant;
     ImageView imageView;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     TextView nomeRestaurant;
     TextView endereçoRestaurant;
     TextView restaurantRating;
     TextView restaurantCategoria;
     RecyclerView recyclerDestaques;
     RecyclerView recyclerPratos;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    TabLayout TabCategorias;
 
 
     public RestauranteFragment(Restaurant restaurant) {
@@ -61,31 +65,43 @@ public class RestauranteFragment extends Fragment {
     }
 
 
-    public void AtualizaCardapio(final Restaurant restaurante){
+    public void AtualizaCardapio(final Restaurant restaurante) {
         Query queryHighlights = db.collection("Restaurant")
                 .document(restaurante.getID_restaurante()).collection("Dishes").orderBy("category");
         queryHighlights.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-
+                List<Dishes> cardapio = new ArrayList<>();
+                List<Dishes> highlights = new ArrayList<>();
+                List<String> categorias = new ArrayList<>();
+                List<Integer> indexCategorias = new ArrayList<>();
+                int position = 0;
                 if (task.isSuccessful()) {
-                    List<Dishes> cardapio = new ArrayList<>();
-                    List<Dishes> highlights = new ArrayList<>();
-
-                    for (DocumentSnapshot document : task.getResult()){
+                    for (DocumentSnapshot document : task.getResult()) {
                         cardapio.add(document.toObject(Dishes.class));
-                        cardapio.get(cardapio.size()-1).setID(document.getId());
-                        Log.d("DISHES", "onComplete: "+document.getId());
-                        Log.d("DISHESnome", "onComplete: "+document.toObject(Dishes.class).getName());
-                        Log.d("DISHESid", "onComplete: "+document.toObject(Dishes.class).getID());
-                        Log.d("DISHEShigh", "onComplete: "+document.toObject(Dishes.class).getIsHighlight());
-                        ;
-                        if(cardapio.get(cardapio.size() - 1).getIsHighlight()==1){
-                            highlights.add(cardapio.get(cardapio.size()-1));
-                            Log.d("DISHESsize", "onComplete: "+highlights.size());
+                        cardapio.get(cardapio.size() - 1).setID(document.getId());
+
+
+                        if (position==0){
+
+                            categorias.add(cardapio.get(position).getCategory());
+
+                        } else if (!cardapio.get(position).getCategory().equals(cardapio.get(position - 1).getCategory())) {
+
+                            categorias.add(cardapio.get(position).getCategory());
+                            indexCategorias.add(position);
+
                         }
 
+
+                        if (cardapio.get(cardapio.size() - 1).getIsHighlight() == 1) {
+
+                            highlights.add(cardapio.get(cardapio.size() - 1));
+                            Log.d("DISHESsize", "onComplete: " + highlights.size());
+
+                        }
+                        position++;
                     }
 
                     HighlightsAdapter highlightsadapter = new HighlightsAdapter(highlights, restaurante.getID_restaurante());
@@ -97,8 +113,10 @@ public class RestauranteFragment extends Fragment {
                     recyclerPratos.setAdapter(cardapioAdapter);
 
 
+                    CriaTabs(categorias,indexCategorias);
 
-                }else {
+
+                } else {
                     Toast.makeText(getActivity(), "Não foi possível atualizar o cardápio", Toast.LENGTH_LONG).show();
 
                 }
@@ -108,6 +126,21 @@ public class RestauranteFragment extends Fragment {
 
 
         });
+    }
+
+    public void CriaTabs(List<String> listaCategorias, List<Integer> listaIndex){
+
+        if(listaCategorias.size()>0){
+
+            for (int i=0;i<listaCategorias.size();i++){
+
+                TabCategorias.addTab(TabCategorias.newTab().setText(listaCategorias.get(i)));
+                TabCategorias.setTabMode(TabLayout.MODE_SCROLLABLE);
+                TabCategorias.setTabGravity(TabLayout.GRAVITY_FILL);
+            }
+
+        }
+
     }
 
 
@@ -121,12 +154,13 @@ public class RestauranteFragment extends Fragment {
         endereçoRestaurant = view.findViewById(R.id.endereço_restaurante);
         restaurantRating = view.findViewById(R.id.restaurant_rating);
         restaurantCategoria = view.findViewById(R.id.restaurante_categoria);
+        TabCategorias = view.findViewById(R.id.TabCategorias);
 
         /*
-        *
-        *  POPULA HIGHLIGHTS
-        *
-        * */
+         *
+         *  POPULA HIGHLIGHTS
+         *
+         * */
 
         recyclerDestaques = view.findViewById(R.id.recycler_destaques);
         RecyclerView.LayoutManager horizontalManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -135,15 +169,14 @@ public class RestauranteFragment extends Fragment {
         recyclerDestaques.setNestedScrollingEnabled(false);
 
 
-
         recyclerPratos = view.findViewById(R.id.recycler_pratos);
         RecyclerView.LayoutManager layManagerRes = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerPratos.setLayoutManager(layManagerRes);
         recyclerPratos.setHasFixedSize(false);
         recyclerPratos.setNestedScrollingEnabled(false);
 
-        nomeRestaurant.setText(  restaurant.getNome());
-        endereçoRestaurant.setText(restaurant.getEnder()+ " - "+ restaurant.getCidade() +"/"+restaurant.getEstado() );
+        nomeRestaurant.setText(restaurant.getNome());
+        endereçoRestaurant.setText(restaurant.getEnder() + " - " + restaurant.getCidade() + "/" + restaurant.getEstado());
         restaurantRating.setText(String.valueOf(restaurant.getMedia()));
         restaurantCategoria.setText(restaurant.getCategoria());
 
@@ -151,15 +184,13 @@ public class RestauranteFragment extends Fragment {
         AtualizaCardapio(restaurant);
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference imagem = storage.getReference().child("Restaurantes/Header/"+ restaurant.getUrlheader());
+        StorageReference imagem = storage.getReference().child("Restaurantes/Header/" + restaurant.getUrlheader());
         imagem.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).fit().centerCrop().into(imageView);
             }
         });
-
-
 
 
         final AppBarLayout appBar;
@@ -176,20 +207,21 @@ public class RestauranteFragment extends Fragment {
         appBar = view.findViewById(R.id.appBarCardapio);
 
         appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean isShow=true;
-            int scrollRange =-1;
+            boolean isShow = true;
+            int scrollRange = -1;
+
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-            float OffsetA = appBarLayout.getY()/appBar.getTotalScrollRange();
+                float OffsetA = appBarLayout.getY() / appBar.getTotalScrollRange();
 
-            if (scrollRange == -1) {
+                if (scrollRange == -1) {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
                     CollapsingToolbar.setTitle(restaurant.getNome());
                     tablayout.setVisibility(View.VISIBLE);
                     isShow = true;
-                } else if(isShow) {
+                } else if (isShow) {
                     CollapsingToolbar.setTitle(" ");//careful there should a space between double quote otherwise it wont work
                     tablayout.setVisibility(View.GONE);
                     isShow = false;

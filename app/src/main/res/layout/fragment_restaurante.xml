@@ -3,7 +3,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@color/Cor1"
+    android:background="#FBFBFB"
     android:layout_height="match_parent">
 
 
@@ -58,8 +58,8 @@
 
 
     <com.google.android.material.appbar.AppBarLayout
-        android:animateLayoutChanges="true"
         android:id="@+id/tablayout"
+        android:animateLayoutChanges="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -72,23 +72,13 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="enterAlwaysCollapsed"
             android:scrollbars="horizontal"
+            app:tabGravity="fill"
+            app:tabMode="scrollable"
             android:background="#FFFFFF"
             app:tabSelectedTextColor="@color/Cor2"
             app:tabIndicatorColor="@color/Cor2"
             >
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Teste" />
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Teste" />
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Teste" />
 
         </com.google.android.material.tabs.TabLayout>
 
