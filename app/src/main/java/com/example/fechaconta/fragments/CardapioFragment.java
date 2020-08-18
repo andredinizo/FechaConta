@@ -44,8 +44,9 @@ public class CardapioFragment extends Fragment {
     private MaterialToolbar toolbar;
     private CollapsingToolbarLayout collapsing;
 
-    public CardapioFragment(){}
+    /*
 
+    public CardapioFragment(){}
 
     @Nullable
     @Override
@@ -112,5 +113,5 @@ public class CardapioFragment extends Fragment {
         return localInflater.inflate(R.layout.fragment_cardapio, container, false);
     }
 
-
+    */
 }

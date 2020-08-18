@@ -1,6 +1,5 @@
 package com.example.fechaconta.fragments;
 
-import android.app.DownloadManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,7 +56,7 @@ public class CategoriaFragment extends Fragment {
 
         imageView = view.findViewById(R.id.capa_restaurante);;
         catTextView = view.findViewById(R.id.nome_categoria);
-        recyclerView = view.findViewById(R.id.recycler_restaurantes);
+        recyclerView = view.findViewById(R.id.recycler_pratos);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);

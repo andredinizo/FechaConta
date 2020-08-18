@@ -23,6 +23,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/textView_nomeItem"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.3"
@@ -33,6 +34,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/textView_descricaoItem"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.3"
@@ -47,6 +49,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/textView_precoItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="R$ 7,00"

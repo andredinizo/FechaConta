@@ -55,7 +55,7 @@
                         android:text="R. Alfredo Lopes, 1310"
                         android:textColor="#494949"
                         android:textSize="20sp"
-                        app:drawableEndCompat="@drawable/ic_dropdown_local" />
+                        android:drawableEnd="@drawable/ic_dropdown_local" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -192,7 +192,7 @@
 
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_restaurantes"
+                        android:id="@+id/recycler_pratos"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingBottom="80dp" />

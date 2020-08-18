@@ -231,7 +231,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/destaques_cardapio"
+                android:id="@+id/recycler_destaques"
                 android:paddingBottom="16dp"/>
 
 
@@ -242,7 +242,7 @@
                 >
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_restaurantes"
+                    android:id="@+id/recycler_pratos"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
 

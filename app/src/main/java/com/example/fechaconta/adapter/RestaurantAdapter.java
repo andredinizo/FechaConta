@@ -63,9 +63,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             holder.linearLayout.setPadding(0,0,0,0);
         }
 
-        holder.nomeres.setText(this.list.get(position).getNome());
-        holder.catres.setText(this.list.get(position).getCategoria());
-        holder.mediares.setText(String.valueOf(this.list.get(position).getMedia()));
+        holder.nomeRes.setText(this.list.get(position).getNome());
+        holder.catRes.setText(this.list.get(position).getCategoria());
+        holder.mediaRes.setText(String.valueOf(this.list.get(position).getMedia()));
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,9 +83,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
         return this.list.size();
     }
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView nomeres;
-        TextView catres;
-        TextView mediares;
+        TextView nomeRes;
+        TextView catRes;
+        TextView mediaRes;
         ImageView imageView;
         LinearLayout linearLayout;
         CardView cardView;
@@ -93,9 +93,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            nomeres = itemView.findViewById(R.id.nomeres);
-            catres = itemView.findViewById(R.id.catres);
-            mediares = itemView.findViewById(R.id.mediares);
+            nomeRes = itemView.findViewById(R.id.nome_res);
+            catRes = itemView.findViewById(R.id.cat_res);
+            mediaRes = itemView.findViewById(R.id.media_res);
             imageView = itemView.findViewById(R.id.logorestaurante);
             linearLayout = itemView.findViewById(R.id.linearlayout_restaurantes);
             cardView = itemView.findViewById(R.id.restaurant_cardview);
