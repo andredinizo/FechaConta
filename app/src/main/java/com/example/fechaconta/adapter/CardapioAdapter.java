@@ -130,7 +130,7 @@ public class CardapioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public void setViews(Dishes dishes) {
             this.categoria.setText(dishes.getCategory());
             this.nomeItem.setText(dishes.getName());
-            this.precoItem.setText(String.valueOf(dishes.getValue()));
+            this.precoItem.setText("R$ " + String.valueOf(dishes.getValue()));
             this.descricaoItem.setText(dishes.getDescription());
 
 
@@ -148,12 +148,12 @@ public class CardapioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             nomeItem = itemView.findViewById(R.id.textView_nomeItem);
             precoItem = itemView.findViewById(R.id.textView_precoItem);
             descricaoItem = itemView.findViewById(R.id.textView_descricaoItem);
-            imagemPrato = itemView.findViewById(R.id.imagemPrato);
+            imagemPrato = itemView.findViewById(R.id.categorias_imagemPratos);
         }
 
         public void setViews(Dishes dishes) {
             this.nomeItem.setText(dishes.getName());
-            this.precoItem.setText(String.valueOf(dishes.getValue()));
+            this.precoItem.setText("R$ " + String.valueOf(dishes.getValue()));
             this.descricaoItem.setText(dishes.getDescription());
 
 
