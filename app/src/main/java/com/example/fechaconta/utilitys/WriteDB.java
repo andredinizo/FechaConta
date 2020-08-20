@@ -1,9 +1,11 @@
-package com.example.fechaconta.models;
+package com.example.fechaconta.utilitys;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.fechaconta.models.Dishes;
+import com.example.fechaconta.models.Restaurant;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
