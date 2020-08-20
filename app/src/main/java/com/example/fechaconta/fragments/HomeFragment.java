@@ -1,5 +1,6 @@
 package com.example.fechaconta.fragments;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.fechaconta.MainActivity;
 import com.example.fechaconta.R;
 import com.example.fechaconta.adapter.CategoryAdapter;
 import com.example.fechaconta.adapter.PromoAdapter;
@@ -141,6 +143,10 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+
+        MainActivity main = (MainActivity) getActivity();
+        main.SetFitsWindows(true);
+
         recyclerViewCategory = view.findViewById(R.id.recycler_categorias);
         recyclerViewRestaurant = view.findViewById(R.id.recycler_pratos);
         recyclerViewPromo = view.findViewById(R.id.recyclerpromo);
@@ -190,7 +196,7 @@ public class HomeFragment extends Fragment {
         final AppBarLayout appbar = view.findViewById(R.id.headerlayout);
         final CoordinatorLayout header = view.findViewById(R.id.cordinatorheader);
         //final Toolbar toolbar_home = view.findViewById(R.id.toolbar_home);
-        //toolbar.setStatusBarScrimColor(Color.WHITE);
+        toolbar.setStatusBarScrimColor(Color.WHITE);
         //toolbar.setContentScrimColor(Color.WHITE);
         //final LinearLayout layout = view.findViewById(R.id.principahome);
         appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {

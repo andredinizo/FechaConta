@@ -14,10 +14,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fechaconta.MainActivity;
 import com.example.fechaconta.R;
 import com.example.fechaconta.adapter.CardapioAdapter;
 import com.example.fechaconta.adapter.HighlightsAdapter;
@@ -29,6 +31,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,10 +39,12 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.iammert.tabscrollattacherlib.TabScrollAttacher;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RestauranteFragment extends Fragment {
 
@@ -53,6 +58,8 @@ public class RestauranteFragment extends Fragment {
     RecyclerView recyclerDestaques;
     RecyclerView recyclerPratos;
     Toolbar toolbarRestaurante;
+    List<Integer> indexTab;
+    CoordinatorLayout coordinatorLayout;
 
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -66,6 +73,11 @@ public class RestauranteFragment extends Fragment {
     public RestauranteFragment() {
     }
 
+    public void AttachTab(List<Integer> index){
+
+        TabScrollAttacher tabAttacher = new TabScrollAttacher(TabCategorias, recyclerPratos, index);
+
+    }
 
     public void AtualizaCardapio(final Restaurant restaurante) {
         Query queryHighlights = db.collection("Restaurant")
@@ -88,6 +100,7 @@ public class RestauranteFragment extends Fragment {
                         if (position==0){
 
                             categorias.add(cardapio.get(position).getCategory());
+                            indexCategorias.add(position);
 
                         } else if (!cardapio.get(position).getCategory().equals(cardapio.get(position - 1).getCategory())) {
 
@@ -137,11 +150,14 @@ public class RestauranteFragment extends Fragment {
             for (int i=0;i<listaCategorias.size();i++){
 
                 TabCategorias.addTab(TabCategorias.newTab().setText(listaCategorias.get(i)));
+                //TODO: Linkar Tabs com Recycler
                 TabCategorias.setTabMode(TabLayout.MODE_SCROLLABLE);
                 TabCategorias.setTabGravity(TabLayout.GRAVITY_FILL);
             }
 
         }
+
+
 
     }
 
@@ -151,6 +167,8 @@ public class RestauranteFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_restaurante, container, false);
 
+
+
         imageView = view.findViewById(R.id.capa_restaurante);
         nomeRestaurant = view.findViewById(R.id.nome_restaurante);
         endereçoRestaurant = view.findViewById(R.id.endereço_restaurante);
@@ -158,11 +176,16 @@ public class RestauranteFragment extends Fragment {
         restaurantCategoria = view.findViewById(R.id.restaurante_categoria);
         TabCategorias = view.findViewById(R.id.TabCategorias);
         toolbarRestaurante = view.findViewById(R.id.toolbar_restaurante);
+        coordinatorLayout = view.findViewById(R.id.CoordinatorCardapio);
+
+        MainActivity mainRestaurante = (MainActivity) getActivity();
+        mainRestaurante.SetFitsWindows(false);
+
 
         toolbarRestaurante.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -185,6 +208,9 @@ public class RestauranteFragment extends Fragment {
         recyclerPratos.setHasFixedSize(false);
         recyclerPratos.setNestedScrollingEnabled(false);
 
+
+
+
         nomeRestaurant.setText(restaurant.getNome());
         endereçoRestaurant.setText(restaurant.getEnder() + " - " + restaurant.getCidade() + "/" + restaurant.getEstado());
         restaurantRating.setText(String.valueOf(restaurant.getMedia()));
@@ -192,6 +218,7 @@ public class RestauranteFragment extends Fragment {
 
 
         AtualizaCardapio(restaurant);
+
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference imagem = storage.getReference().child("Restaurantes/Header/" + restaurant.getUrlheader());
