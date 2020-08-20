@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriaFragment extends Fragment {
-    private final String TAG = "CATEGORIA_FRAGMENT";
+    public static final String TAG = "CATEGORIA_FRAGMENT";
     private Category category;
 
     private ImageView imageView;

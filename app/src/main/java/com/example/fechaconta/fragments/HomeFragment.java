@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,6 +49,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerViewRestaurant;
     private RecyclerView recyclerViewPromo;
     private SwipeRefreshLayout swipe;
+    private EditText searchBar;
 
     public HomeFragment() {
         //Construtor publico vazio (Necessário)
@@ -151,6 +153,7 @@ public class HomeFragment extends Fragment {
         recyclerViewRestaurant = view.findViewById(R.id.recycler_pratos);
         recyclerViewPromo = view.findViewById(R.id.recyclerpromo);
         swipe = view.findViewById(R.id.swipehome);
+        searchBar = view.findViewById(R.id.edittext_searchbar);
 
 
 
@@ -215,6 +218,18 @@ public class HomeFragment extends Fragment {
                 //appbar.setBackgroundColor(Color.argb(1 - (offsetAlpha * -1), (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10));
               // appbar.setBackgroundColor(Color.argb(1, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10));
 
+            }
+        });
+
+
+        // Configura a Search Bar para abrir o Search Fragment
+        searchBar.setFocusable(false);
+        searchBar.setEnabled(true);
+        searchBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_fragment, new SearchFragment())
+                        .addToBackStack(SearchFragment.TAG).commit();
             }
         });
 

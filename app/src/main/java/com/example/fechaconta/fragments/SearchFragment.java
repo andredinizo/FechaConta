@@ -1,15 +1,16 @@
 package com.example.fechaconta.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import com.example.fechaconta.R;
 import com.example.fechaconta.adapter.SearchAdapter;
 import com.example.fechaconta.models.Restaurant;
+import com.example.fechaconta.utilitys.StringStuff;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -31,7 +33,7 @@ import java.util.List;
 
 
 public class SearchFragment extends Fragment {
-    private final String TAG = "SEARCH_FRAGMENT";
+    public static final String TAG = "SEARCH_FRAGMENT";
     private SearchView searchView;
     private RecyclerView restSearchRecycler;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -41,6 +43,7 @@ public class SearchFragment extends Fragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,6 +53,8 @@ public class SearchFragment extends Fragment {
         restSearchRecycler = view.findViewById(R.id.recycler_restsearch);
         searchView.setQuery("",true);
 
+        searchView.setFocusedByDefault(true);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         restSearchRecycler.setLayoutManager(layoutManager);
 
@@ -57,7 +62,7 @@ public class SearchFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                return true;
             }
 
             @Override
@@ -67,8 +72,10 @@ public class SearchFragment extends Fragment {
             }
         });
 
+
         return view;
     }
+
 
 
 
@@ -82,9 +89,12 @@ public class SearchFragment extends Fragment {
 
                     for(DocumentSnapshot documentSnapshot : task.getResult()){
 
-                        if(documentSnapshot.get("nome").toString().toLowerCase().contains(query)){
+                        if(StringStuff.converterString(documentSnapshot.get("nome").toString().toLowerCase(),
+                                StringStuff.RETIRAR_ESPACOS)
+                                .contains(query.toLowerCase())){
 
                             list.add(documentSnapshot.toObject(Restaurant.class));
+                            list.get(list.size() - 1).setID_restaurante(documentSnapshot.getId());
                             Log.d(TAG, "onComplete: ======>" + documentSnapshot.getData().toString());
 
                         }

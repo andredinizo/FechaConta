@@ -56,9 +56,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 activity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frame_fragment, new RestauranteFragment(restaurantList.get(position))).commit();
+                        .replace(R.id.frame_fragment, new RestauranteFragment(restaurantList.get(position)))
+                        .addToBackStack(RestauranteFragment.TAG).commit();
             }
         });
 

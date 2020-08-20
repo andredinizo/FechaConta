@@ -70,7 +70,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
             @Override
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, new CategoriaFragment(list.get(position))).commit();
+                activity.getSupportFragmentManager().beginTransaction().add(R.id.frame_fragment, new CategoriaFragment(list.get(position)))
+                        .addToBackStack(CategoriaFragment.TAG).commit();
                 Log.d(TAG, "onClick: ========> cliclou" );
             }
         });

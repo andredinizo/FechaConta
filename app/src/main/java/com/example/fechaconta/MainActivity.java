@@ -11,15 +11,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.fechaconta.fragments.HomeFragment;
 import com.example.fechaconta.fragments.SearchFragment;
 import com.example.fechaconta.models.Restaurant;
-import com.example.fechaconta.models.WriteDB;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
-
 import java.util.ArrayList;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
