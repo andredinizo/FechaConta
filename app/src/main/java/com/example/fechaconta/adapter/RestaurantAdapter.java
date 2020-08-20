@@ -72,7 +72,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.My
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment,
-                        new RestauranteFragment(list.get(position))).addToBackStack("HOMEFRAGMENT").commit();
+                        new RestauranteFragment(list.get(position))).addToBackStack(RestauranteFragment.TAG).commit();
             }
         });
 

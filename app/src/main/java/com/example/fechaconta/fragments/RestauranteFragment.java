@@ -95,6 +95,7 @@ public class RestauranteFragment extends Fragment {
                     for (DocumentSnapshot document : task.getResult()) {
                         cardapio.add(document.toObject(Dishes.class));
                         cardapio.get(cardapio.size() - 1).setID(document.getId());
+                        cardapio.get(cardapio.size() - 1).setReference(document.getReference());
 
 
                         if (position==0){

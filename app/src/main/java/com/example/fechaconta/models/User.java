@@ -1,5 +1,7 @@
 package com.example.fechaconta.models;
 
+import com.example.fechaconta.interfaces.ModelsInterface;
+
 public class User {
 
     //Atributos
@@ -41,4 +43,6 @@ public class User {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+
 }

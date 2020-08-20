@@ -1,6 +1,11 @@
 package com.example.fechaconta.models;
 
-public class Dishes {
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
+
+public class Dishes{
 
     //Atributos
     private String ID;
@@ -15,8 +20,28 @@ public class Dishes {
     private int numratings;
     private int isHighlight;
     private String urlImagem;
-    //Getters e Setters
+    private DocumentReference reference;
+    private List<Adicionais> adicionals;
 
+
+
+
+    //Getters e Setters
+    public DocumentReference getReference() {
+        return reference;
+    }
+
+    public void setReference(DocumentReference restaurantId) {
+        this.reference = restaurantId;
+    }
+
+    public List<Adicionais> getAdicionals() {
+        return adicionals;
+    }
+
+    public void setAdicionals(List<Adicionais> adicionals) {
+        this.adicionals = adicionals;
+    }
 
     public String getUrlImagem() {
         return urlImagem;
@@ -114,4 +139,6 @@ public class Dishes {
     public void setNumratings(int numratings) {
         this.numratings = numratings;
     }
+
+
 }

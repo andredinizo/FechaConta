@@ -1,5 +1,7 @@
 package com.example.fechaconta.models;
 
+import com.example.fechaconta.interfaces.ModelsInterface;
+
 public class Restaurant {
 
     //Atributos
@@ -107,6 +109,7 @@ public class Restaurant {
     public String getCategoria (){
         return this.categoria;
     }
+
 
 
 }

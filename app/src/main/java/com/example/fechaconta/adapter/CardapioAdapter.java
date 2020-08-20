@@ -1,21 +1,22 @@
 package com.example.fechaconta.adapter;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fechaconta.R;
+import com.example.fechaconta.fragments.ItemsFragment;
 import com.example.fechaconta.models.Dishes;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -25,7 +26,6 @@ import java.util.List;
 public class CardapioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Dishes> pratos;
-    private List<String> Categoria;
 
     public CardapioAdapter(List<Dishes> pratos) {
         this.pratos = pratos;
@@ -60,7 +60,7 @@ public class CardapioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         switch (viewType) {
             case 0:
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.adapter_categorias_cardapio, parent, false);
+                        .inflate(R.layout.adapter_itens_cardapio_categoria, parent, false);
                 return new CategoriaViewHolder(view);
             case 1:
                 view = LayoutInflater.from(parent.getContext())
@@ -116,6 +116,7 @@ public class CardapioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView precoItem;
         TextView descricaoItem;
         ImageView imagemPrato;
+        LinearLayout linearLayoutItem;
 
         public CategoriaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -125,13 +126,24 @@ public class CardapioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             precoItem = itemView.findViewById(R.id.textView_precoItem);
             descricaoItem = itemView.findViewById(R.id.textView_descricaoItem);
             imagemPrato = itemView.findViewById(R.id.categorias_imagemPratos);
+            linearLayoutItem = itemView.findViewById(R.id.linearlayout_item);
         }
 
-        public void setViews(Dishes dishes) {
+        public void setViews(final Dishes dishes) {
             this.categoria.setText(dishes.getCategory());
             this.nomeItem.setText(dishes.getName());
             this.precoItem.setText("R$ " + String.valueOf(dishes.getValue()));
             this.descricaoItem.setText(dishes.getDescription());
+
+            this.linearLayoutItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    activity.getSupportFragmentManager().beginTransaction()
+                            .add(R.id.frame_fragment, new ItemsFragment(dishes))
+                            .addToBackStack(ItemsFragment.TAG).commit();
+                }
+            });
 
 
         }
@@ -143,12 +155,16 @@ public class CardapioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView precoItem;
         TextView descricaoItem;
         ImageView imagemPrato;
+        LinearLayout linearLayoutItem;
+
         public PratosViewHolder(@NonNull View itemView) {
             super(itemView);
+
             nomeItem = itemView.findViewById(R.id.textView_nomeItem);
             precoItem = itemView.findViewById(R.id.textView_precoItem);
             descricaoItem = itemView.findViewById(R.id.textView_descricaoItem);
             imagemPrato = itemView.findViewById(R.id.categorias_imagemPratos);
+            linearLayoutItem = itemView.findViewById(R.id.linearlayout_item);
         }
 
         public void setViews(Dishes dishes) {

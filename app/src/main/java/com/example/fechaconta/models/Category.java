@@ -1,5 +1,7 @@
 package com.example.fechaconta.models;
 
+import com.example.fechaconta.interfaces.ModelsInterface;
+
 public class Category {
 
     private String name;
@@ -20,4 +22,6 @@ public class Category {
     public void setName(String name) {
         this.name = name;
     }
+
+
 }

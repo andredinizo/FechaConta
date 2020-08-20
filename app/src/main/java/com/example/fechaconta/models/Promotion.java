@@ -1,5 +1,7 @@
 package com.example.fechaconta.models;
 
+import com.example.fechaconta.interfaces.ModelsInterface;
+
 public class Promotion {
 
     //Atributos
@@ -33,4 +35,6 @@ public class Promotion {
     public void setUrl(String url) {
         this.url = url;
     }
+
+
 }
