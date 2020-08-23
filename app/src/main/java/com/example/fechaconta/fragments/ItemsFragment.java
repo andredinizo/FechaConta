@@ -77,17 +77,205 @@ public class ItemsFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         recyclerViewItems.setLayoutManager(layoutManager);
 
-        //Recupera os Adicionais do Banco de Dados
-        buscaItems();
-
+        //Recupera os Adicionais do Banco de Dados.
+        buscaAdicionais();
 
         return view;
     }
 
 
 
+    /**
+     * @Soneca
+     *  Passa por cada item da Lista de ADICIONAIS
+     *  e recupera os ADICIONAL's por meio do get() e
+     *  seta o Tipo de Adicional e etc... Dentro de cada
+     *  Snapshot verificamos se as listas estão completas
+     *  e se sim chamamos o metodo @configurarAdapter()...
+     *
+     * @collectionGroup() : Retorna todos os documentos
+     * de todas as coleções que tem o mesmo ID.
+     *
+     * * Não usei o Collection Group, pois ele recupera todos as coleçoes com
+     *   mesmo ID desde da RAIZ ou seja recuperaria de dodos os pratos e restaurantes.
+     *
+     *  -> Verificamos se a lista está completa, garantindo que o metodo @configurarAdapter()
+     *     seja chamdo apenas quando, o ultimo item de @param listAd for o mesmo que o o
+     *     adicional do nosso for, ou seja se estamos no ultimo item da lista, em seguida
+     *     verificamos por meio de um contador se estamos no ultimo item do nosso TASK. se sim
+     *     Atualizamos a UI.
+     *
+     */
+    private void buscaAdicional(final List<Adicionais> listAd) {
+
+        final List<Adicional> listItem = new ArrayList<Adicional>();
+
+        for (final Adicionais adicionais : listAd) {
+
+
+            adicionais.getReference().collection("Adicional").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                    if (task.isSuccessful()) {
+
+                        // Contador para saber quando é o
+                        // ultimo ADICIONAL do respectivo ADICIONAIS.
+                        int contador = 1; // 1 pois queremos comparar com
+                        // o tamanho do nosso @task.getResult().
+
+                        for (DocumentSnapshot document : task.getResult()) {
+
+                            //Setamos os atributos do ADICIONAL
+                            Adicional adicional = document.toObject(Adicional.class);
+                            adicional.setReference(document.getReference());
+                            adicional.setNomeItem(document.getId());
+                            adicional.setNomeAd(adicionais.getNomeAd());
+                            adicional.setTipoAd(adicionais.getTipoAd());
+                            adicional.setLimite(adicionais.getLimite());
+                            listItem.add(adicional);
+
+                            //Acrescenta nosso contador.
+                            //Respectivo ao indice que estamos.
+                            contador++;
+
+                            // Para garantir que o adapter sera chamado
+                            // apenas no ultimo Snapshot do ultimo item de
+                            // @listAd, seguimos com :
+                            if (listAd.get(listAd.size() -1).getNomeAd().equals(adicionais.getNomeAd())){   // Se estivermos no ultimo ADICIONAIS
+
+                                Log.d(TAG, "onComplete: ULTIMOS ADICIONAIS ==================> " + adicionais.getNomeAd());
+
+                                if(contador == task.getResult().size()){     // e no ultimo ADICIONAL
+
+                                    Log.d(TAG, "onComplete: ULTIMO ADICIONAL --------------------> " + adicional.getNomeItem() );
+
+                                    configurarAdapter(listAd, listItem);            // Configuramos nosso Adapter
+
+                                }
+                                else{
+                                    Log.d(TAG, "onComplete: ADCIONAL >>>>>> " + adicional.getNomeItem());
+                                }
+
+                            }
+                            else{
+                                Log.d(TAG, "onComplete: ADICIONAL >>>>> " + document.getData().toString());
+                            }
+
+                        }
+
+                    }
+                    else {
+                        Log.d(TAG, "onComplete: Falha ao Carregar os Documentos ADIOCIONAL");
+
+                    }
+                }
+            });
+
+        }
+    }
 
     /**
+     * Atualiza a UI, setando os
+     * adapters e etc...
+     *
+     */
+    private void configurarAdapter(List<Adicionais> listAd, List<Adicional> listItem) {
+
+        recyclerViewItems.setAdapter(new AdicionaisAdapter(listItem));
+
+    }
+
+    /**
+     * Percorre por cada Documento de Adicionais e salva em uma lista de
+     * adicionais, onde adiciona a cada objeto da lista sua referencia no
+     * Firestore, depois chama @buscaAdicional()...
+     */
+    private void buscaAdicionais() {
+        dishes.getReference().collection("Adicionais").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                if (task.isSuccessful()) {
+
+                    List<Adicionais> listAd = new ArrayList<>();
+
+                    for (DocumentSnapshot document : task.getResult()) {
+
+                        //Setamos os atributos do ADICIONAIS.
+                        listAd.add(document.toObject(Adicionais.class));
+                        listAd.get(listAd.size() - 1).setReference(document.getReference());
+                        listAd.get(listAd.size() - 1).setNomeAd(document.getId());
+
+                    }
+
+                    buscaAdicional(listAd);
+
+                } else {
+
+                }
+
+            }
+        });
+
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Codigo 1.0
+    // Retornava pra de todos os pratos.
+    /*   /**
      * @Soneca
      * Recupera os Items por meio do @collectionGroup
      * e seta o Tipo de Adicional dentro de cada Snapshot
@@ -95,11 +283,15 @@ public class ItemsFragment extends Fragment {
      * ou seja volta pro documento de Adicionais, e seta o nosso item
      * com suas caracteristicas.
      *
+     * @collectionGroup() : Retorna todos os documentos de todas as
+     * coleções que tem o mesmo ID.
+     *
      *  -> Depois chamamos o Recycler e setamos o Adapter, e garantimos
      *    que não vamos chamalo mais de uma vez, verificando se o numero
      *    de item na lista equivale ao de resultados.
-     */
+     *//*
     private void buscaItems() {
+
 
         FirebaseFirestore.getInstance().collectionGroup("Adicional").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -176,7 +368,7 @@ public class ItemsFragment extends Fragment {
     }
 
 
-}
+}*/
 
 
 
@@ -203,109 +395,7 @@ public class ItemsFragment extends Fragment {
 
 
 
-/*    public void contador (){
-        contador++;
-    }
 
-    *//**
-     * Percorre porcada Tipo de Adicional e resgata no Firestore
-     * os documentos de cada Tipo, e salva em uma lista de items,
-     * e no final de cada busca, quando task.isSuccessful acresentamos
-     * nosso @contador, e notificamos nosso
-     * @Observador, com o metodo
-     * @setGatilho(true) que verifica se o
-     * @contador bateu o total de Tipos de Adicionais, ou seja,
-     * se todos os items foram recuperados,
-     * se sim ele atualiza atualiza a UI chamando o metodo
-     * @configurarAdapter(listAd,listItem)...
-     *
-     * @param listAd
-     *//*
-    private void buscaAdicional (final List<Adicionais> listAd){
-        final List <Adicional> listItem = new ArrayList<Adicional>();
-
-        final MyListener myListener = new MyListener();
-        myListener.adicionarObservador(new Observador() {
-            @Override
-            public void notificar(MyListener myListener) {
-                if (contador == listAd.size()){
-                    //Configura o Adapter
-                    configurarAdapter(listAd, listItem);
-                    myListener.removerObservadore(this);
-
-                }else{
-                    Log.d(TAG, "Carregou a Lista: " + contador + " --- > " + listAd.get(contador));
-                }
-
-            }
-        });
-
-        for (final Adicionais adicionais : listAd){
-
-
-            adicionais.getReference().collection("Adicional").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()){
-                        for( DocumentSnapshot document : task.getResult()){
-                            listItem.add(document.toObject(Adicional.class));
-                            listItem.get(listItem.size() -1).setReference(document.getReference());
-                            listItem.get(listItem.size() -1).setNomeItem(document.getId());
-                            listItem.get(listItem.size() -1).setNomeAd(adicionais.getNomeAd());
-                            listItem.get(listItem.size() -1).setTipoAd(adicionais.getTipoAd());
-                            listItem.get(listItem.size() -1).setLimite(adicionais.getLimite());
-                        }
-
-                        contador();
-                        myListener.setGatilho(true);
-                    }
-                    else{
-
-                    }
-                }
-            });
-
-        }
-    }
-
-    *//**
-     * Atualiza a UI, setando os
-     * adapters e etc...
-     * @param listAd
-     * @param listItem
-     *//*
-    private void configurarAdapter(List<Adicionais> listAd, List<Adicional> listItem) {
-        recyclerViewItems.setAdapter(new AdicionaisAdapter(listItem));
-    }
-
-    *//**
-     * Percorre por cada Documento de Adicionais e salva em uma lista de
-     * adicionais, onde adiciona a cada objeto da lista sua referencia no
-     * Firestore, depois chama @buscaAdicional()...
-     *//*
-    private void buscaAdicionais (){
-        dishes.getReference().collection("Adicionais").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    List <Adicionais> listAd = new ArrayList<>();
-                    for (DocumentSnapshot document : task.getResult()){
-                        listAd.add(document.toObject(Adicionais.class));
-                        listAd.get(listAd.size() -1).setReference(document.getReference());
-                        listAd.get(listAd.size() -1).setNomeAd(document.getId());
-                    }
-
-                    buscaAdicional(listAd);
-
-                }
-                else{
-
-                }
-
-            }
-        });
-
-    }*/
 
 
 
