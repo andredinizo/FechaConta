@@ -21,29 +21,68 @@ import com.google.firebase.firestore.DocumentReference;
  */
 public class Adicional extends Adicionais {
 
+    /**
+     * MUDAR @isGratis NOS PORXIMOS TEXTES
+     * DEIXEI ASSIM SÓ PRA NÃO TER O TRAMPO
+     * DE REESCREVER NO BANCO DE DADOS. MAS
+     * DEVE FICAR ALGO ASSIM:
+     *
+     * => Variaveis no Firestore: ====> Exemplo:
+     * @nomeItem : nome do item. -----> Baccon
+     * @valorItem : valor do item. ---> 0.00 ou 5.00
+     * @gratis : se é gratis ou não. -> true ou false
+     *
+     * => Variaveis apenas do Ambiente:
+     * @include : determina se o
+     * item vai ser contado ou não.
+     * @reference : referencia do
+     * documento, torna bem mais
+     * facil de dar Query depois.
+     *
+     */
+
+    //FireStore:
     private String  nomeItem;
     private float   valorItem;
     private boolean isGratis;
-    private boolean include;
 
+    //Ambiente:
+    private boolean include;
     private DocumentReference reference;
 
-
-
-
-    public Adicional(String tipoAdicional) {
-        super(tipoAdicional);
-    }
-
+    //Construtores
+    /**
+     * Costrutor Vazio!
+     * Usado para dar QUERY.
+     */
     public Adicional (){
 
     }
 
+    /**
+     * Recomendado para Instanciar o Objeto.
+     *
+     * Construtor com os Parametros:
+     *
+     * Parametros:      Firestore:
+     * @param nomeItem  getId().
+     * @param valorItem valorItem.
+     * @param isGratis    isGratis.
+     * @param reference getReference()
+     */
+    public Adicional(String nomeItem, float valorItem, boolean isGratis, DocumentReference reference) {
+        this.nomeItem = nomeItem;
+        this.valorItem = valorItem;
+        this.isGratis = isGratis;
+        this.reference = reference;
+    }
+
+    // GettersAndSetters
     public String getNomeItem() {
         return nomeItem;
     }
-
     public void setNomeItem(String nomeItem) {
+
         this.nomeItem = nomeItem;
     }
 
@@ -55,12 +94,12 @@ public class Adicional extends Adicionais {
         this.valorItem = valorItem;
     }
 
-    public boolean isGratis() {
+    public boolean isIsGratis() {
         return isGratis;
     }
 
-    public void setGratis(boolean gratis) {
-        isGratis = gratis;
+    public void setIsGratis(boolean isGratis) {
+        this.isGratis = isGratis;
     }
 
     public boolean isInclude() {

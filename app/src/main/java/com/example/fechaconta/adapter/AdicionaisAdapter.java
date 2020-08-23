@@ -36,7 +36,7 @@ public class AdicionaisAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemViewType(int position) {
         if(position == 0) {
-            if (adicionals.get(position).isGratis())
+            if (adicionals.get(position).isIsGratis())
                 return 2; //Se for o Primeiro for Gratis
                 //retorna Cabeçalho sem Preço.
             else
@@ -45,7 +45,7 @@ public class AdicionaisAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }else
             if(adicionals.get(position).getNomeAd().equals(adicionals.get(position - 1).getNomeAd())) {
                 // ========================> É Corpo
-                if (adicionals.get(position).isGratis())
+                if (adicionals.get(position).isIsGratis())
                     // ====================> Corpo sem Preço
                     return 3;
                 else
@@ -53,7 +53,7 @@ public class AdicionaisAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     return 1;
             }else {
                 // ==============> É Cabeçalho
-                if(adicionals.get(position).isGratis())
+                if(adicionals.get(position).isIsGratis())
                     // ==========> Cabeçalho sem Preço
                     return 2;
                 else

@@ -24,6 +24,7 @@ import com.example.fechaconta.models.Adicional;
 import com.example.fechaconta.models.Dishes;
 import com.example.fechaconta.utilitys.MyListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -83,55 +84,91 @@ public class ItemsFragment extends Fragment {
         return view;
     }
 
+
+
+
     /**
+     * @Soneca
      * Recupera os Items por meio do @collectionGroup
      * e seta o Tipo de Adicional dentro de cada Snapshot
      * buscando o getParent().getParent da referência do item,
      * ou seja volta pro documento de Adicionais, e seta o nosso item
      * com suas caracteristicas.
-     *  Depois chamamos o Recycler fora mesmo, da ultima task
+     *
+     *  -> Depois chamamos o Recycler e setamos o Adapter, e garantimos
+     *    que não vamos chamalo mais de uma vez, verificando se o numero
+     *    de item na lista equivale ao de resultados.
      */
     private void buscaItems() {
 
         FirebaseFirestore.getInstance().collectionGroup("Adicional").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onComplete(@NonNull final Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
 
                     final List<Adicional> listItem = new ArrayList<>();
-                    MyListener myListener0 = new MyListener();
+                    final List<Adicionais> listAdicionais = new ArrayList<>();
 
+                    for(final DocumentSnapshot documentSnapshot : task.getResult()){
 
-                    for(DocumentSnapshot documentSnapshot : task.getResult()){
-                        listItem.add(documentSnapshot.toObject(Adicional.class));
-                        listItem.get(listItem.size() - 1).setNomeItem(documentSnapshot.getId());
-                        listItem.get(listItem.size() - 1).setReference(documentSnapshot.getReference());
-                        listItem.get(listItem.size() - 1).setNomeAd(documentSnapshot.getReference().getParent().getParent().getId());
+                        Adicional adicional = documentSnapshot.toObject(Adicional.class);
 
-                        final MyListener myListener1 = new MyListener();
+                        // Garantimos que adicional != null, @Warning
+                        if (adicional != null) {
+                            adicional.setNomeItem(documentSnapshot.getId());
+                            adicional.setReference(documentSnapshot.getReference());
+                            adicional.setNomeAd(documentSnapshot.getReference().getParent().getParent().getId());
+                            listItem.add(adicional);
+                        }
+
+                        // Verificação:
+                        Log.d(TAG, "onComplete: ADICIONADO A LISTA: " + documentSnapshot.getData().toString());
+                        Log.d(TAG, "onComplete: LISTA ============> " + listItem.get(listItem.size() -1).isIsGratis());
+
+                        // Vamos resgatar os Atributos Mãe do nosso objeto, ou seja as
+                        //as variaveis referente ao tipo de adicional, para isso, voltamos
+                        //até o ducumento de ADICIONAIS, e resgatamos os dados.
                         documentSnapshot.getReference().getParent().getParent().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                Adicionais adicionais = documentSnapshot.toObject(Adicionais.class);
+                            public void onSuccess(DocumentSnapshot document) {
+
+                                // Setamos os dados Resgatados ao Coleção PAI.
+                                Adicionais adicionais = document.toObject(Adicionais.class);
+                                listAdicionais.add(adicionais);
                                 listItem.get(listItem.size() -1).setTipoAd(adicionais.getTipoAd());
                                 listItem.get(listItem.size() -1).setLimite(adicionais.getLimite());
-                                myListener1.setGatilho(true);
+
+
+                                //  Verificaremos se esse é o ultimo documento, e Atualizamos
+                                // a UI, assim garantimos que não chamaremos o adapter mais de
+                                // uma vez.
+                                if(listAdicionais.size() == task.getResult().size()){                     // Se o tamanho da nossa lista for o mesmo
+                                    recyclerViewItems.setAdapter(new AdicionaisAdapter(listItem));  //do numero de resultados da TASK esse é o
+                                    // ultimo item da lista de items.
+                                    // Então podemos chamar o adapter.
+
+                                    Log.d(TAG, "onSuccess: ULTIMO ITEM ===> Adicionais: " + document.getId());
+
+                                }else
+
+                                    Log.d(TAG, "onSuccess: ADICIONAIS: " + document.getData().toString());
 
                             }
-                        });
-
-                        myListener1.adicionarObservador(new Observador() {
+                        }).addOnFailureListener(new OnFailureListener() {
                             @Override
-                            public void notificar(MyListener myListener) {
+                            public void onFailure(@NonNull Exception e) {
+
+                                Log.d(TAG, "onFailure: Falha ao recuperar TIPO DE ADICIONAL!!! ===> " + documentSnapshot.getId());
 
                             }
                         });
+
 
                     }
 
-
-                    recyclerViewItems.setAdapter(new AdicionaisAdapter(listItem));
-
+                }
+                else {
+                    Log.d(TAG, "onComplete: Falha ao Resgatar! ");
                 }
             }
         });
