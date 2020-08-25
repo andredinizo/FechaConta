@@ -29,10 +29,10 @@ import com.google.firebase.firestore.DocumentReference;
  * do usuario quando aos adicionais dessa
  * Coleção, como se Pode selhesonar mais
  * de um item ou não, se sim até quantos e etc...
- *
- * Tipo 0 ===> Pode escolher quantos quiser.
- * Tipo 1 ===> Pode escolher apenas uma das opções.
- * Tipo 2 ===> Pode escolher um numero limitado de itens.
+ *                                                          SuperTipo de ViewHolder:
+ * Tipo 0 ===> Pode escolher quantos quiser.                (CheckBox)
+ * Tipo 1 ===> Pode escolher apenas uma das opções.         (RadioButton)
+ * Tipo 2 ===> Pode escolher um numero limitado de itens.   (CheckBox)
  *
  *
  */
@@ -103,4 +103,8 @@ public class Adicionais {
     public void setNomeAd(String nomeAd) {
         this.nomeAd = nomeAd;
     }
+
+
+
+
 }
