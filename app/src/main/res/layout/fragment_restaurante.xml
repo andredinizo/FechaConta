@@ -2,10 +2,10 @@
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:background="#FBFBFB"
     android:id="@+id/CoordinatorCardapio"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FBFBFB"
 
     >
 
@@ -14,16 +14,17 @@
         android:id="@+id/appBarCardapio"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:background="#FFFFFF"
-        >
+        android:background="#FFFFFF">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
 
             android:id="@+id/colapse_cardapio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:contentScrim="@color/verdePrimario"
             app:collapsedTitleGravity="start"
             app:collapsedTitleTextAppearance="@style/AppBar"
+
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:scrimAnimationDuration="200"
@@ -65,9 +66,9 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/tablayout"
-        android:animateLayoutChanges="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:visibility="gone"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         app:layout_insetEdge="top">
@@ -76,14 +77,14 @@
             android:id="@+id/TabCategorias"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="enterAlwaysCollapsed"
+            android:background="@color/verdePrimario"
             android:scrollbars="horizontal"
+            app:layout_scrollFlags="enterAlwaysCollapsed"
             app:tabGravity="fill"
-            app:tabMode="scrollable"
-            android:background="#FFFFFF"
-            app:tabSelectedTextColor="@color/Cor2"
             app:tabIndicatorColor="@color/Cor2"
-            >
+            app:tabMode="scrollable"
+            app:tabTextColor="#CBD8CC"
+            app:tabSelectedTextColor="#FFFFFF">
 
 
         </com.google.android.material.tabs.TabLayout>
@@ -96,10 +97,10 @@
         android:id="@+id/ScrollCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_anchor="@id/appBarCardapio"
-        app:layout_anchorGravity="bottom"
         android:orientation="vertical"
         app:behavior_overlapTop="80dp"
+        app:layout_anchor="@id/appBarCardapio"
+        app:layout_anchorGravity="bottom"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -112,6 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                app:cardBackgroundColor="#FFFFFF"
                 android:layout_marginEnd="16dp"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="4dp">
@@ -185,7 +187,7 @@
                             android:id="@+id/restaurant_distancia"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-
+                            android:drawableTint="@color/verdePrimario"
                             android:layout_weight="0.25"
                             android:drawableTop="@drawable/ic_restaurante_location"
                             android:text="12km"
@@ -204,7 +206,7 @@
                         android:textAlignment="center"
                         android:textSize="12sp"
                         android:theme="@style/Widget.MaterialComponents.Button"
-                        app:backgroundTint="#F35454"
+                        app:backgroundTint="@color/verdePrimario"
                         app:icon="@drawable/ic_restaurante_location"
                         app:iconSize="20dp" />
 
@@ -215,27 +217,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="Destaques"
                 android:fontFamily="@font/overpass"
+                android:text="Destaques"
                 android:textAllCaps="true"
                 android:textColor="@color/Cor2"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_destaques"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/recycler_destaques"
-                android:paddingBottom="16dp"/>
+                android:paddingBottom="16dp" />
 
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/recyclerdishes"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_pratos"

@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.MenuPresenter;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
@@ -163,6 +166,8 @@ public class RestauranteFragment extends Fragment {
     }
 
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -179,8 +184,6 @@ public class RestauranteFragment extends Fragment {
         toolbarRestaurante = view.findViewById(R.id.toolbar_restaurante);
         coordinatorLayout = view.findViewById(R.id.CoordinatorCardapio);
 
-        MainActivity mainRestaurante = (MainActivity) getActivity();
-        mainRestaurante.SetFitsWindows(false);
 
 
         toolbarRestaurante.setNavigationOnClickListener(new View.OnClickListener() {
@@ -236,13 +239,19 @@ public class RestauranteFragment extends Fragment {
         final Toolbar materialToolbar;
         final CollapsingToolbarLayout CollapsingToolbar;
 
+
+
+
         CollapsingToolbar = view.findViewById(R.id.colapse_cardapio);
         materialToolbar = view.findViewById(R.id.toolbar_cardapio);
         tablayout = view.findViewById(R.id.tablayout);
-        CollapsingToolbar.setContentScrimColor(Color.WHITE);
+        CollapsingToolbar.setContentScrimColor(getResources().getColor(R.color.verdePrimario,null));
         CollapsingToolbar.setStatusBarScrimColor(Color.WHITE);
         CollapsingToolbar.setTitleEnabled(true);
         appBar = view.findViewById(R.id.appBarCardapio);
+
+
+
 
         appBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = true;
@@ -258,6 +267,7 @@ public class RestauranteFragment extends Fragment {
                 if (scrollRange + verticalOffset == 0) {
                     CollapsingToolbar.setTitle(restaurant.getNome());
                     tablayout.setVisibility(View.VISIBLE);
+
                     isShow = true;
                 } else if (isShow) {
                     CollapsingToolbar.setTitle(" ");//careful there should a space between double quote otherwise it wont work

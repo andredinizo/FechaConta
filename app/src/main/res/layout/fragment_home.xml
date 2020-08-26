@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Cor1"
-    android:fitsSystemWindows="true"
+
     >
 
 
@@ -16,10 +16,10 @@
         android:id="@+id/headerlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/Cor1"
+        android:background="@color/verdePrimario"
         android:fitsSystemWindows="true"
         android:orientation="vertical"
-        app:elevation="0dp">
+        app:elevation="4dp">
 
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -37,11 +37,12 @@
                 app:layout_scrollFlags="scroll|enterAlways">
 
                 <LinearLayout
-                    android:fitsSystemWindows="true"
+
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
+                    android:paddingTop="16dp"
                     android:orientation="horizontal">
 
 
@@ -57,7 +58,7 @@
                         android:gravity="center_vertical"
                         android:maxWidth="300dp"
                         android:text="R. Alfredo Lopes, 1310"
-                        android:textColor="#494949"
+                        android:textColor="#FFFFFF"
                         android:textSize="20sp" />
 
                     <LinearLayout
@@ -115,17 +116,22 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipehome"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:layout_anchorGravity="bottom"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/headerlayout"
+            app:layout_anchorGravity="bottom"
+            android:clipChildren="false"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipehome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                >
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/nested"
@@ -203,6 +209,7 @@
                 </LinearLayout>
 
             </androidx.core.widget.NestedScrollView>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
         </LinearLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

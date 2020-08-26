@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         mainLayout = findViewById(R.id.MainLayout);
         mainLayout.setFitsSystemWindows(flag);
 
+
     }
 
 

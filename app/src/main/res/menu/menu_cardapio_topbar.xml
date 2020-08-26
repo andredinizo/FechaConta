@@ -1,10 +1,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    >
 
     <item
-        android:id="@+id/perfil"
+        android:id="@+id/favorito"
         android:icon="@drawable/ic_favorito"
         android:title="@string/perfil"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search_searchbar"
+        android:title="@string/perfil"
+        android:visible="false"
         app:showAsAction="always" />
 
 

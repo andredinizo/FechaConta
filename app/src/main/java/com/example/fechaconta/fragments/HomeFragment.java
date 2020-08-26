@@ -210,12 +210,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 float offsetAlpha = (appBarLayout.getY() / appBarLayout.getTotalScrollRange());
-               // toolbar.setAlpha(1 - (offsetAlpha * -1));
-                //appbar.setAlpha(1 - (offsetAlpha * -1));
+                // toolbar.setAlpha(1 - (offsetAlpha * -1));
+               // appbar.setAlpha(1 - (offsetAlpha * -1));
 
                 Log.d(TAG, "onOffsetChanged: "+ offsetAlpha);
 
-                //appbar.setBackgroundColor(Color.argb(1 - (offsetAlpha * -1), (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10));
+                appbar.setBackgroundColor(Color.argb(1 - ((offsetAlpha * -0.8f)), 82/255.0f, 112/255.0f,79/255.0f));
+                //appbar.setBackgroundColor(Color.argb(0, 82, 112,79));
               // appbar.setBackgroundColor(Color.argb(1, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10));
 
             }

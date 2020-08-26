@@ -6,13 +6,15 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
+
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardCornerRadius="15dp" >
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="15dp"
+        >
 
         <ImageView
             android:id="@+id/categorias_imagemPratos"
@@ -27,20 +29,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="16dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView_nomeItem"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.18"
+            android:layout_weight="0.2"
             android:fontFamily="@font/overpass"
             android:text="Sucos"
-            android:textAllCaps="true"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -48,13 +49,13 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
-            android:layout_weight="0.42"
-            android:maxLines="2"
-            android:textColor="@color/CorAppBar"
+            android:layout_weight="0.2"
             android:ellipsize="end"
             android:fontFamily="@font/overpass_light"
+            android:maxLines="1"
             android:text="Suco natural, feito na hora!"
-            android:textSize="14sp" />
+            android:textColor="@color/CorAppBar"
+            android:textSize="12sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,10 +64,10 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_gravity="bottom"
                 android:id="@+id/textView_precoItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:text="R$ 7,00"
                 android:textColor="#4FD640"
 
@@ -75,6 +76,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>

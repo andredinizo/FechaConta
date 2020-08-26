@@ -10,17 +10,17 @@
     </style>
 
     <style name="HomeFragment" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@color/verdeStatusBar</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
 
     </style>
 
 
     <style name="AppBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/CorAppBar</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
 

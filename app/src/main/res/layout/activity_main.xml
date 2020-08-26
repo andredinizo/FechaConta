@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/MainLayout"
-
     tools:context=".MainActivity">
 
     <FrameLayout
@@ -32,7 +31,7 @@
 
                 app:maxImageSize="35dp"
                 app:iconTint="#FFFFFF"
-                app:backgroundTint="#F35454"
+                app:backgroundTint="@color/verdePrimario"
                 app:elevation="4dp"
                 app:icon="@drawable/qrcode"
                 android:text="Check-in"
