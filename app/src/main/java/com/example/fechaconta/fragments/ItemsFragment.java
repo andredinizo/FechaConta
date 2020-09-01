@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -52,7 +53,6 @@ public class ItemsFragment extends Fragment {
     private ImageView imageViewItem;
     private RecyclerView recyclerViewItems;
 
-
     public ItemsFragment(Dishes dishes) {
         this.dishes = dishes;
     }
@@ -61,7 +61,6 @@ public class ItemsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item, container, false);
-
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
 
         textViewItem = view.findViewById(R.id.textview_item);
@@ -108,10 +107,10 @@ public class ItemsFragment extends Fragment {
      */
     private void buscaAdicional(final List<Adicionais> listAd) {
 
-        final List<Adicional> listItem = new ArrayList<Adicional>();
 
         for (final Adicionais adicionais : listAd) {
 
+            final List<Adicional> listItem = new ArrayList<Adicional>();
 
             adicionais.getReference().collection("Adicional").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -142,25 +141,31 @@ public class ItemsFragment extends Fragment {
                             // Para garantir que o adapter sera chamado
                             // apenas no ultimo Snapshot do ultimo item de
                             // @listAd, seguimos com :
-                            if (listAd.get(listAd.size() -1).getNomeAd().equals(adicionais.getNomeAd())){   // Se estivermos no ultimo ADICIONAIS
 
-                                Log.d(TAG, "onComplete: ULTIMOS ADICIONAIS ==================> " + adicionais.getNomeAd());
+                            if(contador == task.getResult().size()){     // no ultimo ADICIONAL
 
-                                if(contador == task.getResult().size()){     // e no ultimo ADICIONAL
+                                Log.d(TAG, "onComplete: ULTIMO ADICIONAL --------------------> " + adicional.getNomeItem() );
+                                // aqui setamos nossa lista na lista de ADICIONAIS.
+                                // Assim todo ultiomo adicional colocamos a nossa lita na @ListaAd
+                                listAd.get(listAd.indexOf(adicionais)).setAdicionals(listItem);
 
-                                    Log.d(TAG, "onComplete: ULTIMO ADICIONAL --------------------> " + adicional.getNomeItem() );
+                                if (listAd.get(listAd.size() -1).getNomeAd().equals(adicionais.getNomeAd())){   // Se estivermos no ultimo ADICIONAIS
+
+                                    Log.d(TAG, "onComplete: ULTIMOS ADICIONAIS ==================> " + adicionais.getNomeAd());
 
                                     configurarAdapter(listAd, listItem);            // Configuramos nosso Adapter
 
+
                                 }
                                 else{
-                                    Log.d(TAG, "onComplete: ADCIONAL >>>>>> " + adicional.getNomeItem());
+                                    Log.d(TAG, "onComplete: ADICIONAL >>>>> " + document.getData().toString());
                                 }
 
                             }
                             else{
-                                Log.d(TAG, "onComplete: ADICIONAL >>>>> " + document.getData().toString());
+                                Log.d(TAG, "onComplete: ADCIONAL >>>>>> " + adicional.getNomeItem());
                             }
+
 
                         }
 
@@ -172,6 +177,8 @@ public class ItemsFragment extends Fragment {
                 }
             });
 
+
+
         }
     }
 
@@ -182,7 +189,7 @@ public class ItemsFragment extends Fragment {
      */
     private void configurarAdapter(List<Adicionais> listAd, List<Adicional> listItem) {
 
-        recyclerViewItems.setAdapter(new AdicionaisAdapter(listItem));
+        recyclerViewItems.setAdapter(new AdicionaisAdapter(listAd));
 
     }
 

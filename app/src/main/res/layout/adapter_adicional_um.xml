@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     >
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,8 +26,14 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <include layout="@layout/adapter_item_novalue_radio"/>
-
+    <RadioGroup
+        android:id="@+id/radiogroup_adicional"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:paddingTop="4dp"
+        android:orientation="vertical"/>
 
 
 </LinearLayout>

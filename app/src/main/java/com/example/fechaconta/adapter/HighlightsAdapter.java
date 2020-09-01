@@ -1,6 +1,7 @@
 package com.example.fechaconta.adapter;
 
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,12 +62,10 @@ public class HighlightsAdapter extends RecyclerView.Adapter<HighlightsAdapter.My
         holder.nomePrato.setText(cardapio.get(position).getName());
         holder.descPrato.setText(cardapio.get(position).getDescription());
         holder.valorPrato.setText("R$ " +String.format(cardapio.get(position).getValue().toString()));
-
-        if (position==0){
-            holder.LinearLayoutHighlights.setPadding(16,8,0,8);
+        if(Build.VERSION.SDK_INT > 25) if (position==0) holder.LinearLayoutHighlights.setPadding(16, 8, 0, 8);
+        else {
 
         }
-
     }
 
     @Override
@@ -74,7 +73,7 @@ public class HighlightsAdapter extends RecyclerView.Adapter<HighlightsAdapter.My
         return this.listsize;
     }
 
-    class MyHighlights extends RecyclerView.ViewHolder{
+    public class MyHighlights extends RecyclerView.ViewHolder{
         
         ImageView imagemPrato;
         TextView nomePrato;

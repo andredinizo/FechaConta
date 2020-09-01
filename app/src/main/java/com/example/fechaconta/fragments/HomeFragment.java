@@ -214,10 +214,14 @@ public class HomeFragment extends Fragment {
                // appbar.setAlpha(1 - (offsetAlpha * -1));
 
                 Log.d(TAG, "onOffsetChanged: "+ offsetAlpha);
+                if (Build.VERSION.SDK_INT >= 26) {
+                    appbar.setBackgroundColor(Color.argb(1 - ((offsetAlpha * -0.8f)), 82/255.0f, 112/255.0f,79/255.0f));
+                    //appbar.setBackgroundColor(Color.argb(0, 82, 112,79));
+                    // appbar.setBackgroundColor(Color.argb(1, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10));
 
-                appbar.setBackgroundColor(Color.argb(1 - ((offsetAlpha * -0.8f)), 82/255.0f, 112/255.0f,79/255.0f));
-                //appbar.setBackgroundColor(Color.argb(0, 82, 112,79));
-              // appbar.setBackgroundColor(Color.argb(1, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10, (232 / 255.0F) + (offsetAlpha) / 10));
+                }else {
+                    appbar.setBackgroundColor(1);
+                }
 
             }
         });

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_top_adicional"></dimen>
+    <dimen name="margin_botton_adicional"></dimen>
+    <dimen name="margin_start_adicional">6dp</dimen>
+    <dimen name="margin_end_adicional"></dimen>
+</resources>
