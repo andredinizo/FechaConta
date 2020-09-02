@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,6 +22,9 @@ import com.example.fechaconta.utilitys.PxDp;
 import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.util.List;
+
+import static android.view.ViewGroup.*;
+import static android.view.ViewGroup.LayoutParams.*;
 
 public class AdicionaisAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -61,47 +62,34 @@ public class AdicionaisAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         View view;
 
-        switch (viewType) {
 
-            case 0 :
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.adapter_adicionail_zero, parent, false);
-                return new ZeroViewHolder(view);
-
-            case 1 :
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.adapter_adicional_um, parent, false);
-                return new UmViewHolder(view);
-        }
+        view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.adapter_adicionail_zero_um, parent, false);
+        return new ZeroUmViewHolder(view);
 
 
-        return null;
+
+
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
 
-        switch (getItemViewType(position)){
 
-            case 0 :
 
-                ((ZeroViewHolder) holder)
-                        .setView(adicionais.get(position),
-                                adicionais.get(position).getNomeAd());
-                break;
-
-            case 1 :
-
-                ((UmViewHolder) holder)
-                        .setView(adicionais.get(position),
-                        adicionais.get(position).getNomeAd());
-                break;
-        }
+        ((ZeroUmViewHolder) holder).setView(adicionais.get(position), getUltimo(position), getItemViewType(position));
 
 
 
 
 
+
+    }
+
+    private boolean getUltimo (int position) {
+        if ((adicionais.size() - 1) == position) return true;
+        else return false;
     }
 
     @Override
@@ -110,11 +98,11 @@ public class AdicionaisAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
 
-    public class ZeroViewHolder extends RecyclerView.ViewHolder {
+    public class ZeroUmViewHolder extends RecyclerView.ViewHolder {
         TextView itemAdicional;
         LinearLayout linearLayout;
 
-        public ZeroViewHolder(@NonNull View itemView) {
+        public ZeroUmViewHolder(@NonNull View itemView) {
             super(itemView);
 
             itemAdicional = itemView.findViewById(R.id.textview_item_adicional);
@@ -122,21 +110,22 @@ public class AdicionaisAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         }
 
-        public void setView (final Adicionais adicionais, String nomeAd) {
+        public void setView (final Adicionais adicionais, boolean ultimo, int viewType) {
 
-            itemAdicional.setText(nomeAd);
+            itemAdicional.setText(adicionais.getNomeAd());
             for(final Adicional adicional : adicionais.getAdicionals()){
 
                 LinearLayout horizontal = new LinearLayout(itemView.getContext());
-                horizontal.setLayoutParams(new LinearLayout
-                      .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                LinearLayout.LayoutParams horizontalLP = new LinearLayout
+                        .LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+                horizontal.setLayoutParams(horizontalLP);
                 horizontal.setOrientation(LinearLayout.HORIZONTAL);
                 linearLayout.addView(horizontal);
 
                 LinearLayout vertical = new LinearLayout(itemView.getContext());
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        WRAP_CONTENT,
+                        WRAP_CONTENT,
                         1f);
                 int start = PxDp.convertDptoPx(6, itemView.getContext());
                 layoutParams.setMargins(start, 0 , 0 , 0);
@@ -147,79 +136,8 @@ public class AdicionaisAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
                 TextView titulo = new TextView(itemView.getContext());
-                titulo.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT));
-                titulo.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-                titulo.setTypeface(Typeface.create("overpass_light", Typeface.BOLD));
-                titulo.setText(adicional.getNomeItem());
-                titulo.setTextColor(Color.BLACK);
-                vertical.addView(titulo);
-
-                if (adicional.isGratis()){
-                    TextView preco = new TextView(itemView.getContext());
-                    preco.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-                    preco.setText("R$"+adicional.getValorItem());
-                    preco.setTextColor(itemView.getContext().getColor(R.color.Cor3));
-                    vertical.addView(preco);
-                }
-
-                final CheckBox materialCheckBox = new MaterialCheckBox(itemView.getContext());
-                TableLayout.LayoutParams layoutParams1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
-                        , ViewGroup.LayoutParams.WRAP_CONTENT
-                        , 0);
-                layoutParams1.gravity = Gravity.CENTER;
-                materialCheckBox.setGravity(Gravity.CENTER);
-                adicionais.addCheckBoxes(materialCheckBox);
-                horizontal.addView(adicionais.getCheckBoxes().get(adicionais.getAdicionals().indexOf(adicional)));
-
-
-
-
-            }
-
-        }
-
-    }
-
-    public class UmViewHolder extends RecyclerView.ViewHolder {
-        TextView itemAdicional;
-        RadioGroup radioGroup;
-
-        public UmViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            itemAdicional = itemView.findViewById(R.id.textview_item_adicional);
-            radioGroup = itemView.findViewById(R.id.radiogroup_adicional);
-
-        }
-
-        public void setView (Adicionais adicionais, String nomeAd) {
-
-            itemAdicional.setText(nomeAd);
-
-            for(Adicional adicional : adicionais.getAdicionals()){
-                LinearLayout horizontal = new LinearLayout(itemView.getContext());
-                horizontal.setLayoutParams(new LinearLayout
-                        .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                horizontal.setOrientation(LinearLayout.HORIZONTAL);
-                radioGroup.addView(horizontal);
-
-                LinearLayout vertical = new LinearLayout(itemView.getContext());
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        1f);
-                int start = PxDp.convertDptoPx(6, itemView.getContext());
-                layoutParams.setMargins(start, 0 , 0 , 0);
-                layoutParams.gravity = Gravity.CENTER;
-                vertical.setLayoutParams(layoutParams);
-                vertical.setOrientation(LinearLayout.VERTICAL);
-                horizontal.addView(vertical);
-
-
-                TextView titulo = new TextView(itemView.getContext());
-                titulo.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT));
+                titulo.setLayoutParams(new LayoutParams(WRAP_CONTENT,
+                        WRAP_CONTENT));
                 titulo.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
                 titulo.setTypeface(Typeface.create("overpass_light", Typeface.BOLD));
                 titulo.setText(adicional.getNomeItem());
@@ -234,19 +152,46 @@ public class AdicionaisAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     vertical.addView(preco);
                 }
 
-                RadioButton radioButton = new RadioButton(itemView.getContext());
-                TableLayout.LayoutParams layoutParams1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
-                        , ViewGroup.LayoutParams.WRAP_CONTENT
-                        , 0);
-                layoutParams1.gravity = Gravity.CENTER;
-                radioButton.setGravity(Gravity.CENTER);
-                adicionais.addRadioButton(radioButton);
-                horizontal.addView(adicionais.getRadioButtons().get(adicionais.getAdicionals().indexOf(adicional)));
+
+                switch (viewType){
+
+                    case 0 :
+                        final CheckBox materialCheckBox = new MaterialCheckBox(itemView.getContext());
+                        LinearLayout.LayoutParams checkLP = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, 0);
+                        checkLP.gravity = Gravity.CENTER;
+                        materialCheckBox.setLayoutParams(checkLP);
+                        adicionais.addCheckBoxes(materialCheckBox);
+                        horizontal.addView(adicionais.getCheckBoxes().get(adicionais.getAdicionals().indexOf(adicional)));
+                        break;
+
+                    case 1 :
+
+                        RadioButton radioButton = new RadioButton(itemView.getContext());
+                        LinearLayout.LayoutParams radioLP = new LinearLayout.LayoutParams(WRAP_CONTENT
+                                , WRAP_CONTENT
+                                , 0);
+                        radioLP.gravity = Gravity.CENTER;
+                        radioLP.setMargins(0,
+                                PxDp.convertDptoPx(8, itemView.getContext()),
+                                PxDp.convertDptoPx(16, itemView.getContext()),
+                                0);
+                        radioButton.setLayoutParams(radioLP);
+                        adicionais.addRadioButton(radioButton);
+                        horizontal.addView(adicionais.getRadioButtons().get(adicionais.getAdicionals().indexOf(adicional)));
+                        break;
+                }
+
+                if(ultimo) linearLayout.setPadding(0,0,0, PxDp.convertDptoPx(80, itemView.getContext()));
+
+
 
             }
 
         }
+
     }
+
+
 
 
 }
