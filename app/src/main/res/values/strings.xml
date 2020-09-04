@@ -11,6 +11,7 @@
     <string name="digite_email">Digite seu email</string>
     <string name="digite_senha">Digite a senha</string>
     <string name="botao_entrar">Entrar</string>
+    <string name="textRadiogroup"><b>0</b> de <b>1</b></string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="app_searchlabel">Pesquisa</string>

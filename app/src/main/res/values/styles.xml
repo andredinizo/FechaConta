@@ -17,6 +17,15 @@
 
     </style>
 
+    <style name="LeitorQR" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:fitsSystemWindows">false</item>
+
+    </style>
+
 
     <style name="AppBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:textAllCaps">true</item>

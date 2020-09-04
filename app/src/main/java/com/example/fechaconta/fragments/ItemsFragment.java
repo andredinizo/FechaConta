@@ -1,6 +1,7 @@
 package com.example.fechaconta.fragments;
 
 import android.app.DownloadManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.style.AlignmentSpan;
 import android.util.Log;
@@ -17,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fechaconta.MainActivity;
 import com.example.fechaconta.R;
 import com.example.fechaconta.adapter.AdicionaisAdapter;
 import com.example.fechaconta.interfaces.Observador;
@@ -28,12 +30,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -52,7 +57,7 @@ public class ItemsFragment extends Fragment {
     private TextView textViewItemTempo;
     private ImageView imageViewItem;
     private RecyclerView recyclerViewItems;
-
+    private BottomAppBar bottomBar;
     public ItemsFragment(Dishes dishes) {
         this.dishes = dishes;
     }
@@ -62,12 +67,32 @@ public class ItemsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item, container, false);
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
+        bottomBar = view.findViewById(R.id.bottombar);
+        MainActivity mainActivity = (MainActivity) getActivity();
+
+        if(mainActivity.getCheck()){
+            bottomBar.setVisibility(View.VISIBLE);
+        }
+
 
         textViewItem = view.findViewById(R.id.textview_item);
         textViewItemDescr = view.findViewById(R.id.textview_itemdescr);
         textViewItemTempo = view.findViewById(R.id.textview_itemtempo);
         textViewItemValor = view.findViewById(R.id.textview_itemvalor);
         recyclerViewItems = view.findViewById(R.id.recycler_itens);
+        imageViewItem = view.findViewById(R.id.imagem_item);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference imagem = storage.getReference()
+                .child("Restaurantes/Pratos/"+dishes.getUrlImagem());
+
+        imagem.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).fit().centerCrop().into(imageViewItem);
+            }
+        });
+
 
         textViewItem.setText(dishes.getName());
         textViewItemDescr.setText(dishes.getDescription());

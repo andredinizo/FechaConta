@@ -84,6 +84,7 @@ public class Adicional extends Adicionais {
     public String getNomeItem() {
         return nomeItem;
     }
+
     public void setNomeItem(String nomeItem) {
 
         this.nomeItem = nomeItem;

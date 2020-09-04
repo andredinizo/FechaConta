@@ -1,33 +1,40 @@
 package com.example.fechaconta;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.fechaconta.fragments.HomeFragment;
-import com.example.fechaconta.fragments.SearchFragment;
-import com.example.fechaconta.models.Restaurant;
-import com.google.android.material.navigation.NavigationView;
+import com.example.fechaconta.fragments.ItemsFragment;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
-import java.util.ArrayList;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private TextView inicioBottom;
     private HomeFragment homeFragment;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private ExtendedFloatingActionButton btnCheckin;
+    private Boolean isCheck = false;
 
+    public Boolean getCheck() {
+        return isCheck;
+    }
 
-    public void SetFitsWindows(boolean flag){
+    public void setCheck(Boolean check) {
+        isCheck = check;
+    }
+
+    //TODO: Pensar necessidade
+    public void SetFitsWindows(boolean flag) {
 
         LinearLayout mainLayout;
         mainLayout = findViewById(R.id.MainLayout);
@@ -40,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
         /*
          *
@@ -62,6 +67,32 @@ public class MainActivity extends AppCompatActivity {
         homeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, homeFragment, homeFragment.getTag()).commit();
         FirebaseAuth.getInstance().signOut();
+
+        btnCheckin = findViewById(R.id.btnCheckin);
+
+        btnCheckin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(), QRreader.class);
+                startActivity(intent);
+
+                if (!isCheck) {
+
+                    //btnCheckin.setVisibility(View.GONE);
+                   // isCheck = true;
+
+
+
+                } else {
+
+                   // btnCheckin.setVisibility(View.VISIBLE);
+                   // isCheck = false;
+
+                }
+            }
+        });
+
 
     }
 }
