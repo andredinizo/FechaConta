@@ -130,6 +130,7 @@ public class LoginEmailFragment extends Fragment {
             }
         });
 
+
         //botão voltar troca para fragmento método de login
         botao_voltar = view.findViewById(R.id.botao_voltar);
         botao_voltar.setOnClickListener(new View.OnClickListener() {

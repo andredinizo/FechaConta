@@ -69,7 +69,7 @@ public class Login extends AppCompatActivity {
         @Override
         public void run() {
             //movimento do logo
-            ObjectAnimator animation = ObjectAnimator.ofFloat(logo,"translationY", 0f, -470f);
+            ObjectAnimator animation = ObjectAnimator.ofFloat(logo,"translationY", 0f, -520f);
             animation.setDuration(300);
             animation.start();
 

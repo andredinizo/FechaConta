@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.fechaconta.ActivityRegistro;
 import com.example.fechaconta.Login;
 import com.example.fechaconta.MainActivity;
 import com.example.fechaconta.R;
@@ -62,6 +63,16 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        //botão criar conta chama função que abre activity cadastro
+        botao_criar_conta = view.findViewById(R.id.botao_criar_conta);
+        botao_criar_conta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirCadastro();}
+        });
+
+
+
         botao_google = view.findViewById(R.id.botao_google);
         botao_google.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,8 +97,16 @@ public class LoginFragment extends Fragment {
         Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
         getActivity().finish();
-
     }
+
+
+    //função que abre a activity cadastro
+    public void abrirCadastro() {
+        Intent intent = new Intent(getActivity(), ActivityRegistro.class);
+        startActivity(intent);
+        //getActivity().finish();
+    }
+
 
     private void signIn() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
