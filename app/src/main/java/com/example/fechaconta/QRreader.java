@@ -5,7 +5,9 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.Image;
 import android.os.Bundle;
+import android.transition.Explode;
 import android.util.Size;
+import android.view.Window;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -178,6 +180,13 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // inside your activity (if you did not enable transitions in your theme)
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+
+        // set an exit transition
+        getWindow().setExitTransition(new Explode());
+
         setContentView(R.layout.activity_qrreader);
 
         mPreviewView = findViewById(R.id.camerapreview);
