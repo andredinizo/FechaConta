@@ -44,7 +44,7 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA"};
     PreviewView mPreviewView;
     private int REQUEST_CODE_PERMISSIONS = 1001;
-    private Executor executor = Executors.;
+    private Executor executor = Executors.newSingleThreadExecutor();
     private Camera camera;
     private boolean allPermissionsGranted() {
 
@@ -55,11 +55,11 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
         }
         return true;
     }
+    private ImageAnalysis imageAnalysis;
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
                 iniciaCamera();
@@ -94,8 +94,6 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
 
     void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
 
-
-
         Preview preview = new Preview.Builder()
                 .build();
 
@@ -103,8 +101,7 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
 
-
-        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
+        imageAnalysis = new ImageAnalysis.Builder()
                 .build();
 
         imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() {
@@ -142,12 +139,12 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
 
                                     Rect bounds = barcode.getBoundingBox();
                                     Point[] corners = barcode.getCornerPoints();
-
                                     String rawValue = barcode.getRawValue();
                                     Toast.makeText(getApplicationContext(), rawValue, Toast.LENGTH_SHORT).show();
                                     scanner.close();
 
                                 }
+                                image.close();
                                 // Task completed successfully
                                 // ...
                             }
@@ -155,22 +152,21 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), "OPS", Toast.LENGTH_SHORT).show();
+
                                 scanner.close();
+                                image.close();
                                 // Task failed with an exception
                                 // ...
                             }
                         });
 
-            }
+
+        }
+
+
         });
 
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
 
-            }
-        });
 
         preview.setSurfaceProvider(mPreviewView.createSurfaceProvider());
 
