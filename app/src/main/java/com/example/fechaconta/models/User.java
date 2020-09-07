@@ -1,16 +1,74 @@
 package com.example.fechaconta.models;
 
-import com.example.fechaconta.interfaces.ModelsInterface;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class User {
 
     //Atributos
+    private String id;
     private String firstname;
     private String lastname;
     private String email;
     private String phone;
 
+    static class CheckIn{
+
+        private String restaurante;
+        private String mesa;
+        private String hora;
+        private String data;
+        private String id;
+        private String userId;
+
+        public CheckIn(String restaurante, String mesa, String hora, String data, String userId) {
+            this.restaurante = restaurante;
+            this.mesa = mesa;
+            this.hora = hora;
+            this.data = data;
+            this.userId = userId;
+        }
+    }
+
+    //Metodos
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void FazCheckin(Restaurant restaurante, Mesa mesa){
+
+        String restauranteId;
+        String mesaId;
+        String data;
+        String hora;
+
+        DateTimeFormatter dataformato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter horaformato = DateTimeFormatter.ofPattern("HH:mm");
+
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        data = dateTime.format(dataformato);
+        hora = dateTime.format(horaformato);
+
+        restauranteId = restaurante.getID_restaurante();
+        mesaId = mesa.getNu_mesa();
+
+
+        CheckIn Checkin = new CheckIn(restauranteId,mesaId,hora,data, this.id);
+
+    }
+
+
     //Getter e Setter
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getFirstname() {
         return firstname;

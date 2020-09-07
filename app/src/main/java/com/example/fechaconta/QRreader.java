@@ -2,14 +2,17 @@ package com.example.fechaconta;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +28,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.example.fechaconta.models.Mesa;
@@ -62,6 +66,7 @@ public class QRreader extends AppCompatActivity {
     private Mesa mesa;
     private Restaurant restaurante;
     private Dialog dialogConfirma;
+    private ContentLoadingProgressBar progress;
 
 
 
@@ -73,6 +78,8 @@ public class QRreader extends AppCompatActivity {
 
         dialogConfirma = new Dialog(this);
         mPreviewView = findViewById(R.id.camerapreview);
+        progress = findViewById(R.id.progress_checkin);
+
 
 
         if (allPermissionsGranted()) {
@@ -189,7 +196,7 @@ public class QRreader extends AppCompatActivity {
                             public void onSuccess(List<Barcode> barcodes) { //LEITURA REALIZADA
                                 int flag = 0;
                                 for (Barcode barcode : barcodes) {
-
+                                    //progress.show();
                                     Rect bounds = barcode.getBoundingBox();
                                     Point[] corners = barcode.getCornerPoints();
                                     String rawValue = barcode.getRawValue(); //PEGA DADO LIDO
@@ -238,14 +245,27 @@ public class QRreader extends AppCompatActivity {
                                         });
 
                                         //EXIBE DIALOGO
+                                       // progress.hide();
                                         dialogConfirma.show();
                                         dialogConfirma.setCanceledOnTouchOutside(false); //FAZ COM QUE NÃO FECHE SE CLICAR FORA DO DIALOGO
+
+                                        dialogConfirma.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog) {
+                                                iniciaCamera(); //REINICIA CAMERA
+
+                                                //APAGA AS CLASSES CRIADAS
+                                                mesa = null;
+                                                restaurante = null;
+                                                //progress.hide();
+                                            }
+                                        });
 
                                         btnCancelar.setOnClickListener(new View.OnClickListener() { //BOTÃO DE CANCELAR CHECK-IN
                                             @Override
                                             public void onClick(View v) {
 
-                                                iniciaCamera(); //REINICIA CAMERA
+                                               // iniciaCamera(); //REINICIA CAMERA
 
                                                 //APAGA AS CLASSES CRIADAS
                                                 mesa = null;
@@ -256,6 +276,10 @@ public class QRreader extends AppCompatActivity {
 
                                             }
                                         });
+
+                                    }else {
+
+                                        Toast.makeText(getApplication(), "Não foi possível localizar restaurante",Toast.LENGTH_SHORT).show();
 
                                     }
 
@@ -276,8 +300,6 @@ public class QRreader extends AppCompatActivity {
                             }
 
                         });
-
-
             }
 
 
@@ -358,7 +380,11 @@ public class QRreader extends AppCompatActivity {
     *
     * */
 
-    private void RealizaCheckIn(){}
+    private void RealizaCheckIn(){
+
+
+
+    }
 
 }
 
