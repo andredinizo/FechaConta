@@ -1,13 +1,18 @@
 package com.example.fechaconta;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
-import android.transition.Explode;
-import android.util.Size;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,50 +21,73 @@ import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
-import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
-import androidx.camera.core.impl.ImageAnalysisConfig;
-import androidx.camera.core.impl.PreviewConfig;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.example.fechaconta.models.Mesa;
+import com.example.fechaconta.models.Restaurant;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.mlkit.vision.barcode.Barcode;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.common.InputImage;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyzer {
+
+    //VARIAVEIS
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA"};
     PreviewView mPreviewView;
     private int REQUEST_CODE_PERMISSIONS = 1001;
     private Executor executor = Executors.newSingleThreadExecutor();
-    private Camera camera;
-    private boolean allPermissionsGranted() {
-
-        for (String permission : REQUIRED_PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-        return true;
-    }
     private ImageAnalysis imageAnalysis;
+    private Mesa mesa;
+    private Restaurant restaurante;
+    private Dialog dialogConfirma;
+    private Context actvity;
+    private CameraX camerax;
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_qrreader);
+
+        dialogConfirma = new Dialog(this);
+        mPreviewView = findViewById(R.id.camerapreview);
+
+
+        if (allPermissionsGranted()) {
+            iniciaCamera(); //inicia camera caso haja permissão
+        } else {
+            ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+        }
+
+
+    }
+
+
+    //Permisões
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
@@ -72,12 +100,20 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
         }
     }
 
+    private boolean allPermissionsGranted() {
 
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //INICIA CAMERA
     private void iniciaCamera() {
 
-
         final ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
-
         cameraProviderFuture.addListener(new Runnable() {
             @Override
             public void run() {
@@ -92,8 +128,18 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
                 }
             }
         }, ContextCompat.getMainExecutor(this));
+
     }
 
+    //PAUSA CAMERA
+    private void PausaCamera(ProcessCameraProvider cameraProvider) {
+
+        cameraProvider.unbindAll();
+
+    }
+
+    //FUNÇÃO ANALISE QRCODE
+    //ABRE POPUP
     void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
 
         Preview preview = new Preview.Builder()
@@ -109,46 +155,90 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
         imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() {
             @Override
             public void analyze(@NonNull ImageProxy image) {
+
                 BarcodeScannerOptions QRoptions = new BarcodeScannerOptions.Builder()
                         .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
                         .build();
 
                 BarcodeScanner scanner = BarcodeScanning.getClient(QRoptions);
 
-                ImageAnalysis imageAnalysis = new ImageAnalysis.Builder().setTargetResolution(new Size(1280, 720))
-                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                        .build();
-
 
                 int rotationDegrees = image.getImageInfo().getRotationDegrees();
-                Image imagem = image.getImage();
 
+                Image imagem = image.getImage();
 
                 InputImage ImagemAnalise = null;
                 if (imagem != null) {
                     ImagemAnalise = InputImage.fromMediaImage(imagem, rotationDegrees);
                 }
 
-
-
-
                 Task<List<Barcode>> result = scanner.process(ImagemAnalise)
                         .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                             @Override
                             public void onSuccess(List<Barcode> barcodes) {
-
-                                for (Barcode barcode:barcodes){
+                                int flag = 0;
+                                for (Barcode barcode : barcodes) {
 
                                     Rect bounds = barcode.getBoundingBox();
                                     Point[] corners = barcode.getCornerPoints();
                                     String rawValue = barcode.getRawValue();
-                                    Toast.makeText(getApplicationContext(), rawValue, Toast.LENGTH_SHORT).show();
+
                                     scanner.close();
+                                    if (BuscarMesa(rawValue)) {
+
+                                        PausaCamera(cameraProvider);
+
+                                        TextView nomeRestaurante;
+                                        TextView codMesa;
+                                        ImageView restauranteHeader;
+                                        TextView btnCancelar;
+
+                                        dialogConfirma.setContentView(R.layout.dialogo_confirmar_checkin);
+
+                                        nomeRestaurante = dialogConfirma.findViewById(R.id.nome_restaurante_checkin);
+                                        codMesa = dialogConfirma.findViewById(R.id.cod_mesa_checkin);
+                                        btnCancelar = dialogConfirma.findViewById(R.id.btn_cancelar);
+                                        nomeRestaurante.setText(restaurante.getNome());
+                                        codMesa.setText("Mesa: " + mesa.getNu_mesa());
+
+
+                                        View v = Objects.requireNonNull(dialogConfirma.getWindow()).getDecorView();
+                                        v.setBackgroundResource(android.R.color.transparent);
+                                        restauranteHeader = dialogConfirma.findViewById(R.id.header_confirma_checkin);
+
+                                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                                        final StorageReference imagem = storage.getReference().child("Restaurantes/Header/" + restaurante.getUrlheader());
+
+                                        Log.d("URLQR", "onSuccess2: " + imagem);
+                                        imagem.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                Picasso.get().load(uri).fit().into(restauranteHeader);
+                                            }
+                                        });
+
+                                        dialogConfirma.show();
+                                        dialogConfirma.setCanceledOnTouchOutside(false);
+
+                                        btnCancelar.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                iniciaCamera();
+                                                mesa = null;
+                                                restaurante = null;
+                                                dialogConfirma.cancel();
+
+                                            }
+                                        });
+
+                                    }
+
 
                                 }
+
                                 image.close();
-                                // Task completed successfully
-                                // ...
+
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -160,89 +250,85 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
                                 // Task failed with an exception
                                 // ...
                             }
+
                         });
 
 
-        }
+            }
 
 
         });
 
 
-
         preview.setSurfaceProvider(mPreviewView.createSurfaceProvider());
 
 
-        this.camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageAnalysis);
+        Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageAnalysis);
 
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-        // inside your activity (if you did not enable transitions in your theme)
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+    //DIVIDE STRING LEITURA//BUSCA RESTAURANTE//BUSCA MESA
+    private boolean BuscarMesa(String rawcode) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String restauranteId;
+        String mesaId;
+        String[] split;
 
-        // set an exit transition
-        getWindow().setExitTransition(new Explode());
+        split = rawcode.split("//urlmesa//"); //Divide os Endereços (Restaurante e Mesa)
 
-        setContentView(R.layout.activity_qrreader);
+        if (split.length == 2) { //VERIFICA SE CONSEGUIU SEPARAR
+            restauranteId = split[0];
+            mesaId = split[1];
 
-        mPreviewView = findViewById(R.id.camerapreview);
 
-        if (allPermissionsGranted()) {
-            iniciaCamera(); //start camera if permission has been granted by user
-        } else {
-            ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+            //BuscaRestaurante
+
+            db.collection("Restaurant")
+                    .document(restauranteId)
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+
+                        restaurante = Objects.requireNonNull(task.getResult()).toObject(Restaurant.class);
+
+                    }
+                }
+            });
+
+            //BuscaMesa
+
+            db.collection("Restaurant")
+                    .document(restauranteId)
+                    .collection("Mesas")
+                    .document(mesaId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+
+                        mesa = Objects.requireNonNull(task.getResult()).toObject(Mesa.class);
+
+
+                    }
+                }
+            });
+
+
         }
 
+        if (mesa == null) {
 
+            return false;
 
-
-
+        } else return true;
     }
 
     @Override
     public void analyze(@NonNull ImageProxy image) {
-        int rotationDegrees = image.getImageInfo().getRotationDegrees();
-        Image imagem = image.getImage();
-        Toast.makeText(getApplicationContext(), "OPS", Toast.LENGTH_SHORT).show();
-        BarcodeScannerOptions QRoptions = new BarcodeScannerOptions.Builder()
-                .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-                .build();
-
-        BarcodeScanner scanner = BarcodeScanning.getClient(QRoptions);
-
-        InputImage ImagemAnalise = null;
-        if (imagem != null) {
-            ImagemAnalise = InputImage.fromMediaImage(imagem, rotationDegrees);
-        }
-
-        Task<List<Barcode>> result = scanner.process(ImagemAnalise)
-                .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
-                    @Override
-                    public void onSuccess(List<Barcode> barcodes) {
-                        Toast.makeText(getApplicationContext(), "FUNCIONOU", Toast.LENGTH_SHORT).show();
-
-                        // Task completed successfully
-                        // ...
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "OPS", Toast.LENGTH_SHORT).show();
-                        // Task failed with an exception
-                        // ...
-                    }
-                });
-
-
 
     }
 }
-
 
 
 

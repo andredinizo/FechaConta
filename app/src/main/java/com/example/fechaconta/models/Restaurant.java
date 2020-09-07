@@ -1,6 +1,15 @@
 package com.example.fechaconta.models;
 
-import com.example.fechaconta.interfaces.ModelsInterface;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
 
 public class Restaurant {
 
@@ -19,6 +28,7 @@ public class Restaurant {
 
 
 
+    public Restaurant(){};
 
     //Getters e Setters
 
@@ -102,14 +112,13 @@ public class Restaurant {
         this.urlicon = urlicon;
     }
 
-    public void setCategoria (String categoria){
-        this.categoria = categoria;
-    }
-
-    public String getCategoria (){
+    public String getCategoria() {
         return this.categoria;
     }
 
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
 
 
 }
