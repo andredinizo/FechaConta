@@ -59,15 +59,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:clipToPadding="false"
         android:orientation="vertical"
-        android:paddingBottom="100dp"
+        android:paddingBottom="0dp"
         app:behavior_overlapTop="30dp"
-        app:layout_anchor="@id/appBarItem"
         app:layout_anchorGravity="bottom"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
+
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -80,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="0dp"
                 android:background="#ffffff"
                 android:orientation="vertical">
 
@@ -121,7 +122,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
@@ -158,17 +159,24 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/linearlayout_item_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:background="#ffffff"
+                    android:nestedScrollingEnabled="false"
+                    android:isScrollContainer="false"
                     android:orientation="vertical">
 
                     <androidx.recyclerview.widget.RecyclerView
 
                         android:id="@+id/recycler_itens"
+                        android:nestedScrollingEnabled="true"
+                        android:isScrollContainer="true"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="80dp"
+                        />
 
                 </LinearLayout>
             </LinearLayout>
@@ -183,7 +191,6 @@
         android:id="@+id/bottombar"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:visibility="gone"
         android:layout_gravity="bottom"
         app:elevation="6dp"
         app:contentInsetLeft="0dp"

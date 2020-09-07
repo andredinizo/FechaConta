@@ -28,6 +28,7 @@ import com.example.fechaconta.adapter.SnapHelperOneByOne;
 import com.example.fechaconta.models.Category;
 import com.example.fechaconta.models.Promotion;
 import com.example.fechaconta.models.Restaurant;
+import com.example.fechaconta.utilitys.Aplotoso;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
@@ -39,6 +40,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator;
 
@@ -89,24 +91,21 @@ public class HomeFragment extends Fragment {
     public void AtualizaRestaurantes() {
         //Recupera os Restaurantes Ordenados pela media do Firestore
         Query queryRes = db.collection("Restaurant").orderBy("media", Query.Direction.DESCENDING);
+
         queryRes.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    List<Restaurant> listRes = new ArrayList<>();
-                    for (DocumentSnapshot document : task.getResult()) {
-                        listRes.add(document.toObject(Restaurant.class));
-                        listRes.get(listRes.size()-1).setID_restaurante(document.getId());
-                        Log.d(TAG, "onComplete:  =====> " + document.getData());
+                    Log.d(TAG, "onComplete: Restaurante recuperado");
 
-                    }
-
-                    RestaurantAdapter restaurantAdapter = new RestaurantAdapter(listRes);
+                    RestaurantAdapter restaurantAdapter = new RestaurantAdapter(Aplotoso.pullRestaurats(task));
                     restaurantAdapter.notifyDataSetChanged();
                     recyclerViewRestaurant.setAdapter(restaurantAdapter);
 
                 } else {
+
                     Log.d(TAG, "onFailure: Falha ao recuperar os Restaurantes");
+
                 }
 
 

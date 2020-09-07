@@ -53,8 +53,6 @@ public class SearchFragment extends Fragment {
         restSearchRecycler = view.findViewById(R.id.recycler_restsearch);
         searchView.setQuery("",true);
 
-        searchView.setFocusedByDefault(true);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         restSearchRecycler.setLayoutManager(layoutManager);
 

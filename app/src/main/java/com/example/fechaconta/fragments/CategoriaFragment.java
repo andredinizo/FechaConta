@@ -19,6 +19,7 @@ import com.example.fechaconta.R;
 import com.example.fechaconta.adapter.RestaurantAdapter;
 import com.example.fechaconta.models.Category;
 import com.example.fechaconta.models.Restaurant;
+import com.example.fechaconta.utilitys.Aplotoso;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -76,19 +77,13 @@ public class CategoriaFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
-                    List<Restaurant> restaurantList = new ArrayList<>();
-                    for(DocumentSnapshot document : task.getResult()){
-                        if(document.get("categoria").toString().toLowerCase()
-                                .contains(category.getName().toLowerCase())){
-                            restaurantList.add(document.toObject(Restaurant.class));
-                            Log.d(TAG, "onComplete: ========> "+ document.getData().toString());
-                        }
 
-                        recyclerView.setAdapter(new RestaurantAdapter(restaurantList));
+                    recyclerView.setAdapter(new RestaurantAdapter(Aplotoso.pullRestaurats(task, Aplotoso.RESTAURANT_CATEGORIA, category.getName())));
 
-                    }
                 }else{
+
                     Log.d(TAG, "onComplete: Falha ao resgatar os restaurante da Categoria: " + category.getName());
+
                 }
             }
         });

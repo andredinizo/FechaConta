@@ -6,31 +6,83 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import com.example.fechaconta.interfaces.ModelsInterface;
+/**
+ * -Firestore-
+ * nome
+ * des
+ * ender
+ * cidade
+ * estado
+ * categoria
+ * media
+ * taval
+ * urlheader
+ * urlicon
+ *
+ *
+ *
+ *  = Funcionalidades relacionadas ao Restaurante=
+ *  * Funçoes para facilitar a fluidez do codigo,
+ *  centralizando o maximo de call's de metodos a um
+ *  tipo de classe.
+ *
+ */
 public class Restaurant {
 
-    //Atributos
-    private String ID_restaurante;
+    //Firestore
+    private String /* Id do documento:  */ ID_restaurante;
     private String nome;
     private String des;
     private String ender;
     private String cidade;
     private String estado, categoria;
-    private float media;
-    private int taval;
+    private float  media;
+    private int    taval;
     private String urlheader;
     private String urlicon;
 
+    //Ambiente
+    private DocumentReference restaurantReference;
 
 
+    public Restaurant(Restaurant restaurant) {
+
+        this.ID_restaurante = restaurant.ID_restaurante;
+        this.nome = restaurant.nome;
+        this.des = restaurant.des;
+        this.ender = restaurant.ender;
+        this.cidade = restaurant.cidade;
+        this.estado = restaurant.estado;
+        this.categoria = restaurant.categoria;
+        this.media = restaurant.media;
+        this.taval = restaurant.taval;
+        this.urlheader = restaurant.urlheader;
+        this.urlicon = restaurant.urlicon;
+        this.restaurantReference = restaurant.restaurantReference;
+    }
 
     public Restaurant(){};
 
+
     //Getters e Setters
+
+
+    public DocumentReference getRestaurantReference() {
+        return restaurantReference;
+    }
+
+    public void setRestaurantReference(DocumentReference restaurantReference) {
+        this.restaurantReference = restaurantReference;
+    }
 
     public String getID_restaurante() {
         return ID_restaurante;

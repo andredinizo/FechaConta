@@ -1,5 +1,7 @@
 package com.example.fechaconta.adapter;
 
+import android.content.res.ColorStateList;
+import android.content.res.XmlResourceParser;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.TypedValue;
@@ -19,12 +21,17 @@ import com.example.fechaconta.R;
 import com.example.fechaconta.models.Adicionais;
 import com.example.fechaconta.models.Adicional;
 import com.example.fechaconta.utilitys.PxDp;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.radiobutton.MaterialRadioButton;
 
 import java.util.List;
 
 import static android.view.ViewGroup.*;
 import static android.view.ViewGroup.LayoutParams.*;
+import static com.example.fechaconta.R.color.radio_check_button;
+import static com.example.fechaconta.R.id.cardview_item;
+import static org.xmlpull.v1.XmlPullParser.START_DOCUMENT;
 
 public class AdicionaisAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -99,20 +106,27 @@ public class AdicionaisAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
     public class ZeroUmViewHolder extends RecyclerView.ViewHolder {
-        TextView itemAdicional;
-        LinearLayout linearLayout;
+        TextView         itemAdicional;
+        TextView         limiteItemAdicional;
+        LinearLayout     linearLayout;
+        MaterialCardView obrigatorioCardView;
+
 
         public ZeroUmViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            itemAdicional = itemView.findViewById(R.id.textview_item_adicional);
-            linearLayout = itemView.findViewById(R.id.linearlayout_adicionail);
+            itemAdicional       = itemView.findViewById(R.id.textview_item_adicional);
+            linearLayout        = itemView.findViewById(R.id.linearlayout_adicionail);
+            limiteItemAdicional = itemView.findViewById(R.id.textview_item_adicional_limite);
+            obrigatorioCardView = limiteItemAdicional.findViewById(cardview_item);
 
         }
 
         public void setView (final Adicionais adicionais, boolean ultimo, int viewType) {
 
             itemAdicional.setText(adicionais.getNomeAd());
+            adicionais.attTextLimite(limiteItemAdicional);
+
             for(final Adicional adicional : adicionais.getAdicionals()){
 
                 LinearLayout horizontal = new LinearLayout(itemView.getContext());
@@ -139,10 +153,11 @@ public class AdicionaisAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 titulo.setLayoutParams(new LayoutParams(WRAP_CONTENT,
                         WRAP_CONTENT));
                 titulo.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-                titulo.setTypeface(Typeface.create("overpass_light", Typeface.BOLD));
+                titulo.setTypeface(Typeface.create("overpass_light", Typeface.NORMAL));
                 titulo.setText(adicional.getNomeItem());
                 titulo.setTextColor(Color.BLACK);
                 vertical.addView(titulo);
+
 
                 if (!adicional.isGratis()){
                     TextView preco = new TextView(itemView.getContext());
@@ -156,32 +171,34 @@ public class AdicionaisAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 switch (viewType){
 
                     case 0 :
-                        final CheckBox materialCheckBox = new MaterialCheckBox(itemView.getContext());
+                        final MaterialCheckBox checkBox = new MaterialCheckBox(itemView.getContext());
                         LinearLayout.LayoutParams checkLP = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, 0);
                         checkLP.gravity = Gravity.CENTER;
-                        materialCheckBox.setLayoutParams(checkLP);
-                        adicionais.addCheckBoxes(materialCheckBox);
+                        checkBox.setLayoutParams(checkLP);
+                        checkBox.setButtonTintList(itemView.getContext().getColorStateList(radio_check_button));
+                        adicionais.addCheckBoxes(checkBox, limiteItemAdicional);
                         horizontal.addView(adicionais.getCheckBoxes().get(adicionais.getAdicionals().indexOf(adicional)));
                         break;
 
                     case 1 :
 
-                        RadioButton radioButton = new RadioButton(itemView.getContext());
+                        MaterialRadioButton radioButton = new MaterialRadioButton(itemView.getContext());
                         LinearLayout.LayoutParams radioLP = new LinearLayout.LayoutParams(WRAP_CONTENT
                                 , WRAP_CONTENT
                                 , 0);
                         radioLP.gravity = Gravity.CENTER;
                         radioLP.setMargins(0,
                                 PxDp.convertDptoPx(8, itemView.getContext()),
-                                PxDp.convertDptoPx(16, itemView.getContext()),
+                                0,
                                 0);
                         radioButton.setLayoutParams(radioLP);
-                        adicionais.addRadioButton(radioButton);
+                        radioButton.setButtonTintList(itemView.getContext().getColorStateList(radio_check_button));
+                        adicionais.addRadioButton(radioButton, limiteItemAdicional);
                         horizontal.addView(adicionais.getRadioButtons().get(adicionais.getAdicionals().indexOf(adicional)));
                         break;
                 }
 
-                if(ultimo) linearLayout.setPadding(0,0,0, PxDp.convertDptoPx(80, itemView.getContext()));
+                //if(ultimo) linearLayout.setPadding(0,0,0, PxDp.convertDptoPx(80, itemView.getContext()));
 
 
 

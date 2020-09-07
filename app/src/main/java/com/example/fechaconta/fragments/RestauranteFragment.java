@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
 public class RestauranteFragment extends Fragment {
 
     final static public String TAG = "RestauranteFragment";
@@ -61,7 +62,6 @@ public class RestauranteFragment extends Fragment {
     RecyclerView recyclerDestaques;
     RecyclerView recyclerPratos;
     Toolbar toolbarRestaurante;
-    List<Integer> indexTab;
     CoordinatorLayout coordinatorLayout;
 
 

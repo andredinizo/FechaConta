@@ -8,6 +8,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+/**
+ *  = Funcões do Usuario =
+ *
+ * - Type  retirn  nome             : description
+ * -       void    fazCheckin       : em um restaurante e mesa
+ * - staic boolean verificaCheckin  : verifica se o usuario fez checkIn e Valida
+ *
+ */
 public class User {
 
     //Atributos
@@ -16,6 +24,7 @@ public class User {
     private String lastname;
     private String email;
     private String phone;
+
 
     static class CheckIn{
 
@@ -35,7 +44,14 @@ public class User {
         }
     }
 
+
     //Metodos
+
+    /**
+     *
+     * @param restaurante
+     * @param mesa
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void FazCheckin(Restaurant restaurante, Mesa mesa){
 
@@ -59,7 +75,6 @@ public class User {
         CheckIn Checkin = new CheckIn(restauranteId,mesaId,hora,data, this.id);
 
     }
-
 
     //Getter e Setter
     public String getId() {
