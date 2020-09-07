@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private ExtendedFloatingActionButton btnCheckin;
-    private Boolean isCheck = false;
+    private Boolean isCheck = true;
 
     public Boolean getCheck() {
         return isCheck;
@@ -43,6 +44,30 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    public TextView getInicioBottom() {
+        return inicioBottom;
+    }
+
+    public void setInicioBottom(TextView inicioBottom) {
+        this.inicioBottom = inicioBottom;
+    }
+
+    public HomeFragment getHomeFragment() {
+        return homeFragment;
+    }
+
+    public void setHomeFragment(HomeFragment homeFragment) {
+        this.homeFragment = homeFragment;
+    }
+
+    public ExtendedFloatingActionButton getBtnCheckin() {
+        return btnCheckin;
+    }
+
+    public void setBtnCheckin(ExtendedFloatingActionButton btnCheckin) {
+        this.btnCheckin = btnCheckin;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,5 +119,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
     }
+
+
+
+
+
 }

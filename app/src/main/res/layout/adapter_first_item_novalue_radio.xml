@@ -40,6 +40,8 @@
             android:text="@string/textRadiogroup"/>
 
             <com.google.android.material.card.MaterialCardView
+                android:visibility="invisible"
+                android:id="@+id/CardView_obrigatotio"
                 android:layout_width="80dp"
                 android:layout_height="18dp"
                 app:cardBackgroundColor="@color/Cor2"

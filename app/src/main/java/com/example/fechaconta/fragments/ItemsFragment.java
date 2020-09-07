@@ -1,19 +1,20 @@
 package com.example.fechaconta.fragments;
 
-import android.app.DownloadManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.style.AlignmentSpan;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,66 +22,93 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fechaconta.MainActivity;
 import com.example.fechaconta.R;
 import com.example.fechaconta.adapter.AdicionaisAdapter;
-import com.example.fechaconta.interfaces.Observador;
 import com.example.fechaconta.models.Adicionais;
 import com.example.fechaconta.models.Adicional;
 import com.example.fechaconta.models.Dishes;
-import com.example.fechaconta.utilitys.MyListener;
+import com.example.fechaconta.models.Restaurant;
+import com.example.fechaconta.utilitys.Aplotoso;
+import com.example.fechaconta.utilitys.PxDp;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Array;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Objects;
 
+/**
+ *
+ *
+ * Pendencias e Conflitos:
+ *
+ * -> CheckIn : Verificação de Checkin está sendo
+ * feita pela variavel MainActivity.Check
+ * e dou gone no botão de checkIn, entretanto não
+ * acho que seja o lugar certo.
+ *
+ */
 public class ItemsFragment extends Fragment {
     public static final String TAG = "ITEMS_FRAGMENT";
-    private Dishes dishes;
-    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    private int contador;
 
-    private TextView textViewItem;
-    private TextView textViewItemDescr;
-    private TextView textViewItemValor;
-    private TextView textViewItemTempo;
-    private ImageView imageViewItem;
+    private Dishes dishes;
+
+    private TextView     textViewItem;
+    private TextView     textViewItemDescr;
+    private TextView     textViewItemValor;
+    private TextView     textViewItemTempo;
     private RecyclerView recyclerViewItems;
     private BottomAppBar bottomBar;
+    private Toolbar      toolbar;
+    private ImageView    imageViewItem;
+    private LinearLayout linearLayoutRecycler;
+
     public ItemsFragment(Dishes dishes) {
         this.dishes = dishes;
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item, container, false);
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
         bottomBar = view.findViewById(R.id.bottombar);
         MainActivity mainActivity = (MainActivity) getActivity();
 
-        if(mainActivity.getCheck()){
+        linearLayoutRecycler = view.findViewById(R.id.linearlayout_item_recycler);
+        textViewItemDescr    = view.findViewById(R.id.textview_itemdescr);
+        textViewItemTempo    = view.findViewById(R.id.textview_itemtempo);
+        textViewItemValor    = view.findViewById(R.id.textview_itemvalor);
+        recyclerViewItems    = view.findViewById(R.id.recycler_itens);
+        imageViewItem        = view.findViewById(R.id.imagem_item);
+        textViewItem         = view.findViewById(R.id.textview_item);
+        toolbar              = view.findViewById(R.id.toolbar_item);
+
+        //Ajusta o layout segundo,
+        //a variavel CheckIn.
+        if(true){
             bottomBar.setVisibility(View.VISIBLE);
+            // Acreidito que isto deva ser feito na MainActivity,
+            // mas só pra garantir
+            ((MainActivity) getActivity()).getBtnCheckin().setVisibility(View.GONE);
+
+        }else {
+            bottomBar.setVisibility(View.GONE);
+
         }
 
 
-        textViewItem = view.findViewById(R.id.textview_item);
-        textViewItemDescr = view.findViewById(R.id.textview_itemdescr);
-        textViewItemTempo = view.findViewById(R.id.textview_itemtempo);
-        textViewItemValor = view.findViewById(R.id.textview_itemvalor);
-        recyclerViewItems = view.findViewById(R.id.recycler_itens);
-        imageViewItem = view.findViewById(R.id.imagem_item);
+
+
+
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference imagem = storage.getReference()
@@ -104,20 +132,29 @@ public class ItemsFragment extends Fragment {
         //Recupera os Adicionais do Banco de Dados.
         buscaAdicionais();
 
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Objects.requireNonNull(getActivity()).onBackPressed();
+            }
+        });
+
         return view;
     }
 
 
 
+
+
     /**
-     * @Soneca
+     *  ~Soneca~
      *  Passa por cada item da Lista de ADICIONAIS
      *  e recupera os ADICIONAL's por meio do get() e
      *  seta o Tipo de Adicional e etc... Dentro de cada
      *  Snapshot verificamos se as listas estão completas
      *  e se sim chamamos o metodo @configurarAdapter()...
      *
-     * @collectionGroup() : Retorna todos os documentos
+     * collectionGroup() : Retorna todos os documentos
      * de todas as coleções que tem o mesmo ID.
      *
      * * Não usei o Collection Group, pois ele recupera todos as coleçoes com
@@ -135,64 +172,30 @@ public class ItemsFragment extends Fragment {
 
         for (final Adicionais adicionais : listAd) {
 
-            final List<Adicional> listItem = new ArrayList<Adicional>();
 
-            adicionais.getReference().collection("Adicional").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            adicionais.getReference()
+                    .collection("Adicional")
+                    .orderBy("idxItem", Query.Direction.ASCENDING)
+                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                    if (task.isSuccessful()) {
+                    if (task.isSuccessful()) { // Aqui a tarefa já ta concluida, ou seja
+                                                //o codigo aqui dentro é sicrono.
 
-                        // Contador para saber quando é o
-                        // ultimo ADICIONAL do respectivo ADICIONAIS.
-                        int contador = 1; // 1 pois queremos comparar com
-                        // o tamanho do nosso @task.getResult().
+                        // Assim  colocamos a nossa lita na @ListaAd
+                        listAd.get(listAd.indexOf(adicionais)).setAdicionals(Aplotoso.pullAdicionals(task, adicionais));
 
-                        for (DocumentSnapshot document : task.getResult()) {
+                        // Para garantir que o adapter sera chamado
+                        // apenas no ultimo item de
+                        // @listAd, seguimos com :
+                            if (listAd.size() -1 == listAd.lastIndexOf(adicionais)){   // Se estivermos no ultimo ADICIONAIS
 
-                            //Setamos os atributos do ADICIONAL
-                            Adicional adicional = document.toObject(Adicional.class);
-                            adicional.setReference(document.getReference());
-                            adicional.setNomeItem(document.getId());
-                            adicional.setNomeAd(adicionais.getNomeAd());
-                            adicional.setTipoAd(adicionais.getTipoAd());
-                            adicional.setLimite(adicionais.getLimite());
-                            listItem.add(adicional);
+                                configurarAdapter(listAd);            // Configuramos nosso Adapter
 
-                            //Acrescenta nosso contador.
-                            //Respectivo ao indice que estamos.
-                            contador++;
-
-                            // Para garantir que o adapter sera chamado
-                            // apenas no ultimo Snapshot do ultimo item de
-                            // @listAd, seguimos com :
-
-                            if(contador == task.getResult().size()){     // no ultimo ADICIONAL
-
-                                Log.d(TAG, "onComplete: ULTIMO ADICIONAL --------------------> " + adicional.getNomeItem() );
-                                // aqui setamos nossa lista na lista de ADICIONAIS.
-                                // Assim todo ultiomo adicional colocamos a nossa lita na @ListaAd
-                                listAd.get(listAd.indexOf(adicionais)).setAdicionals(listItem);
-
-                                if (listAd.get(listAd.size() -1).getNomeAd().equals(adicionais.getNomeAd())){   // Se estivermos no ultimo ADICIONAIS
-
-                                    Log.d(TAG, "onComplete: ULTIMOS ADICIONAIS ==================> " + adicionais.getNomeAd());
-
-                                    configurarAdapter(listAd, listItem);            // Configuramos nosso Adapter
-
-
-                                }
-                                else{
-                                    Log.d(TAG, "onComplete: ADICIONAL >>>>> " + document.getData().toString());
-                                }
 
                             }
-                            else{
-                                Log.d(TAG, "onComplete: ADCIONAL >>>>>> " + adicional.getNomeItem());
-                            }
 
-
-                        }
 
                     }
                     else {
@@ -212,7 +215,7 @@ public class ItemsFragment extends Fragment {
      * adapters e etc...
      *
      */
-    private void configurarAdapter(List<Adicionais> listAd, List<Adicional> listItem) {
+    private void configurarAdapter(List<Adicionais> listAd) {
 
         recyclerViewItems.setAdapter(new AdicionaisAdapter(listAd));
 
@@ -224,26 +227,16 @@ public class ItemsFragment extends Fragment {
      * Firestore, depois chama @buscaAdicional()...
      */
     private void buscaAdicionais() {
-        dishes.getReference().collection("Adicionais").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        dishes.getReference()
+                .collection("Adicionais")
+                .orderBy("index", Query.Direction.ASCENDING)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
                 if (task.isSuccessful()) {
 
-                    List<Adicionais> listAd = new ArrayList<>();
-
-                    for (DocumentSnapshot document : task.getResult()) {
-
-                        //Setamos os atributos do ADICIONAIS.
-                        listAd.add(document.toObject(Adicionais.class));
-                        listAd.get(listAd.size() - 1).setReference(document.getReference());
-                        listAd.get(listAd.size() - 1).setNomeAd(document.getId());
-
-                    }
-
-                    buscaAdicional(listAd);
-
-                } else {
+                    buscaAdicional(Aplotoso.pullAdicionais(task));
 
                 }
 
@@ -251,6 +244,8 @@ public class ItemsFragment extends Fragment {
         });
 
     }
+
+
 
 
 }

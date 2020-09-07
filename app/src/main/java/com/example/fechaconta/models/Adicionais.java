@@ -4,8 +4,11 @@ package com.example.fechaconta.models;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
+import com.example.fechaconta.utilitys.AbstractListenerMet;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
@@ -27,11 +30,11 @@ import java.util.List;
  *                  => atributos
  *
  *
- *         //Variaveis//
+ *         //Variaveis Firestore//
  * nomeAd     => Nome do grupo de adicionais. ---------> (Esta variavel é o id do documento).
- * tipoAd     => tipo de adicionais.
- * limite     => limite de items a serem escolhidos. --> (apenas pro tipo 2)
- * adicionals => lista com os ADICIONAL.
+ * tipoAd     => Tipo de adicionais.
+ * limite     => Limite de items a serem escolhidos. --> (apenas pro tipo 2)
+ * index      => Ordem de exibição. -------------------> (apenas no Firestore)
  *
  *          //Tipos//
  * Tipos referece ao Tipo de Escolha
@@ -58,17 +61,21 @@ public class Adicionais {
     public static final  int TIPO_ZERO   = 0;
     public static final  int TIPO_UM     = 1;
 
-    // Firestore
-    private String nomeAd;
+
+
+    /* Firestore */
+    private String /* Id do documento: */ nomeAd;
     private int    limite;
     private int    tipoAd;
+        /* Just Firestore
+        private int index;    */
 
-    // Ambiente
+    /* Ambiente */
     private DocumentReference reference;
     private List <Adicional> adicionals;
-        // Ui-Stuff
-    private List<RadioButton> radioButtons = new ArrayList<>();
-    private List<CheckBox> checkBoxes = new ArrayList<>();
+    /*  UI - Stuff */
+        private List<MaterialRadioButton> radioButtons = new ArrayList<>();
+        private List<MaterialCheckBox> checkBoxes = new ArrayList<>();
 
     /*  Cosntrutores    */
     public Adicionais (){
@@ -85,19 +92,19 @@ public class Adicionais {
 
     /*  Getters & Setters   */
 
-    public List<RadioButton> getRadioButtons() {
+    public List<MaterialRadioButton> getRadioButtons() {
         return radioButtons;
     }
 
-    public void setRadioButtons(List<RadioButton> radioButtons) {
+    public void setRadioButtons(List<MaterialRadioButton> radioButtons) {
         this.radioButtons = radioButtons;
     }
 
-    public List<CheckBox> getCheckBoxes() {
+    public List<MaterialCheckBox> getCheckBoxes() {
         return checkBoxes;
     }
 
-    public void setCheckBoxes(List<CheckBox> checkBoxes) {
+    public void setCheckBoxes(List<MaterialCheckBox> checkBoxes) {
         this.checkBoxes = checkBoxes;
     }
 
@@ -180,7 +187,36 @@ public class Adicionais {
 
     }
 
-    public void addRadioButton (final RadioButton radioButton) {
+    /**
+     * Att os dados de limite
+     * em um text view.
+     * @param textView - TextView Limite
+     */
+    public void attTextLimite (TextView textView) {
+
+        int i = 0;
+        for (Adicional adicional : adicionals) if(adicional.isInclude()) i++;
+
+        switch (this.getTipoAd()){
+            case 0 :
+                if (this.getLimite() == 0) textView.setText("Escolha " + i +"/-");
+                else textView.setText("Escolha " + i + "/"+ this.getLimite());
+                break;
+            case 1 :
+                textView.setText("Escolha " + i + "/" + 1);
+                break;
+        }
+    }
+
+    /**
+     * Adiciona um RadioButton a uma Lista
+     * já configurando, tanto seus listeners,
+     * quanto o comportamento deles, segundo o
+     * tipo de ADICIONAIS. E chama attTextLimite().
+     * @param radioButton - radioButton a ser setado.
+     * @param dinamicLimitText - textView Referente ao Limite.
+     */
+    public void addRadioButton (final MaterialRadioButton radioButton, TextView dinamicLimitText) {
         if(radioButtons.size() < adicionals.size()){
             radioButtons.add(radioButton);
             radioButtons.get(radioButtons.indexOf(radioButton)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -193,20 +229,35 @@ public class Adicionais {
                         for (RadioButton rb : radioButtons) radioButtons.get(radioButtons.indexOf(rb)).setChecked(false);
                         radioButtons.get(radioButtons.indexOf(radioButton)).setChecked(true);
 
+
                     }else{
 
                         radioButtons.get(radioButtons.indexOf(radioButton)).setChecked(false);
                         adicionals.get(radioButtons.indexOf(radioButton)).setInclude(false);
 
                     }
+
+                    attTextLimite(dinamicLimitText);
+
                 }
+
+
+
             });
 
 
         }
     }
 
-    public void addCheckBoxes (final CheckBox checkBox) {
+    /**
+     * Adiciona um checkBox a uma Lista
+     * já configurando, tanto seus listeners,
+     * quanto o comportamento deles, segundo o
+     * tipo de ADICIONAIS. E chama attTextLimite().
+     * @param checkBox - checkBox a ser setado.
+     * @param dinamicLimitText - textView Referente ao Limite.
+     */
+    public void addCheckBoxes (final MaterialCheckBox checkBox, TextView dinamicLimitText) {
         if (this.checkBoxes.size() < this.adicionals.size()){
             this.checkBoxes.add(checkBox);
             checkBoxes.get(checkBoxes.indexOf(checkBox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -219,6 +270,15 @@ public class Adicionais {
                             checkBoxes.get(checkBoxes.indexOf(checkBox)).setChecked(true);
                             adicionals.get(checkBoxes.indexOf(checkBox)).setInclude(true);
 
+                            int i = 0;
+                            for (Adicional adicional : adicionals) if(adicional.isInclude()) i++;
+                            if(i == getLimite())
+                                for (MaterialCheckBox checkBox1 : checkBoxes)
+                                    if(!checkBox1.isChecked()) checkBoxes
+                                            .get(checkBoxes
+                                            .indexOf(checkBox1))
+                                            .setEnabled(false);
+
                         }else {
 
                             checkBoxes.get(checkBoxes.indexOf(checkBox)).setChecked(false);
@@ -230,8 +290,13 @@ public class Adicionais {
                         checkBoxes.get(checkBoxes.indexOf(checkBox)).setChecked(false);
                         adicionals.get(checkBoxes.indexOf(checkBox)).setInclude(false);
 
+                        for(MaterialCheckBox checkBox1 : checkBoxes)
+                            checkBoxes.get(checkBoxes.indexOf(checkBox1)).setEnabled(true);
+
 
                     }
+
+                    attTextLimite(dinamicLimitText);
 
                 }
             });

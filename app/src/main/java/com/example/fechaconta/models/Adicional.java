@@ -30,10 +30,10 @@ public class Adicional extends Adicionais {
      * DEVE FICAR ALGO ASSIM:
      *
      * => Variaveis no Firestore: ====> Exemplo:
-     * @relevIt : ordem de relevancia dos itens, escolher a ordem
-     * @nomeItem : nome do item. -----> Baccon
-     * @valorItem : valor do item. ---> 0.00 ou 5.00
-     * @gratis : se é gratis ou não. -> true ou false
+     * idxItem      : ordem de relevancia dos itens, escolher a ordem
+     * nomeItem     : nome do item. -----> Baccon
+     * valorItem    : valor do item. ---> 0.00 ou 5.00
+     * gratis       : se é gratis ou não. -> true ou false
      *
      * => Variaveis apenas do Ambiente:
      * @include : determina se o

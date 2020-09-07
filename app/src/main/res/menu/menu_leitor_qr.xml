@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    >
+
+    <item
+        android:id="@+id/favorito"
+        android:icon="@drawable/ic_flash_on"
+        android:title="@string/perfil"
+        android:visible="true"
+        app:showAsAction="always" />
+
+</menu>

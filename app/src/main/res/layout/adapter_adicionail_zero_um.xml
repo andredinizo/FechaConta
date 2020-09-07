@@ -1,40 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
+    android:id="@+id/linearlayout_adicionail"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/Cor1"
         android:paddingStart="16dp"
-        android:paddingTop="8dp"
+        android:paddingTop="16dp"
+        android:orientation="vertical"
         android:paddingEnd="16dp"
-        android:paddingBottom="8dp">
+        android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/textview_item_adicional"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:fontFamily="@font/overpass_light"
+            android:fontFamily="@font/overpass"
             android:text="OPCIONAIS"
-            android:textColor="@color/Cor3"
+            android:textColor="@color/Cor2"
             android:textSize="16sp"
             android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/textview_item_adicional_limite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:text="@string/textRadiogroup"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:visibility="invisible"
+                android:id="@+id/cardview_item"
+                android:layout_width="80dp"
+                android:layout_height="18dp"
+                app:cardBackgroundColor="@color/Cor2"
+                app:cardCornerRadius="5dp"
+
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Obrigatório"
+                    android:textSize="10sp"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+
+                    android:gravity="center_vertical|center_horizontal"/>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linearlayout_adicionail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="8dp"/>
+
 
 
 </LinearLayout>

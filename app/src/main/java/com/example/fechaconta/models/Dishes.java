@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
-public class Dishes{
+public class Dishes extends Restaurant{
 
     //Atributos
     private String ID;
@@ -22,6 +22,10 @@ public class Dishes{
     private String urlImagem;
     private DocumentReference reference;
     private List<Adicionais> adicionals;
+
+
+
+
 
 
 
