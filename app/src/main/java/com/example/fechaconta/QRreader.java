@@ -8,9 +8,7 @@ import android.graphics.Rect;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,7 +51,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyzer {
+public class QRreader extends AppCompatActivity {
 
     //VARIAVEIS
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA"};
@@ -64,14 +62,14 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
     private Mesa mesa;
     private Restaurant restaurante;
     private Dialog dialogConfirma;
-    private Context actvity;
-    private CameraX camerax;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrreader);
+
 
         dialogConfirma = new Dialog(this);
         mPreviewView = findViewById(R.id.camerapreview);
@@ -87,7 +85,9 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
     }
 
 
-    //Permisões
+    /*
+     * REQUISITA PERMIÇÕES    *
+     * */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
@@ -110,7 +110,11 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
         return true;
     }
 
-    //INICIA CAMERA
+
+    /*
+     * INICIA CAMERA    *
+     * */
+
     private void iniciaCamera() {
 
         final ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
@@ -131,85 +135,101 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
 
     }
 
-    //PAUSA CAMERA
+    /*
+     * PAUSA CAMERA    *
+     * */
     private void PausaCamera(ProcessCameraProvider cameraProvider) {
 
         cameraProvider.unbindAll();
 
     }
 
-    //FUNÇÃO ANALISE QRCODE
-    //ABRE POPUP
+    /*
+     *
+     * Função responsável por inicializar os casos de uso da camera
+     *
+     * Casos de uso utilizados: Preview (imagem em tempo real), Image Analyzer (Permite a leitura do QRCode), Camera Selector(Seleciona a Camera)
+     *
+     * */
     void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
 
-        Preview preview = new Preview.Builder()
+        Preview preview = new Preview.Builder() //CRIA VIZUALIZADOR DA CAMERA
                 .build();
 
-        CameraSelector cameraSelector = new CameraSelector.Builder()
+        CameraSelector cameraSelector = new CameraSelector.Builder() //CRIA UM SELETOR DE CAMERA
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
 
-        imageAnalysis = new ImageAnalysis.Builder()
+        imageAnalysis = new ImageAnalysis.Builder() //CRIA UM ANALISADOR DE IMAGENS
                 .build();
 
-        imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() {
+        imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() { //Configura a Análise
             @Override
-            public void analyze(@NonNull ImageProxy image) {
+            public void analyze(@NonNull ImageProxy image) { //Analizador recebe como entrada um imagem vindo da camera
 
-                BarcodeScannerOptions QRoptions = new BarcodeScannerOptions.Builder()
+                BarcodeScannerOptions QRoptions = new BarcodeScannerOptions.Builder() //CONFIGURA BARCODE
                         .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
                         .build();
 
-                BarcodeScanner scanner = BarcodeScanning.getClient(QRoptions);
+                BarcodeScanner scanner = BarcodeScanning.getClient(QRoptions); //INICIA BARCODE
 
 
-                int rotationDegrees = image.getImageInfo().getRotationDegrees();
+                int rotationDegrees = image.getImageInfo().getRotationDegrees(); //PEGA ROTAÇÃO DO CELULAR NO FRAME QUE ESTÁ SENDO ANALISADO
 
-                Image imagem = image.getImage();
+                Image imagem = image.getImage(); //PEGA A IMAGEM
 
                 InputImage ImagemAnalise = null;
                 if (imagem != null) {
-                    ImagemAnalise = InputImage.fromMediaImage(imagem, rotationDegrees);
+                    ImagemAnalise = InputImage.fromMediaImage(imagem, rotationDegrees); //CONFIGURA A IMAGEM COM A ROTAÇÃO
                 }
 
-                Task<List<Barcode>> result = scanner.process(ImagemAnalise)
+                Task<List<Barcode>> result = scanner.process(ImagemAnalise) //CRIA A TASK DE ANALIZAR
                         .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                             @Override
-                            public void onSuccess(List<Barcode> barcodes) {
+                            public void onSuccess(List<Barcode> barcodes) { //LEITURA REALIZADA
                                 int flag = 0;
                                 for (Barcode barcode : barcodes) {
 
                                     Rect bounds = barcode.getBoundingBox();
                                     Point[] corners = barcode.getCornerPoints();
-                                    String rawValue = barcode.getRawValue();
+                                    String rawValue = barcode.getRawValue(); //PEGA DADO LIDO
 
-                                    scanner.close();
-                                    if (BuscarMesa(rawValue)) {
+                                    scanner.close(); //FECHA SCANER
 
-                                        PausaCamera(cameraProvider);
+
+                                    if (BuscarMesa(rawValue)) { //VERIFICA SE O CÓDIGO LIDO É O CAMINHO DE UMA MESA
+
+                                        PausaCamera(cameraProvider); //PAUSA A CAMERA
+
+
+                                        //INSTANCIA OBJETOS DO DIALOG
 
                                         TextView nomeRestaurante;
                                         TextView codMesa;
                                         ImageView restauranteHeader;
                                         TextView btnCancelar;
 
+                                        //SET LAYOUT DIALOG
                                         dialogConfirma.setContentView(R.layout.dialogo_confirmar_checkin);
 
+                                        //INSTANCIA COMPONENTES LAYOUT DIALOG
                                         nomeRestaurante = dialogConfirma.findViewById(R.id.nome_restaurante_checkin);
                                         codMesa = dialogConfirma.findViewById(R.id.cod_mesa_checkin);
                                         btnCancelar = dialogConfirma.findViewById(R.id.btn_cancelar);
+                                        restauranteHeader = dialogConfirma.findViewById(R.id.header_confirma_checkin);
+
+                                        //PREENCHE OS CAMPOS
                                         nomeRestaurante.setText(restaurante.getNome());
                                         codMesa.setText("Mesa: " + mesa.getNu_mesa());
 
-
+                                        //ARREDONDA AS BORDAS DO DIALOG
                                         View v = Objects.requireNonNull(dialogConfirma.getWindow()).getDecorView();
                                         v.setBackgroundResource(android.R.color.transparent);
-                                        restauranteHeader = dialogConfirma.findViewById(R.id.header_confirma_checkin);
 
+
+                                        //BUSCA IMAGEM DO RESTAURANTE
                                         FirebaseStorage storage = FirebaseStorage.getInstance();
                                         final StorageReference imagem = storage.getReference().child("Restaurantes/Header/" + restaurante.getUrlheader());
-
-                                        Log.d("URLQR", "onSuccess2: " + imagem);
                                         imagem.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                             @Override
                                             public void onSuccess(Uri uri) {
@@ -217,16 +237,21 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
                                             }
                                         });
 
+                                        //EXIBE DIALOGO
                                         dialogConfirma.show();
-                                        dialogConfirma.setCanceledOnTouchOutside(false);
+                                        dialogConfirma.setCanceledOnTouchOutside(false); //FAZ COM QUE NÃO FECHE SE CLICAR FORA DO DIALOGO
 
-                                        btnCancelar.setOnClickListener(new View.OnClickListener() {
+                                        btnCancelar.setOnClickListener(new View.OnClickListener() { //BOTÃO DE CANCELAR CHECK-IN
                                             @Override
                                             public void onClick(View v) {
 
-                                                iniciaCamera();
+                                                iniciaCamera(); //REINICIA CAMERA
+
+                                                //APAGA AS CLASSES CRIADAS
                                                 mesa = null;
                                                 restaurante = null;
+
+                                                //FECHA DIALOGO
                                                 dialogConfirma.cancel();
 
                                             }
@@ -243,12 +268,11 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
-                            public void onFailure(@NonNull Exception e) {
+                            public void onFailure(@NonNull Exception e) { //LEITURA NÃO FOI EFETUADA
 
-                                scanner.close();
-                                image.close();
-                                // Task failed with an exception
-                                // ...
+                                scanner.close(); //FECHA SCANNER
+                                image.close(); //LIMPA IMAGEM
+
                             }
 
                         });
@@ -260,29 +284,32 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
         });
 
 
-        preview.setSurfaceProvider(mPreviewView.createSurfaceProvider());
+        preview.setSurfaceProvider(mPreviewView.createSurfaceProvider()); //CRIA SUPERFICIE DE VIZUALIZAÇÃO DA CAMERA
 
-
+        //ANEXA CICLO DE VIDA DA CAMERA COM CICLO DE VIDA DA ACTIVITY
         Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageAnalysis);
 
     }
 
 
-    //DIVIDE STRING LEITURA//BUSCA RESTAURANTE//BUSCA MESA
-    private boolean BuscarMesa(String rawcode) {
+    /*
+    * FUNÇÃO QUE VERIFICA SE O QRCODE É VALIDO E BUSCA A MESA
+    * */
+
+    private boolean BuscarMesa(String rawcode) { //BUSCA A MESA LIDA NO QR CODE
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String restauranteId;
         String mesaId;
         String[] split;
 
-        split = rawcode.split("//urlmesa//"); //Divide os Endereços (Restaurante e Mesa)
+        split = rawcode.split("//urlmesa//"); //DIVIDE O ENDEREÇO LIDO PARA MESA E RESTAURANTE
 
-        if (split.length == 2) { //VERIFICA SE CONSEGUIU SEPARAR
+        if (split.length == 2) { //VERIFICA O LINK RECEBIDO É VÁLIDO
             restauranteId = split[0];
             mesaId = split[1];
 
-
-            //BuscaRestaurante
+            //SE O LINK É VÁLIDO, BUSCA RESTAURANTE
 
             db.collection("Restaurant")
                     .document(restauranteId)
@@ -297,7 +324,7 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
                 }
             });
 
-            //BuscaMesa
+            //SE O LINK É VALIDO, BUSCA MESA
 
             db.collection("Restaurant")
                     .document(restauranteId)
@@ -317,17 +344,22 @@ public class QRreader extends AppCompatActivity implements ImageAnalysis.Analyze
 
         }
 
-        if (mesa == null) {
+        if (mesa == null) { //VERIFICA SE A MESA EXISTE, CASO NÃO: RETORNA FALSE;
 
             return false;
 
-        } else return true;
+        } else return true; //CASO SIM: RETORNA TRUE;
     }
 
-    @Override
-    public void analyze(@NonNull ImageProxy image) {
 
-    }
+    /*
+    *
+    * FUNÇÃO QUE REALIZA O CHECK-IN
+    *
+    * */
+
+    private void RealizaCheckIn(){}
+
 }
 
 
