@@ -4,34 +4,54 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import com.example.fechaconta.fragments.HomeFragment;
-import com.example.fechaconta.fragments.ItemsFragment;
+import com.example.fechaconta.models.Usuario;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private TextView inicioBottom;
     private HomeFragment homeFragment;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private ExtendedFloatingActionButton btnCheckin;
-    private Boolean isCheck = true;
+    private Boolean existeCheckin = false;
+    private Usuario usuarioLogado;
+    private Usuario.CheckIn checkin;
 
-    public Boolean getCheck() {
-        return isCheck;
+    public Boolean getExisteCheckin() {
+        return existeCheckin;
     }
 
-    public void setCheck(Boolean check) {
-        isCheck = check;
+    public void setExisteCheckin(Boolean check) {
+        existeCheckin = check;
+
+        if (existeCheckin) {
+            btnCheckin.setVisibility(View.GONE);
+        } else {
+            btnCheckin.setVisibility(View.VISIBLE);
+        }
+
     }
 
     //TODO: Pensar necessidade
@@ -43,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
 
     public TextView getInicioBottom() {
         return inicioBottom;
@@ -91,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         homeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, homeFragment, homeFragment.getTag()).commit();
-        FirebaseAuth.getInstance().signOut();
+
 
         btnCheckin = findViewById(R.id.btnCheckin);
 
@@ -102,19 +121,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), QRreader.class);
                 startActivity(intent);
 
-                if (!isCheck) {
-
-                    //btnCheckin.setVisibility(View.GONE);
-                   // isCheck = true;
-
-
-
-                } else {
-
-                   // btnCheckin.setVisibility(View.VISIBLE);
-                   // isCheck = false;
-
-                }
             }
         });
 
@@ -122,8 +128,44 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        DatabaseReference dbrealtime;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference usuario = db.collection("User").document(user.getUid());
+
+        usuario.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                usuarioLogado = Objects.requireNonNull(task.getResult()).toObject(Usuario.class);
+            }
+        });
+
+        dbrealtime = FirebaseDatabase.getInstance().getReference();
+        dbrealtime.child("checkin").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Usuario.CheckIn checkin  = snapshot.getValue(Usuario.CheckIn.class);
+
+                if(checkin != null){
+
+                    MainActivity.this.setExisteCheckin(true);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
+        //VERIFICA SE EXISTE CHECKIN DO USUARIO ATIVO
 
 
+    }
 }

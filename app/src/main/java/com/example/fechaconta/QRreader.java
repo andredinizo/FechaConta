@@ -1,26 +1,25 @@
 package com.example.fechaconta;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
@@ -33,11 +32,16 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.example.fechaconta.models.Mesa;
 import com.example.fechaconta.models.Restaurant;
+import com.example.fechaconta.models.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -64,10 +68,13 @@ public class QRreader extends AppCompatActivity {
     private Executor executor = Executors.newSingleThreadExecutor();
     private ImageAnalysis imageAnalysis;
     private Mesa mesa;
+    private Usuario usuarioLogado;
     private Restaurant restaurante;
     private Dialog dialogConfirma;
     private ContentLoadingProgressBar progress;
-
+    private FirebaseAuth mAuth;
+    private String restauranteId;
+    private String mesaId;
 
 
     @Override
@@ -79,7 +86,6 @@ public class QRreader extends AppCompatActivity {
         dialogConfirma = new Dialog(this);
         mPreviewView = findViewById(R.id.camerapreview);
         progress = findViewById(R.id.progress_checkin);
-
 
 
         if (allPermissionsGranted()) {
@@ -215,6 +221,7 @@ public class QRreader extends AppCompatActivity {
                                         TextView codMesa;
                                         ImageView restauranteHeader;
                                         TextView btnCancelar;
+                                        MaterialButton btnFazCheckin;
 
                                         //SET LAYOUT DIALOG
                                         dialogConfirma.setContentView(R.layout.dialogo_confirmar_checkin);
@@ -224,6 +231,8 @@ public class QRreader extends AppCompatActivity {
                                         codMesa = dialogConfirma.findViewById(R.id.cod_mesa_checkin);
                                         btnCancelar = dialogConfirma.findViewById(R.id.btn_cancelar);
                                         restauranteHeader = dialogConfirma.findViewById(R.id.header_confirma_checkin);
+                                        btnFazCheckin = dialogConfirma.findViewById(R.id.btn_confirma);
+
 
                                         //PREENCHE OS CAMPOS
                                         nomeRestaurante.setText(restaurante.getNome());
@@ -245,8 +254,9 @@ public class QRreader extends AppCompatActivity {
                                         });
 
                                         //EXIBE DIALOGO
-                                       // progress.hide();
+                                        // progress.hide();
                                         dialogConfirma.show();
+
                                         dialogConfirma.setCanceledOnTouchOutside(false); //FAZ COM QUE NÃO FECHE SE CLICAR FORA DO DIALOGO
 
                                         dialogConfirma.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -259,13 +269,13 @@ public class QRreader extends AppCompatActivity {
                                                 restaurante = null;
                                                 //progress.hide();
                                             }
-                                        });
+                                        }); //REINICIA CAMERA QUANDO DISCARTA O DIALOGO
 
                                         btnCancelar.setOnClickListener(new View.OnClickListener() { //BOTÃO DE CANCELAR CHECK-IN
                                             @Override
                                             public void onClick(View v) {
 
-                                               // iniciaCamera(); //REINICIA CAMERA
+                                                // iniciaCamera(); //REINICIA CAMERA
 
                                                 //APAGA AS CLASSES CRIADAS
                                                 mesa = null;
@@ -275,11 +285,19 @@ public class QRreader extends AppCompatActivity {
                                                 dialogConfirma.cancel();
 
                                             }
-                                        });
+                                        }); //FECHA DIALOGO E REINICIA CAMERA
 
-                                    }else {
+                                        btnFazCheckin.setOnClickListener(new View.OnClickListener() {
+                                            @RequiresApi(api = Build.VERSION_CODES.O)
+                                            @Override
+                                            public void onClick(View v) {
+                                                RealizaCheckIn();
+                                            }
+                                        }); //REALIZA CHECKIN
 
-                                        Toast.makeText(getApplication(), "Não foi possível localizar restaurante",Toast.LENGTH_SHORT).show();
+                                    } else {
+
+                                        Toast.makeText(getApplication(), "Não foi possível localizar restaurante", Toast.LENGTH_SHORT).show();
 
                                     }
 
@@ -315,14 +333,13 @@ public class QRreader extends AppCompatActivity {
 
 
     /*
-    * FUNÇÃO QUE VERIFICA SE O QRCODE É VALIDO E BUSCA A MESA
-    * */
+     * FUNÇÃO QUE VERIFICA SE O QRCODE É VALIDO E BUSCA A MESA
+     * */
 
     private boolean BuscarMesa(String rawcode) { //BUSCA A MESA LIDA NO QR CODE
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String restauranteId;
-        String mesaId;
+
         String[] split;
 
         split = rawcode.split("//urlmesa//"); //DIVIDE O ENDEREÇO LIDO PARA MESA E RESTAURANTE
@@ -341,7 +358,7 @@ public class QRreader extends AppCompatActivity {
                     if (task.isSuccessful()) {
 
                         restaurante = Objects.requireNonNull(task.getResult()).toObject(Restaurant.class);
-
+                        restaurante.setID_restaurante(restauranteId);
                     }
                 }
             });
@@ -375,12 +392,45 @@ public class QRreader extends AppCompatActivity {
 
 
     /*
-    *
-    * FUNÇÃO QUE REALIZA O CHECK-IN
-    *
-    * */
+     *
+     * FUNÇÃO QUE REALIZA O CHECK-IN
+     *
+     * */
 
-    private void RealizaCheckIn(){
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void RealizaCheckIn() {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        String userID = user.getUid();
+
+        DocumentReference usuario = db.collection("User").document(user.getUid());
+
+        usuario.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    usuarioLogado = Objects.requireNonNull(task.getResult()).toObject(Usuario.class);
+                    assert usuarioLogado != null;
+                    usuarioLogado.FazCheckin(restaurante,mesa);
+
+                    Intent intent = new Intent(QRreader.this, MainActivity.class );
+                    startActivity(intent);
+                    QRreader.this.finish();
+
+                } else {
+
+                    Toast.makeText(QRreader.this, "Não foi possível recuperar usuário", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+
 
 
 

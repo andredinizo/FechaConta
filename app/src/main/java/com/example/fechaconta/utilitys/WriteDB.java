@@ -24,10 +24,6 @@ public class WriteDB {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
-    
-
-
-
     public void escrPrato (final Dishes prato, String resname){
         db.collection("Restaurant").whereEqualTo("nome", resname).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

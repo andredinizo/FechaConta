@@ -26,23 +26,6 @@ public class User {
     private String phone;
 
 
-    static class CheckIn{
-
-        private String restaurante;
-        private String mesa;
-        private String hora;
-        private String data;
-        private String id;
-        private String userId;
-
-        public CheckIn(String restaurante, String mesa, String hora, String data, String userId) {
-            this.restaurante = restaurante;
-            this.mesa = mesa;
-            this.hora = hora;
-            this.data = data;
-            this.userId = userId;
-        }
-    }
 
 
     //Metodos
@@ -71,8 +54,8 @@ public class User {
         restauranteId = restaurante.getID_restaurante();
         mesaId = mesa.getNu_mesa();
 
-
-        CheckIn Checkin = new CheckIn(restauranteId,mesaId,hora,data, this.id);
+                                                                        //ID USUARIO
+        CheckIn Checkin = new CheckIn(restauranteId, mesaId, hora, data, this.id);
 
     }
 
@@ -115,6 +98,72 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    static class CheckIn{
+
+        private String restaurante;
+        private String mesa;
+        private String hora;
+        private String data;
+        private String id;
+        private String userId;
+
+        public CheckIn(String restaurante, String mesa, String hora, String data, String userId) {
+            this.restaurante = restaurante;
+            this.mesa = mesa;
+            this.hora = hora;
+            this.data = data;
+            this.userId = userId;
+        }
+
+        public String getRestaurante() {
+            return restaurante;
+        }
+
+        public void setRestaurante(String restaurante) {
+            this.restaurante = restaurante;
+        }
+
+        public String getMesa() {
+            return mesa;
+        }
+
+        public void setMesa(String mesa) {
+            this.mesa = mesa;
+        }
+
+        public String getHora() {
+            return hora;
+        }
+
+        public void setHora(String hora) {
+            this.hora = hora;
+        }
+
+        public String getData() {
+            return data;
+        }
+
+        public void setData(String data) {
+            this.data = data;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
     }
 
 

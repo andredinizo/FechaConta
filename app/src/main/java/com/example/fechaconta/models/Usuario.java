@@ -1,6 +1,17 @@
 package com.example.fechaconta.models;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Usuario {
 
@@ -10,10 +21,50 @@ public class Usuario {
     private String email;
     private String cpf;
     private String telefone;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private DatabaseReference dbrealtime = FirebaseDatabase.getInstance().getReference();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
     public Usuario() {}
+
+
+    //METODOS
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void FazCheckin(Restaurant restaurante, Mesa mesa){
+
+
+        //CRIA INSTANCIA DE CHECK-IN
+        String restauranteId;
+        String mesaId;
+        String data;
+        String hora;
+
+
+        DateTimeFormatter dataformato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter horaformato = DateTimeFormatter.ofPattern("HH:mm");
+
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        data = dateTime.format(dataformato);
+        hora = dateTime.format(horaformato);
+
+        restauranteId = restaurante.getID_restaurante();
+        mesaId = mesa.getNu_mesa();
+
+        //ID USUARIO
+        Usuario.CheckIn checkin = new Usuario.CheckIn(restauranteId, mesaId, hora, data, user.getUid());
+
+
+        //CRIA INSTANCIA DE CHECKIN FIREBASE REALTIME COM ID DO USUARIO
+
+        dbrealtime.child("checkin").child(user.getUid()).setValue(checkin);
+
+
+
+
+    }
 
     //Getter e Setter
 
@@ -60,6 +111,88 @@ public class Usuario {
 
     public void criarUsuarioBD (Usuario usuario){
 
-        db.collection("User").add(usuario);
+        db.collection("User").document(user.getUid()).set(usuario);
     }
+
+    public static class CheckIn{
+
+        private String restaurante;
+        private String mesa;
+        private String hora;
+        private String data;
+        private String id;
+        private String userId;
+        private int estado; // 0 - Esperando confirmação; 1- Check-in Aceito ; 2- Check-in Recusado; 3 - Check-in Concluido com Pagamento; 4- Check-in Concluido s/ Pagamento
+
+        public CheckIn(){/*CONSTRUTOR VAZIO PARA CRIAR OBJETO A PRTIR DO FIREBASE*/}
+
+        public CheckIn(String restaurante, String mesa, String hora, String data, String userId) {
+            this.restaurante = restaurante;
+            this.mesa = mesa;
+            this.hora = hora;
+            this.data = data;
+            this.userId = userId;
+            this.estado = 0;
+        }
+
+        //Getter and Setter
+
+
+        public int getEstado() {
+            return estado;
+        }
+
+        public void setEstado(int estado) {
+            this.estado = estado;
+        }
+
+        public String getRestaurante() {
+            return restaurante;
+        }
+
+        public void setRestaurante(String restaurante) {
+            this.restaurante = restaurante;
+        }
+
+        public String getMesa() {
+            return mesa;
+        }
+
+        public void setMesa(String mesa) {
+            this.mesa = mesa;
+        }
+
+        public String getHora() {
+            return hora;
+        }
+
+        public void setHora(String hora) {
+            this.hora = hora;
+        }
+
+        public String getData() {
+            return data;
+        }
+
+        public void setData(String data) {
+            this.data = data;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+    }
+
 }

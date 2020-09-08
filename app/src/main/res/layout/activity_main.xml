@@ -39,6 +39,8 @@
                 app:iconTint="#FFFFFF"
                 app:maxImageSize="35dp" />
 
+            <include layout="@layout/bottom_sheet_comanda"/>
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </FrameLayout>
 

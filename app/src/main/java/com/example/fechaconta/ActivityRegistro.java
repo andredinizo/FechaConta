@@ -6,13 +6,20 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fechaconta.fragments.Registro2Fragment;
 import com.example.fechaconta.models.Usuario;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
@@ -33,13 +40,14 @@ public class ActivityRegistro extends AppCompatActivity {
     private boolean permiteErroEmail = false;
     private boolean permiteErroSenha = false;
     private boolean permiteErroRepeteSenha = false;
+    private FirebaseAuth mAuth;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
-
+        mAuth = FirebaseAuth.getInstance();
         cadastroEmail = findViewById(R.id.cadastroEmail);
         cadastroSenha = findViewById(R.id.cadastroSenha);
         cadastroRepeteSenha = findViewById(R.id.cadastroRepeteSenha);
@@ -154,7 +162,24 @@ public class ActivityRegistro extends AppCompatActivity {
                     email=cadastroEmail.getText().toString().toLowerCase();
                     senha=cadastroSenha.getText().toString();
 
-                    abreRegistro2();
+                    mAuth.createUserWithEmailAndPassword(email,senha).addOnCompleteListener( new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()){
+                                //Deu certo
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                mAuth.signInWithEmailAndPassword(email,senha);
+                                abreRegistro2();
+
+                            }else{
+
+                                Toast.makeText(ActivityRegistro.this,"Não foi possível realizar cadastro", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    });
+
+
                 }
             }
         });
