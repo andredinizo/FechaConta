@@ -1,96 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottomsheet_comanda"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:visibility="gone"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        >
+    android:visibility="visible"
+    app:behavior_peekHeight="80dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="#12b2a0"
-        android:orientation="horizontal"
-        android:visibility="visible">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="R$ 23,90"
-            android:textAlignment="textStart"
-            android:fontFamily="@font/overpass"
-            android:gravity="start|center_vertical"
-            android:layout_marginStart="16dp"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_weight="1"
-            />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="Ver comanda"
-            android:fontFamily="@font/overpass"
-            android:gravity="center"
-            android:layout_marginStart="16dp"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textAllCaps="true"
-            android:layout_weight="1"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="end">
+            android:id="@+id/CheckinAceito"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#516E51"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="center"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_weight="0.4"
+                android:fontFamily="@font/overpass"
+                android:gravity="start|center_vertical"
+                android:text="R$ 23,90"
+                android:textAlignment="textStart"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:fontFamily="@font/overpass"
+                android:gravity="center"
+                android:text="Comanda Virtual"
+                android:textAllCaps="true"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="16dp"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/Cor1"
-                app:cardElevation="0dp"
+                android:layout_weight="0.4"
+                android:gravity="end">
 
-                >
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/Cor1"
+                    app:strokeWidth="1dp"
+
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/overpass"
+                        android:gravity="center"
+                        android:text="2"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+
+        </LinearLayout> <!--Checink Confirmado -->
+
+        <LinearLayout
+            android:id="@+id/AguardandoConfirmar"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#516E51"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:fontFamily="@font/overpass"
-                    android:text="2"
-                    android:gravity="center"
-                    android:textSize="16sp"
+                    android:text="Aguardando confirmação do restaurante..."
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tempocheckin"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|bottom"
+                    android:fontFamily="@font/overpass"
+                    android:gravity="bottom"
+
+                    android:text="0:59"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <androidx.core.widget.ContentLoadingProgressBar
+                android:id="@+id/progressCheckin"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:theme="@style/AppTheme" />
+
+
+        </LinearLayout> <!--Checink Aguardando -->
+
+        <LinearLayout
+            android:id="@+id/CheckinRecusado"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#db5d00"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/overpass"
+                    android:text="O Restaurante não aceitou seu pedido de checkin"
                     android:textAlignment="center"
-                    android:textColor="#FFFFFF"/>
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-            </com.google.android.material.card.MaterialCardView>
 
-        </LinearLayout>
+            </LinearLayout>
 
+
+        </LinearLayout> <!--Checink Cancelado -->
+
+        <LinearLayout
+            android:id="@+id/CheckinTimedOut"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="#db5d00"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/overpass"
+                    android:text="O tempo limite foi atingido"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout> <!--Checink TimedOut-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/Cor1" />
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="#12b2a0"
-        android:orientation="horizontal"
-        >
-
-
-
-    </LinearLayout>
-
-
-
 
 
 </FrameLayout>

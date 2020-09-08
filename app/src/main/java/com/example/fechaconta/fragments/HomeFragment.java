@@ -146,7 +146,7 @@ public class HomeFragment extends Fragment {
 
 
         MainActivity main = (MainActivity) getActivity();
-        main.SetFitsWindows(true);
+
 
         recyclerViewCategory = view.findViewById(R.id.recycler_categorias);
         recyclerViewRestaurant = view.findViewById(R.id.recycler_pratos);

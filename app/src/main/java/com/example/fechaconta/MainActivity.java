@@ -3,7 +3,9 @@ package com.example.fechaconta;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,8 @@ import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
 
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private TextView inicioBottom;
@@ -38,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     private Boolean existeCheckin = false;
     private Usuario usuarioLogado;
     private Usuario.CheckIn checkin;
+    private int tempolimiteCheckin;
+    private Timer timer;
+    private FrameLayout bottomsheetComanda;
 
     public Boolean getExisteCheckin() {
         return existeCheckin;
@@ -46,21 +53,17 @@ public class MainActivity extends AppCompatActivity {
     public void setExisteCheckin(Boolean check) {
         existeCheckin = check;
 
-        if (existeCheckin) {
+        if (MainActivity.this.existeCheckin) {
+
             btnCheckin.setVisibility(View.GONE);
+            bottomsheetComanda.setVisibility(View.VISIBLE);
+
         } else {
+
             btnCheckin.setVisibility(View.VISIBLE);
+            bottomsheetComanda.setVisibility(View.GONE);
+
         }
-
-    }
-
-    //TODO: Pensar necessidade
-    public void SetFitsWindows(boolean flag) {
-
-        LinearLayout mainLayout;
-        mainLayout = findViewById(R.id.MainLayout);
-        mainLayout.setFitsSystemWindows(flag);
-
 
     }
 
@@ -92,28 +95,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*
-         *
-         * Ativa App Center
-         *
-         * */
-
         AppCenter.start(getApplication(), "ace1eef7-0e90-4635-81c1-9e40d8323a8b", Analytics.class, Crashes.class);
-
-        /*
-         *
-         *
-         * Ativa app Center
-         *
-         * */
 
         setContentView(R.layout.activity_main);
         homeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, homeFragment, homeFragment.getTag()).commit();
 
-
+        bottomsheetComanda = findViewById(R.id.bottomsheet_comanda);
         btnCheckin = findViewById(R.id.btnCheckin);
-
         btnCheckin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,12 +114,33 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference usuario = db.collection("User").document(user.getUid());
+
+        usuario.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                usuarioLogado = Objects.requireNonNull(task.getResult()).toObject(Usuario.class);
+
+        }
+        });
+
+
 
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
+
+        VerificaCheckin();
+
+    }
+
+
+    //VERIFICA SE EXISTE CHECKIN DO USUARIO ATIVO
+
+    public void VerificaCheckin() {
 
         DatabaseReference dbrealtime;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -144,15 +154,69 @@ public class MainActivity extends AppCompatActivity {
         });
 
         dbrealtime = FirebaseDatabase.getInstance().getReference();
+
         dbrealtime.child("checkin").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Usuario.CheckIn checkin  = snapshot.getValue(Usuario.CheckIn.class);
+                checkin = snapshot.getValue(Usuario.CheckIn.class);
 
-                if(checkin != null){
+                if (checkin != null) {
 
                     MainActivity.this.setExisteCheckin(true);
 
+                } else {
+
+                    MainActivity.this.setExisteCheckin(false);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        });
+
+        dbrealtime.child("checkin").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                Usuario.CheckIn checkInAtualizado = snapshot.getValue(Usuario.CheckIn.class);
+
+                if (checkInAtualizado != null) {
+
+                    switch (checkInAtualizado.getEstado()) {
+                        // 0 - Esperando confirmação;
+                        // 1- Check-in Aceito ;
+                        // 2- Check-in Recusado;
+                        // 3 - Tempo de Checkin esgotado ;
+                        // 4- Check-in Concluido c/ Pagamento;
+                        // 5 - Checkin concluido s/ pagamento
+
+                        case 0:
+                            CheckinAguardando();
+                            break;
+                        case 1:
+                            ChecInAceito();
+                            if (timer != null) {
+                                timer.cancel();
+                            }
+                            break;
+                        case 2:
+                            CheckInRecusado();
+                            if (timer != null) {
+                                timer.cancel();
+                            }
+                            break;
+                        case 3:
+                            CheckinTempoEsgotado();
+
+                            break;
+
+
+                    }
                 }
 
             }
@@ -163,9 +227,115 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if (MainActivity.this.existeCheckin) {
 
-        //VERIFICA SE EXISTE CHECKIN DO USUARIO ATIVO
+            btnCheckin.setVisibility(View.GONE);
+            bottomsheetComanda.setVisibility(View.VISIBLE);
 
+        } else {
+
+            btnCheckin.setVisibility(View.VISIBLE);
+            bottomsheetComanda.setVisibility(View.GONE);
+
+        }
 
     }
+
+    public void ChecInAceito() {
+
+        LinearLayout linearCheckinAceito = findViewById(R.id.CheckinAceito);
+        LinearLayout linearAguardando = findViewById(R.id.AguardandoConfirmar);
+        LinearLayout linearRecusado = findViewById(R.id.CheckinRecusado);
+        LinearLayout linearTimedOut = findViewById(R.id.CheckinTimedOut);
+
+        linearCheckinAceito.setVisibility(View.VISIBLE);
+        linearAguardando.setVisibility(View.GONE);
+        linearRecusado.setVisibility(View.GONE);
+        linearTimedOut.setVisibility(View.GONE);
+
+    }
+
+    public void CheckInRecusado() {
+
+        LinearLayout linearCheckinAceito = findViewById(R.id.CheckinAceito);
+        LinearLayout linearAguardando = findViewById(R.id.AguardandoConfirmar);
+        LinearLayout linearRecusado = findViewById(R.id.CheckinRecusado);
+        LinearLayout linearTimedOut = findViewById(R.id.CheckinTimedOut);
+
+        linearCheckinAceito.setVisibility(View.GONE);
+        linearAguardando.setVisibility(View.GONE);
+        linearRecusado.setVisibility(View.VISIBLE);
+        linearTimedOut.setVisibility(View.GONE);
+
+    }
+
+    public void CheckinAguardando() {
+
+        if(this.timer!=null){
+            this.timer.cancel();
+        }
+
+        this.timer = new Timer();
+
+        LinearLayout linearCheckinAceito = findViewById(R.id.CheckinAceito);
+        LinearLayout linearAguardando = findViewById(R.id.AguardandoConfirmar);
+        LinearLayout linearRecusado = findViewById(R.id.CheckinRecusado);
+        LinearLayout linearTimedOut = findViewById(R.id.CheckinTimedOut);
+
+        linearCheckinAceito.setVisibility(View.GONE);
+        linearAguardando.setVisibility(View.VISIBLE);
+        linearRecusado.setVisibility(View.GONE);
+        linearTimedOut.setVisibility(View.GONE);
+
+        TextView txtTempo = findViewById(R.id.tempocheckin);
+
+        ProgressBar progressBar = findViewById(R.id.progressCheckin);
+        progressBar.setIndeterminate(true);
+
+        tempolimiteCheckin = 60;
+
+
+        TimerTask atualizaUI = new TimerTask() {
+            @Override
+            public void run() {
+                tempolimiteCheckin = tempolimiteCheckin - 1;
+
+                if (tempolimiteCheckin > 9) {
+                    txtTempo.setText("0:" + String.valueOf(tempolimiteCheckin));
+                } else {
+                    txtTempo.setText("0:0" + String.valueOf(tempolimiteCheckin));
+                }
+
+
+                if (tempolimiteCheckin == 0) {
+
+
+                    checkin.setEstado(3); //ESTADO DE CHECKIN TEMPO ESGOTADO
+                    checkin.AtualizaCheckin(checkin);
+                    timer.cancel();
+
+
+                }
+
+            }
+        };
+        timer.schedule(atualizaUI, 1, 1000);
+
+    }
+
+    public void CheckinTempoEsgotado() {
+
+        LinearLayout linearCheckinAceito = findViewById(R.id.CheckinAceito);
+        LinearLayout linearAguardando = findViewById(R.id.AguardandoConfirmar);
+        LinearLayout linearRecusado = findViewById(R.id.CheckinRecusado);
+        LinearLayout linearTimedOut = findViewById(R.id.CheckinTimedOut);
+
+        linearCheckinAceito.setVisibility(View.GONE);
+        linearAguardando.setVisibility(View.GONE);
+        linearRecusado.setVisibility(View.GONE);
+        linearTimedOut.setVisibility(View.VISIBLE);
+
+    }
+
+
 }

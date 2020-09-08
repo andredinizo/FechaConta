@@ -122,7 +122,7 @@ public class Usuario {
         private String data;
         private String id;
         private String userId;
-        private int estado; // 0 - Esperando confirmação; 1- Check-in Aceito ; 2- Check-in Recusado; 3 - Check-in Concluido com Pagamento; 4- Check-in Concluido s/ Pagamento
+        private int estado; // 0 - Esperando confirmação; 1- Check-in Aceito ; 2- Check-in Recusado; 3 - Tempo de Checkin esgotado ; 4- Check-in Concluido c/ Pagamento; 5 - Checkin concluido s/ pagamento
 
         public CheckIn(){/*CONSTRUTOR VAZIO PARA CRIAR OBJETO A PRTIR DO FIREBASE*/}
 
@@ -133,6 +133,16 @@ public class Usuario {
             this.data = data;
             this.userId = userId;
             this.estado = 0;
+        }
+
+        public void AtualizaCheckin(CheckIn checkIn){
+             DatabaseReference dbrealtime = FirebaseDatabase.getInstance().getReference();
+             FirebaseFirestore db = FirebaseFirestore.getInstance();
+             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            assert user != null;
+            dbrealtime.child("checkin").child(user.getUid()).setValue(checkIn);
+
         }
 
         //Getter and Setter
