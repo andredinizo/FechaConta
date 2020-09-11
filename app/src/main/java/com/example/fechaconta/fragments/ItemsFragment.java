@@ -23,6 +23,7 @@ import com.example.fechaconta.R;
 import com.example.fechaconta.adapter.AdicionaisAdapter;
 import com.example.fechaconta.models.Adicionais;
 import com.example.fechaconta.models.Dishes;
+import com.example.fechaconta.models.Usuario;
 import com.example.fechaconta.utilitys.Aplotoso;
 import com.example.fechaconta.utilitys.StringStuff;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -100,18 +101,15 @@ public class ItemsFragment extends Fragment {
         toolbar              = view.findViewById(R.id.toolbar_item);
 
         //Configura o Total do Botão de Adicionar pedido, a primeira vez.
-        textViewItemTotal.setText("R$ " + String.valueOf(dishes.getValue()));
+        textViewItemTotal.setText(StringStuff.converterString(dishes.getValue(), StringStuff.FORMATAR_VALOR));
 
         //Seta o text view da quantidade pra mostrar a quantidade, ao iniciar a fragment
-        textViewQuantidade.setText(StringStuff.converterString(dishes.getQuantidade(), StringStuff.FORMATAR_VALOR));
+        textViewQuantidade.setText(String.valueOf(dishes.getQuantidade()));
 
         //Ajusta o layout segundo,
         //a variavel CheckIn.
         if(true){
             bottomBar.setVisibility(View.VISIBLE);
-            // Acreidito que isto deva ser feito na MainActivity,
-            // mas só pra garantir
-            ((MainActivity) getActivity()).getBtnCheckin().setVisibility(View.GONE);
 
         }else {
             bottomBar.setVisibility(View.GONE);

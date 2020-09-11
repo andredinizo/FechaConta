@@ -42,13 +42,22 @@ public class Usuario {
         String hora;
 
 
-        DateTimeFormatter dataformato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        DateTimeFormatter horaformato = DateTimeFormatter.ofPattern("HH:mm");
 
-        LocalDateTime dateTime = LocalDateTime.now();
+        if (Build.VERSION.SDK_INT >= 26){
+            DateTimeFormatter dataformato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter horaformato = DateTimeFormatter.ofPattern("HH:mm");
+            LocalDateTime dateTime = LocalDateTime.now();
+            data = dateTime.format(dataformato);
+            hora = dateTime.format(horaformato);
+        } else
+        {
+            SimpleDateFormat dataformato = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat horaformato = new SimpleDateFormat("HH:mm");
 
-        data = dateTime.format(dataformato);
-        hora = dateTime.format(horaformato);
+            data = dataformato.format(Calendar.getInstance().getTime());
+            hora = horaformato.format(Calendar.getInstance().getTime());
+        }
+
 
         restauranteId = restaurante.getID_restaurante();
         mesaId = mesa.getNu_mesa();
@@ -143,6 +152,39 @@ public class Usuario {
             assert user != null;
             dbrealtime.child("checkin").child(user.getUid()).setValue(checkIn);
 
+
+
+        /** Verifica se posso ou não prosseguir
+         * segundo o estado do CheckIn.
+         *
+         *  =-=-+ Estados +-=-=
+         * 0 - Esperando confirmação;
+         * 1 - Check-in Aceito;
+         * 2 - Check-in Recusado;
+         * 3 - Tempo de Checkin esgotado;
+         * 4 - Check-in Concluido c/ Pagamento;
+         * 5 - Checkin concluido s/ pagamento
+         *
+         * @return - True - False.
+         */
+        public static boolean verificaCheckIn () {
+
+            switch (CheckIn.getEstado()) {
+
+                case 0 :
+                case 2 :
+                case 3 :
+                case 4 :
+                case 5 :
+                    return false;
+
+                case 1 :
+                    return true;
+
+
+            }
+
+            return false;
         }
 
         //Getter and Setter

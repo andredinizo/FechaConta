@@ -5,7 +5,11 @@ import android.util.Log;
 import com.example.fechaconta.models.Adicionais;
 import com.example.fechaconta.models.Adicional;
 import com.example.fechaconta.models.Restaurant;
+import com.example.fechaconta.models.Usuario;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -13,7 +17,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -37,12 +43,11 @@ import java.util.Objects;
 public class Aplotoso {
 
     public static final String TAG = "APLOTOSO";
+
     public static final int NO_FILTER = 0; /*Default*/
 
     //Filtros Restaurantes
     public static final int /* Para filtrar por uma Categoria */ RESTAURANT_CATEGORIA = 1 /* text : categoria a ser filtrada */;
-
-
 
      /*================================================================================< Adicionail >
      * Objeto
@@ -91,10 +96,8 @@ public class Aplotoso {
         return adicionalList;
     }
 
-
      /*================================================================================< Adicionail >
       */
-
 
     /*================================================================================< Adicionais >
      * Objeto
@@ -144,8 +147,6 @@ public class Aplotoso {
 
     }/*
      ===============================================================================</ Adicionais>*/
-
-
 
      /*===============================================================================< Restaurant >
      * Objeto
@@ -230,5 +231,46 @@ public class Aplotoso {
 
     /*
       =============================================================================</ Restaurant > */
+
+    //Push
+
+    //Constantes de Push
+    public static final int /* Faz funcção no Firestore  */FIRESTORE = 0;
+    public static final int /* Faz função no RealTime DB */REALTIME  = 1;
+
+    private static DatabaseReference dbrealtime = FirebaseDatabase.getInstance().getReference();
+
+    /**
+     * String restaurante;
+     * String mesa;
+     * String hora;
+     * String data;
+     * String userId;
+     *
+     * itn estado = 0;
+     */
+    public static void pushCheckin(int onde, String restaurante, String mesa, String hora, String data, String userId){
+
+        switch (onde) {
+
+            case 0 :
+
+                break;
+            case 1 :
+                Map<String, Object> pushValues = new HashMap<>();
+                pushValues.put("restaurante", restaurante);
+                pushValues.put("mesa", mesa);
+                pushValues.put("hora", hora);
+                pushValues.put("data", data);
+                pushValues.put("userId", userId);
+                pushValues.put("estado", 0);
+
+                dbrealtime.child("checkin").child(userId).setValue(pushValues);
+                break;
+
+        }
+    }
+
+
 
 }
