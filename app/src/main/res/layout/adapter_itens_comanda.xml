@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutItens"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/overpass"
+            android:text="Homemade Fries"
+            android:textSize="20sp"
+            android:drawableEnd="@drawable/ic_mostrar_mais_adatper_item"
+            />
+
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutAdicionaisItens"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/overpass_light"
+                android:text="- Cheddar"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout> <!--Adicionais-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                 android:layout_weight="1"
+                android:fontFamily="@font/overpass"
+                android:drawableStart="@drawable/ic_dividir_item"
+                android:drawablePadding="4sp"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="R$ 23,90"
+                android:textAlignment="textEnd"
+                android:fontFamily="@font/overpass"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/Cor1"/>
+
+    </LinearLayout>
+
+
+
+
+</FrameLayout>

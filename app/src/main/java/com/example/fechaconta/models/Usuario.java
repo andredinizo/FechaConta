@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class Usuario {
 
@@ -21,23 +22,25 @@ public class Usuario {
     private String email;
     private String cpf;
     private String telefone;
+    private String photoUrl;
     private DatabaseReference dbrealtime = FirebaseDatabase.getInstance().getReference();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
-    public Usuario() {}
+    public Usuario() {
+    }
 
 
     //METODOS
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void FazCheckin(Restaurant restaurante, Mesa mesa){
+    public void FazCheckin(Restaurant restaurante, Mesa mesa) {
 
 
         //CRIA INSTANCIA DE CHECK-IN
         String restauranteId;
-        String mesaId;
+        String nmesa;
         String data;
         String hora;
 
@@ -51,17 +54,28 @@ public class Usuario {
         hora = dateTime.format(horaformato);
 
         restauranteId = restaurante.getID_restaurante();
-        mesaId = mesa.getNu_mesa();
+        nmesa = mesa.getNu_mesa();
 
         //ID USUARIO
-        Usuario.CheckIn checkin = new Usuario.CheckIn(restauranteId, mesaId, hora, data, user.getUid());
 
+        if (CheckIn.getInstance() == null) {
+            Usuario.CheckIn checkin = new Usuario.CheckIn(restauranteId, nmesa, hora, data, user.getUid(), mesa.getUser_id(), mesa.getMesaId());
+        } else {
+
+            Usuario.CheckIn checkin = CheckIn.getInstance();
+            checkin.setRestaurante(restauranteId);
+            checkin.setMesa(nmesa);
+            checkin.setHora(hora);
+            checkin.setData(data);
+            checkin.setUserId(user.getUid());
+            checkin.setListaUsuarioMesa(mesa.getUser_id());
+            checkin.setMesaId(mesa.getMesaId());
+
+        }
 
         //CRIA INSTANCIA DE CHECKIN FIREBASE REALTIME COM ID DO USUARIO
 
-        dbrealtime.child("checkin").child(user.getUid()).setValue(checkin);
-
-
+        dbrealtime.child("checkin").child(user.getUid()).setValue(CheckIn.getInstance());
 
 
     }
@@ -108,37 +122,77 @@ public class Usuario {
         this.telefone = telefone;
     }
 
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
 
-    public void criarUsuarioBD (Usuario usuario){
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public void criarUsuarioBD(Usuario usuario) {
 
         db.collection("User").document(user.getUid()).set(usuario);
     }
 
-    public static class CheckIn{
+    public static class CheckIn {
 
-        private String restaurante;
-        private String mesa;
-        private String hora;
-        private String data;
-        private String id;
-        private String userId;
-        private int estado; // 0 - Esperando confirmação; 1- Check-in Aceito ; 2- Check-in Recusado; 3 - Tempo de Checkin esgotado ; 4- Check-in Concluido c/ Pagamento; 5 - Checkin concluido s/ pagamento
+        static private String restaurante;
+        static private String mesa;
+        static private String hora;
+        static private String data;
+        static private String id;
+        static private String mesaId;
+        static private String userId;
+        static private List<String> listaUsuarioMesa;
+        static private int estado; // 0 - Esperando confirmação; 1- Check-in Aceito ; 2- Check-in Recusado; 3 - Tempo de Checkin esgotado ; 4- Check-in Concluido c/ Pagamento; 5 - Checkin concluido s/ pagamento
 
-        public CheckIn(){/*CONSTRUTOR VAZIO PARA CRIAR OBJETO A PRTIR DO FIREBASE*/}
+        static private volatile CheckIn sCheckin;
 
-        public CheckIn(String restaurante, String mesa, String hora, String data, String userId) {
-            this.restaurante = restaurante;
-            this.mesa = mesa;
-            this.hora = hora;
-            this.data = data;
-            this.userId = userId;
-            this.estado = 0;
+        private CheckIn() {/*CONSTRUTOR VAZIO PARA CRIAR OBJETO A PRTIR DO FIREBASE*/}
+
+        private CheckIn(String restaurante, String mesa, String hora, String data, String userId, List<String> listuserId, String mesaId) {
+
+            CheckIn.restaurante = restaurante;
+            CheckIn.mesa = mesa;
+            CheckIn.hora = hora;
+            CheckIn.data = data;
+            CheckIn.userId = userId;
+            CheckIn.estado = 0;
+            CheckIn.listaUsuarioMesa = listuserId;
+            CheckIn.mesaId = mesaId;
+
+            if (sCheckin != null) {
+                throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
+            }
+
         }
 
-        public void AtualizaCheckin(CheckIn checkIn){
-             DatabaseReference dbrealtime = FirebaseDatabase.getInstance().getReference();
-             FirebaseFirestore db = FirebaseFirestore.getInstance();
-             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        public static CheckIn getInstance() {
+            if (sCheckin == null) {
+
+                synchronized (CheckIn.class) {
+                    if (sCheckin == null) {
+                        sCheckin = new CheckIn();
+
+                    }
+
+                }
+
+            }
+
+            return sCheckin;
+        }
+
+        protected CheckIn readResolve() {
+            return getInstance();
+        }
+
+        public void AtualizaCheckin(CheckIn checkIn) {
+            DatabaseReference dbrealtime = FirebaseDatabase.getInstance().getReference();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
             assert user != null;
             dbrealtime.child("checkin").child(user.getUid()).setValue(checkIn);
@@ -148,12 +202,28 @@ public class Usuario {
         //Getter and Setter
 
 
+        public String getMesaId() {
+            return mesaId;
+        }
+
+        public void setMesaId(String mesaId) {
+            CheckIn.mesaId = mesaId;
+        }
+
+        public List<String> getListaUsuarioMesa() {
+            return listaUsuarioMesa;
+        }
+
+        public void setListaUsuarioMesa(List<String> listaUsuarioMesa) {
+            CheckIn.listaUsuarioMesa = listaUsuarioMesa;
+        }
+
         public int getEstado() {
             return estado;
         }
 
         public void setEstado(int estado) {
-            this.estado = estado;
+            CheckIn.estado = estado;
         }
 
         public String getRestaurante() {
@@ -161,7 +231,7 @@ public class Usuario {
         }
 
         public void setRestaurante(String restaurante) {
-            this.restaurante = restaurante;
+            CheckIn.restaurante = restaurante;
         }
 
         public String getMesa() {
@@ -169,7 +239,7 @@ public class Usuario {
         }
 
         public void setMesa(String mesa) {
-            this.mesa = mesa;
+            CheckIn.mesa = mesa;
         }
 
         public String getHora() {
@@ -177,7 +247,7 @@ public class Usuario {
         }
 
         public void setHora(String hora) {
-            this.hora = hora;
+            CheckIn.hora = hora;
         }
 
         public String getData() {
@@ -185,7 +255,7 @@ public class Usuario {
         }
 
         public void setData(String data) {
-            this.data = data;
+            CheckIn.data = data;
         }
 
         public String getId() {
@@ -193,7 +263,7 @@ public class Usuario {
         }
 
         public void setId(String id) {
-            this.id = id;
+            CheckIn.id = id;
         }
 
         public String getUserId() {
@@ -201,7 +271,7 @@ public class Usuario {
         }
 
         public void setUserId(String userId) {
-            this.userId = userId;
+            CheckIn.userId = userId;
         }
     }
 

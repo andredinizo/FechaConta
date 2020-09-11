@@ -192,6 +192,7 @@ public class QRreader extends AppCompatActivity {
                 Image imagem = image.getImage(); //PEGA A IMAGEM
 
                 InputImage ImagemAnalise = null;
+
                 if (imagem != null) {
                     ImagemAnalise = InputImage.fromMediaImage(imagem, rotationDegrees); //CONFIGURA A IMAGEM COM A ROTAÇÃO
                 }
@@ -200,11 +201,12 @@ public class QRreader extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
                             @Override
                             public void onSuccess(List<Barcode> barcodes) { //LEITURA REALIZADA
-                                int flag = 0;
+
                                 for (Barcode barcode : barcodes) {
                                     //progress.show();
                                     Rect bounds = barcode.getBoundingBox();
                                     Point[] corners = barcode.getCornerPoints();
+
                                     String rawValue = barcode.getRawValue(); //PEGA DADO LIDO
 
                                     scanner.close(); //FECHA SCANER
@@ -275,7 +277,7 @@ public class QRreader extends AppCompatActivity {
                                             @Override
                                             public void onClick(View v) {
 
-                                                // iniciaCamera(); //REINICIA CAMERA
+                                                //iniciaCamera(); //REINICIA CAMERA
 
                                                 //APAGA AS CLASSES CRIADAS
                                                 mesa = null;
@@ -358,6 +360,7 @@ public class QRreader extends AppCompatActivity {
                     if (task.isSuccessful()) {
 
                         restaurante = Objects.requireNonNull(task.getResult()).toObject(Restaurant.class);
+                        assert restaurante != null;
                         restaurante.setID_restaurante(restauranteId);
                     }
                 }
@@ -374,7 +377,8 @@ public class QRreader extends AppCompatActivity {
                     if (task.isSuccessful()) {
 
                         mesa = Objects.requireNonNull(task.getResult()).toObject(Mesa.class);
-
+                        assert mesa != null;
+                        mesa.setMesaId(mesaId);
 
                     }
                 }

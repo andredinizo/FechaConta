@@ -2,16 +2,21 @@ package com.example.fechaconta;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fechaconta.adapter.UsuarioComandaAdapter;
 import com.example.fechaconta.fragments.HomeFragment;
+import com.example.fechaconta.models.Mesa;
 import com.example.fechaconta.models.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,6 +35,8 @@ import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,10 +48,13 @@ public class MainActivity extends AppCompatActivity {
     private ExtendedFloatingActionButton btnCheckin;
     private Boolean existeCheckin = false;
     private Usuario usuarioLogado;
-    private Usuario.CheckIn checkin;
+    private Usuario.CheckIn checkin = Usuario.CheckIn.getInstance();
     private int tempolimiteCheckin;
     private Timer timer;
-    private FrameLayout bottomsheetComanda;
+    private CoordinatorLayout bottomsheetComanda;
+    private RecyclerView recyclerUsuariosComanda;
+    private Mesa mesaCheckin;
+
 
     public Boolean getExisteCheckin() {
         return existeCheckin;
@@ -101,6 +111,14 @@ public class MainActivity extends AppCompatActivity {
         homeFragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, homeFragment, homeFragment.getTag()).commit();
 
+
+        //Instancia os layout Manager e configura os recycler
+        recyclerUsuariosComanda = findViewById(R.id.pessoasNaMesaRecycler);
+        RecyclerView.LayoutManager layManagerUserComanda = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerUsuariosComanda.setLayoutManager(layManagerUserComanda);
+        recyclerUsuariosComanda.setHasFixedSize(true);
+        recyclerUsuariosComanda.setNestedScrollingEnabled(true);
+
         bottomsheetComanda = findViewById(R.id.bottomsheet_comanda);
         btnCheckin = findViewById(R.id.btnCheckin);
         btnCheckin.setOnClickListener(new View.OnClickListener() {
@@ -122,9 +140,8 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 usuarioLogado = Objects.requireNonNull(task.getResult()).toObject(Usuario.class);
 
-        }
+            }
         });
-
 
 
     }
@@ -137,6 +154,40 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //POPULA COMANDA
+
+    public void AtualizaUsuarios() {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        List<Usuario> listaUsuarioLogado = new ArrayList<>();
+
+        UsuarioComandaAdapter usuarioLogadoAdapter = new UsuarioComandaAdapter();
+        usuarioLogadoAdapter.notifyDataSetChanged();
+        recyclerUsuariosComanda.setAdapter(usuarioLogadoAdapter);
+
+
+    }
+
+
+    //Busca Mesa
+
+    public void BuscaMesa() {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Restaurant").document(Usuario.CheckIn.getInstance().getRestaurante()).collection("Mesas").document(Usuario.CheckIn.getInstance().getMesaId()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            mesaCheckin = Objects.requireNonNull(task.getResult()).toObject(Mesa.class);
+                            assert mesaCheckin != null;
+                            Log.d("MESA", mesaCheckin.toString());
+                            AtualizaUsuarios();
+                        }
+                    }
+                });
+
+    }
 
     //VERIFICA SE EXISTE CHECKIN DO USUARIO ATIVO
 
@@ -214,8 +265,6 @@ public class MainActivity extends AppCompatActivity {
                             CheckinTempoEsgotado();
 
                             break;
-
-
                     }
                 }
 
@@ -226,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
 
         if (MainActivity.this.existeCheckin) {
 
@@ -252,6 +302,8 @@ public class MainActivity extends AppCompatActivity {
         linearAguardando.setVisibility(View.GONE);
         linearRecusado.setVisibility(View.GONE);
         linearTimedOut.setVisibility(View.GONE);
+        BuscaMesa();
+
 
     }
 
@@ -271,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void CheckinAguardando() {
 
-        if(this.timer!=null){
+        if (this.timer != null) {
             this.timer.cancel();
         }
 
@@ -319,6 +371,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
+
         timer.schedule(atualizaUI, 1, 1000);
 
     }
@@ -337,5 +390,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
+    }
 }

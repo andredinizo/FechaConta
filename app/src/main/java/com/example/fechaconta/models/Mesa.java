@@ -10,6 +10,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,8 +18,9 @@ public class Mesa {
 
     private int estado;
     private String nu_mesa;
-    private List<String> user_id;
+    private ArrayList<String> user_id;
     private int vagas;
+    private String mesaId;
 
     public Mesa() {
         //Public Constructor
@@ -45,6 +47,13 @@ public class Mesa {
         }
     }
 
+    public String getMesaId() {
+        return mesaId;
+    }
+
+    public void setMesaId(String mesaId) {
+        this.mesaId = mesaId;
+    }
 
     public int getEstado() {
         return estado;
@@ -62,11 +71,11 @@ public class Mesa {
         this.nu_mesa = nu_mesa;
     }
 
-    public List<String> getUser_id() {
+    public ArrayList<String> getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(List<String> user_id) {
+    public void setUser_id(ArrayList<String> user_id) {
         this.user_id = user_id;
     }
 

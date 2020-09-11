@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,18 +13,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.view.menu.MenuPresenter;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.fechaconta.MainActivity;
 import com.example.fechaconta.R;
 import com.example.fechaconta.adapter.CardapioAdapter;
 import com.example.fechaconta.adapter.HighlightsAdapter;
-import com.example.fechaconta.adapter.RestaurantAdapter;
 import com.example.fechaconta.models.Dishes;
 import com.example.fechaconta.models.Restaurant;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,7 +29,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -56,7 +50,7 @@ public class RestauranteFragment extends Fragment {
     private Restaurant restaurant;
     ImageView imageView;
     TextView nomeRestaurant;
-    TextView endereçoRestaurant;
+    TextView enderecoRestaurant;
     TextView restaurantRating;
     TextView restaurantCategoria;
     RecyclerView recyclerDestaques;
@@ -177,7 +171,7 @@ public class RestauranteFragment extends Fragment {
 
         imageView = view.findViewById(R.id.capa_restaurante);
         nomeRestaurant = view.findViewById(R.id.nome_restaurante);
-        endereçoRestaurant = view.findViewById(R.id.endereço_restaurante);
+        enderecoRestaurant = view.findViewById(R.id.endereço_restaurante);
         restaurantRating = view.findViewById(R.id.restaurant_rating);
         restaurantCategoria = view.findViewById(R.id.restaurante_categoria);
         TabCategorias = view.findViewById(R.id.TabCategorias);
@@ -216,7 +210,7 @@ public class RestauranteFragment extends Fragment {
 
 
         nomeRestaurant.setText(restaurant.getNome());
-        endereçoRestaurant.setText(restaurant.getEnder() + " - " + restaurant.getCidade() + "/" + restaurant.getEstado());
+        enderecoRestaurant.setText(restaurant.getEnder() + " - " + restaurant.getCidade() + "/" + restaurant.getEstado());
         restaurantRating.setText(String.valueOf(restaurant.getMedia()));
         restaurantCategoria.setText(restaurant.getCategoria());
 

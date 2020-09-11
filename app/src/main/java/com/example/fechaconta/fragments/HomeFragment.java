@@ -155,7 +155,6 @@ public class HomeFragment extends Fragment {
         searchBar = view.findViewById(R.id.edittext_searchbar);
 
 
-
         //Instancia os layout Manager e configura os recycler
         RecyclerView.LayoutManager layManagerCat = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         RecyclerView.LayoutManager layManagerRes = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);

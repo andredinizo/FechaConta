@@ -52,7 +52,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        final StorageReference imagem = FirebaseStorage.getInstance().getReference().child("Categorias" + "/" + list.get(position).getUrlimage());
+        final StorageReference imagem = storage.getReference().child("Categorias" + "/" + list.get(position).getUrlimage());
         imagem.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
