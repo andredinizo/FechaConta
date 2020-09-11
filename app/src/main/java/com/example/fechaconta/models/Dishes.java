@@ -38,11 +38,13 @@ public class Dishes{
     }
 
     /**
-     *
+     * Acrescenta ou diminui a qunatidade de itens
+     * use as duas constantes a seguir para selecionar
+     * qual ação será executada
      */
-    public static final int ADICIONAR = 0;
-    public static final int RETIRAR   = 1;
-     /**
+    public static final int /** Adiciona Qunatidade ++ */ADICIONAR = 0;
+    public static final int /** Retira a Quantidade -- */RETIRAR   = 1; /** apenas quantidade > 1
+     *
      * @param addOrRetirar 0 Adiciona
      *                     1 Retira
      */
@@ -58,23 +60,35 @@ public class Dishes{
     }
 
 
-
+    /**
+     * Calcula o total, segundo o valor do prato,
+     * e os adicionais selecionados, e multiplica
+     * tudo pela quantidade deste prato que queremos.
+     * @return - Retorna o valor total.
+     */
     public float calcularTotal() {
 
+        // Total a ser acrescentado.
         float total = this.getValue();
 
-        for(Adicionais adicionais : this.getAdicionais()) {
-
+        // Percorremos nossa lista de GruposAdicionais
+        for(Adicionais adicionais : this.getAdicionais()) { /*Perceba que como usamos a mesma instância de Dishes,
+                                                                    quando mexemos no prato dentro do adapter, mexemos no
+            //Percorremos as listas de Adicionais                         no do ItemFragment tbm, já que ambos tem a mesma istância.*/
             for(Adicional adicional : adicionais.getAdicionals()){
 
+                // Pegamos apenas os Inclusos
                 if (adicional.isInclude())
+                    // Se não forem Gratis
                     if (!adicional.isGratis())
+                        // Acresntamos ao total o valor do item;
                         total = total + adicional.getValorItem();
 
             }
 
         }
 
+        // Retornamos o total (Valor do prato + Adicionais) multiplicado pela quantidade.
         return total * quantidade;
     }
 
