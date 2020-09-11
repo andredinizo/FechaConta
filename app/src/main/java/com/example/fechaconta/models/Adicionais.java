@@ -1,12 +1,10 @@
 package com.example.fechaconta.models;
 
 
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.example.fechaconta.utilitys.AbstractListenerMet;
+import com.example.fechaconta.utilitys.StringStuff;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.firebase.firestore.DocumentReference;
@@ -152,12 +150,11 @@ public class Adicionais {
      * Diz se um adicional pode
      * ser selecionado ou não.
      * ---UTIL MAIS NO CASO 0----
-     * @param index - index do adicional a ser verificado na lista.
      * @return - returna true ou false.
      */
-    public boolean isCheckable (int index) {
+    public boolean isCheckable () {
 
-        switch (this.adicionals.get(index).getTipoAd()) {
+        switch (this.getTipoAd()) {
 
             case 0 :
 
@@ -187,6 +184,7 @@ public class Adicionais {
 
     }
 
+
     /**
      * Att os dados de limite
      * em um text view.
@@ -195,7 +193,7 @@ public class Adicionais {
     public void attTextLimite (TextView textView) {
 
         int i = 0;
-        for (Adicional adicional : adicionals) if(adicional.isInclude()) i++;
+        for (Adicional adicional : this.adicionals ) if(adicional.isInclude()) i++;
 
         switch (this.getTipoAd()){
             case 0 :
@@ -216,7 +214,7 @@ public class Adicionais {
      * @param radioButton - radioButton a ser setado.
      * @param dinamicLimitText - textView Referente ao Limite.
      */
-    public void addRadioButton (final MaterialRadioButton radioButton, TextView dinamicLimitText) {
+    public void addRadioButton (final MaterialRadioButton radioButton, TextView dinamicLimitText,TextView precosTotal, Dishes dishes )  {
         if(radioButtons.size() < adicionals.size()){
             radioButtons.add(radioButton);
             radioButtons.get(radioButtons.indexOf(radioButton)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -224,9 +222,14 @@ public class Adicionais {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked){
 
-                        for (Adicional adicional : adicionals) adicionals.get(adicionals.indexOf(adicional)).setInclude(false);
+                        for (int i = 0; i < adicionals.size(); i++)
+                            adicionals.get(i).setInclude(false);
+
                         adicionals.get(radioButtons.indexOf(radioButton)).setInclude(true);
-                        for (RadioButton rb : radioButtons) radioButtons.get(radioButtons.indexOf(rb)).setChecked(false);
+
+                        for (int i = 0; i < radioButtons.size(); i++)
+                            radioButtons.get(i).setChecked(false);
+
                         radioButtons.get(radioButtons.indexOf(radioButton)).setChecked(true);
 
 
@@ -237,8 +240,9 @@ public class Adicionais {
 
                     }
 
-                    attTextLimite(dinamicLimitText);
 
+                    attTextLimite(dinamicLimitText);
+                    attTotalPreços(precosTotal, dishes);
                 }
 
 
@@ -249,6 +253,16 @@ public class Adicionais {
         }
     }
 
+
+
+
+    public void attTotalPreços(TextView textView, Dishes dishes){
+
+        textView.setText(StringStuff.converterString(dishes.calcularTotal(), StringStuff.FORMATAR_VALOR));
+
+
+    }
+
     /**
      * Adiciona um checkBox a uma Lista
      * já configurando, tanto seus listeners,
@@ -257,7 +271,7 @@ public class Adicionais {
      * @param checkBox - checkBox a ser setado.
      * @param dinamicLimitText - textView Referente ao Limite.
      */
-    public void addCheckBoxes (final MaterialCheckBox checkBox, TextView dinamicLimitText) {
+    public void addCheckBoxes (final MaterialCheckBox checkBox, TextView dinamicLimitText, TextView precosTotal, Dishes dishes) {
         if (this.checkBoxes.size() < this.adicionals.size()){
             this.checkBoxes.add(checkBox);
             checkBoxes.get(checkBoxes.indexOf(checkBox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -265,7 +279,7 @@ public class Adicionais {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
 
-                        if (isCheckable(checkBoxes.indexOf(checkBox))) {
+                        if (isCheckable()) {
 
                             checkBoxes.get(checkBoxes.indexOf(checkBox)).setChecked(true);
                             adicionals.get(checkBoxes.indexOf(checkBox)).setInclude(true);
@@ -297,6 +311,7 @@ public class Adicionais {
                     }
 
                     attTextLimite(dinamicLimitText);
+                    attTotalPreços(precosTotal, dishes);
 
                 }
             });

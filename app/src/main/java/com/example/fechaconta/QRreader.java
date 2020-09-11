@@ -421,7 +421,7 @@ public class QRreader extends AppCompatActivity {
 
                     usuarioLogado = Objects.requireNonNull(task.getResult()).toObject(Usuario.class);
                     assert usuarioLogado != null;
-                    usuarioLogado.FazCheckin(restaurante,mesa);
+                    usuarioLogado.FazCheckin(restaurante, mesa);
 
                     Intent intent = new Intent(QRreader.this, MainActivity.class );
                     startActivity(intent);

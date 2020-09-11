@@ -1,11 +1,16 @@
 package com.example.fechaconta.models;
 
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
-public class Dishes extends Restaurant{
+/**
+ * todo replace : Adicionais = GrupoAdicionais
+ * * public static float calcTotal (): Calcula o preço final do prato (Adicionais).
+ * * public static List <Adicionais> getIncludeAicionaisList () : Retorna a lista de Adicionais, com apenas os Adicional's incluso
+ * public void adicionarComanda (int x) : Adiciona na comanda, a quantidade x deste prato.
+ */
+public class Dishes{
 
     //Atributos
     private String ID;
@@ -21,16 +26,85 @@ public class Dishes extends Restaurant{
     private int isHighlight;
     private String urlImagem;
     private DocumentReference reference;
-    private List<Adicionais> adicionals;
+
+    //Ambiente
+    private List<Adicionais> adicionais;
+    private  int quantidade = 1;
 
 
+    //Métodos
+    public void adicionarComanda (){
+
+    }
+
+    /**
+     * Acrescenta ou diminui a qunatidade de itens
+     * use as duas constantes a seguir para selecionar
+     * qual ação será executada
+     */
+    public static final int /** Adiciona Qunatidade ++ */ADICIONAR = 0;
+    public static final int /** Retira a Quantidade -- */RETIRAR   = 1; /** apenas quantidade > 1
+     *
+     * @param addOrRetirar 0 Adiciona
+     *                     1 Retira
+     */
+    public void altQuantidade (int addOrRetirar) {
+        switch (addOrRetirar){
+            case 0 :
+                quantidade ++;
+                break;
+            case 1 :
+                if(quantidade > 1) quantidade --;
+                break;
+        }
+    }
 
 
+    /**
+     * Calcula o total, segundo o valor do prato,
+     * e os adicionais selecionados, e multiplica
+     * tudo pela quantidade deste prato que queremos.
+     * @return - Retorna o valor total.
+     */
+    public float calcularTotal() {
+
+        // Total a ser acrescentado.
+        float total = this.getValue();
+
+        // Percorremos nossa lista de GruposAdicionais
+        for(Adicionais adicionais : this.getAdicionais()) { /*Perceba que como usamos a mesma instância de Dishes,
+                                                                    quando mexemos no prato dentro do adapter, mexemos no
+            //Percorremos as listas de Adicionais                         no do ItemFragment tbm, já que ambos tem a mesma istância.*/
+            for(Adicional adicional : adicionais.getAdicionals()){
+
+                // Pegamos apenas os Inclusos
+                if (adicional.isInclude())
+                    // Se não forem Gratis
+                    if (!adicional.isGratis())
+                        // Acresntamos ao total o valor do item;
+                        total = total + adicional.getValorItem();
+
+            }
+
+        }
+
+        // Retornamos o total (Valor do prato + Adicionais) multiplicado pela quantidade.
+        return total * quantidade;
+    }
 
 
 
 
     //Getters e Setters
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
     public DocumentReference getReference() {
         return reference;
     }
@@ -39,12 +113,12 @@ public class Dishes extends Restaurant{
         this.reference = restaurantId;
     }
 
-    public List<Adicionais> getAdicionals() {
-        return adicionals;
+    public List<Adicionais> getAdicionais() {
+        return adicionais;
     }
 
-    public void setAdicionals(List<Adicionais> adicionals) {
-        this.adicionals = adicionals;
+    public void setAdicionais(List<Adicionais> adicionais) {
+        this.adicionais = adicionais;
     }
 
     public String getUrlImagem() {

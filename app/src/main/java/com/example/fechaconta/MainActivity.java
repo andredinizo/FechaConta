@@ -105,6 +105,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+       //FirebaseAuth.getInstance().signOut();
+
+
+
         AppCenter.start(getApplication(), "ace1eef7-0e90-4635-81c1-9e40d8323a8b", Analytics.class, Crashes.class);
 
         setContentView(R.layout.activity_main);
@@ -363,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     checkin.setEstado(3); //ESTADO DE CHECKIN TEMPO ESGOTADO
-                    checkin.AtualizaCheckin(checkin);
+                    checkin.AtualizaCheckin();
                     timer.cancel();
 
 
