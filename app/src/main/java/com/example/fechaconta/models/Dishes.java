@@ -1,11 +1,16 @@
 package com.example.fechaconta.models;
 
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
-public class Dishes extends Restaurant{
+/**
+ * todo replace : Adicionais = GrupoAdicionais
+ * * public static float calcTotal (): Calcula o preço final do prato (Adicionais).
+ * * public static List <Adicionais> getIncludeAicionaisList () : Retorna a lista de Adicionais, com apenas os Adicional's incluso
+ * public void adicionarComanda (int x) : Adiciona na comanda, a quantidade x deste prato.
+ */
+public class Dishes{
 
     //Atributos
     private String ID;
@@ -21,16 +26,71 @@ public class Dishes extends Restaurant{
     private int isHighlight;
     private String urlImagem;
     private DocumentReference reference;
-    private List<Adicionais> adicionals;
+
+    //Ambiente
+    private List<Adicionais> adicionais;
+    private  int quantidade = 1;
+
+
+    //Métodos
+    public void adicionarComanda (){
+
+    }
+
+    /**
+     *
+     */
+    public static final int ADICIONAR = 0;
+    public static final int RETIRAR   = 1;
+     /**
+     * @param addOrRetirar 0 Adiciona
+     *                     1 Retira
+     */
+    public void altQuantidade (int addOrRetirar) {
+        switch (addOrRetirar){
+            case 0 :
+                quantidade ++;
+                break;
+            case 1 :
+                if(quantidade > 1) quantidade --;
+                break;
+        }
+    }
 
 
 
+    public float calcularTotal() {
 
+        float total = this.getValue();
+
+        for(Adicionais adicionais : this.getAdicionais()) {
+
+            for(Adicional adicional : adicionais.getAdicionals()){
+
+                if (adicional.isInclude())
+                    if (!adicional.isGratis())
+                        total = total + adicional.getValorItem();
+
+            }
+
+        }
+
+        return total * quantidade;
+    }
 
 
 
 
     //Getters e Setters
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
     public DocumentReference getReference() {
         return reference;
     }
@@ -39,12 +99,12 @@ public class Dishes extends Restaurant{
         this.reference = restaurantId;
     }
 
-    public List<Adicionais> getAdicionals() {
-        return adicionals;
+    public List<Adicionais> getAdicionais() {
+        return adicionais;
     }
 
-    public void setAdicionals(List<Adicionais> adicionals) {
-        this.adicionals = adicionals;
+    public void setAdicionais(List<Adicionais> adicionais) {
+        this.adicionais = adicionais;
     }
 
     public String getUrlImagem() {

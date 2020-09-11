@@ -230,6 +230,7 @@
                    >
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_less_item"
                         android:layout_width="0dp"
                         android:layout_weight="0.33"
                         android:layout_height="match_parent"
@@ -244,6 +245,7 @@
                         app:iconTint="#8F8D8C"/>
 
                     <TextView
+                        android:id="@+id/textview_quantidade_item"
                         android:layout_width="0dp"
                         android:layout_weight="0.3"
                         android:layout_height="match_parent"
@@ -255,6 +257,7 @@
                         android:textSize="18sp"/>
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_pluss_item"
                         android:layout_weight="0.33"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -284,6 +287,7 @@
                 app:cardCornerRadius="5dp">
 
                 <LinearLayout
+                    android:id="@+id/btn_additem"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
@@ -301,6 +305,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/textview_item_total"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"

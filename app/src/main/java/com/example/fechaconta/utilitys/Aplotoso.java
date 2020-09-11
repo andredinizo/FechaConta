@@ -55,10 +55,6 @@ public class Aplotoso {
      *      * reference
      *      * include [!get]
      *
-     *  - Parent
-     *      * nomeAd ----[Id do documento!]
-     *      * limite
-     *      * tipoAd
      *
      *
      * [!get] = não recupera, pelo menos não aqui!
@@ -84,11 +80,6 @@ public class Aplotoso {
 
             //Ambiente
             adicional.setReference(documentSnapshot.getReference());
-
-            //Parent
-            adicional.setNomeAd(adicionais.getNomeAd());
-            adicional.setTipoAd(adicionais.getTipoAd());
-            adicional.setLimite(adicionais.getLimite());
 
             //addList
             adicionalList.add(adicional);

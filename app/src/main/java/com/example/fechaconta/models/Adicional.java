@@ -21,7 +21,7 @@ import java.util.List;
  *
  *
  */
-public class Adicional extends Adicionais {
+public class Adicional {
 
     /**
      * MUDAR (feito) @isGratis NOS PORXIMOS TEXTES
@@ -158,39 +158,9 @@ public class Adicional extends Adicionais {
         return total;
     }
 
-    /**
-     * Conta os item selecionados de
-     * uma mesmo ADICIONAIS.
-     *
-     * @param adicionals - Lista de adicionais a ser contado.
-     * @return - Retorna um inteiro referente
-     * ao numero de ADICIONAL's selecionados de um mesmo
-     * ADICIONAIS.
-     */
-    public int contaCheck(List <Adicional> adicionals) {
 
-        // Nosso total a ser retornado
-        int total = 0;
 
-        // Passamos por todos os ADICIONAL's
-        for (Adicional adicional : adicionals){
 
-            // Filtramos os do mesmo ADICIONAIS
-          if (this.getNomeAd().equals(adicional.getNomeAd()))
-
-              // Pra cada ADICIONAL que tiver selecionado
-              if (adicional.isInclude())
-
-                  // Acrescentamos ao total.
-                  total ++;
-
-        }
-
-        // E retonamos o Total de selecionados
-        // se um mesmo ADICIONAIS
-        return total;
-
-    }
 
 
 }
