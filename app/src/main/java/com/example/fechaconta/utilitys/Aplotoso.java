@@ -527,25 +527,27 @@ public class Aplotoso {
 
         //Atributos
         pedidoPath.child("ID").setValue(dishes.getID());
-        pedidoPath.child("name").setValue(dishes.getName());
-        pedidoPath.child("description").setValue(dishes.getDescription());
-        pedidoPath.child("isVegan").setValue(dishes.getIsVegan());
-        pedidoPath.child("isVeg").setValue(dishes.getIsVeg());
-        pedidoPath.child("isGluetnFree").setValue(dishes.getIsGlutenFree());
+        //pedidoPath.child("name").setValue(dishes.getName());
+        //pedidoPath.child("description").setValue(dishes.getDescription());
+        //pedidoPath.child("isVegan").setValue(dishes.getIsVegan());
+        //pedidoPath.child("isVeg").setValue(dishes.getIsVeg());
+        //pedidoPath.child("isGluetnFree").setValue(dishes.getIsGlutenFree());
         pedidoPath.child("value").setValue(dishes.getValue());
-        pedidoPath.child("category").setValue(dishes.getCategory());
-        pedidoPath.child("avgrating").setValue(dishes.getAvgrating());
-        pedidoPath.child("numratings").setValue(dishes.getNumratings());
-        pedidoPath.child("isHighlight").setValue(dishes.getIsHighlight());
-        pedidoPath.child("urlImagem").setValue(dishes.getUrlImagem());
+        //pedidoPath.child("category").setValue(dishes.getCategory());
+        //pedidoPath.child("avgrating").setValue(dishes.getAvgrating());
+        //pedidoPath.child("numratings").setValue(dishes.getNumratings());
+        //pedidoPath.child("isHighlight").setValue(dishes.getIsHighlight());
+        //pedidoPath.child("urlImagem").setValue(dishes.getUrlImagem());
 
         //RealTime Variables
-        pedidoPath.child("statusPedid").setValue(dishes.getStatusPedido());
+        pedidoPath.child("statusPedido").setValue(dishes.getStatusPedido());
         pedidoPath.child("dividirCom").setValue(dishes.getDividirCom());
+        pedidoPath.child("total").setValue(dishes.calcularTotal());
 
         //Ambiente
         pedidoPath.child("quantidade").setValue(dishes.getQuantidade());
-        pushPedidoAdicionais(dishes.getAdicionais(), pedidoPath);
+        //pushPedidoAdicionais(dishes.getAdicionais(), pedidoPath);
+        pushPedidoIncludeAdicinals(dishes.getAdicionais(), pedidoPath);
 
     }
     /*
@@ -590,6 +592,7 @@ public class Aplotoso {
         for (Adicional adicional : adicionals) {
 
             //FireStore
+
             DatabaseReference adlRef = adicionaisReference.child("adicional").child(adicional.getNomeItem());
             adlRef.child("valorItem").setValue(adicional.getNomeItem());
             adlRef.child("gratis").setValue(adicional.isGratis());
@@ -599,6 +602,28 @@ public class Aplotoso {
 
 
         }
+
+    }
+
+    public static void pushPedidoIncludeAdicinals(List<Adicionais> adicionais, DatabaseReference fromdishesReference){
+
+        for (Adicionais adicionais1 : adicionais)
+
+            for(Adicional adicional : adicionais1.getAdicionals())
+
+                if(adicional.isInclude()) {
+
+                    //FireStore
+                    DatabaseReference includeAdicionalRef = fromdishesReference.child("includeAdicional").child(adicional.getNomeItem());
+                    includeAdicionalRef.child("valorItem").setValue(adicional.getValorItem());
+                    includeAdicionalRef.child("gratis").setValue(adicional.isGratis());
+
+                    //Ambiente
+                    includeAdicionalRef.child("include").setValue(adicional.isInclude());
+
+                }
+
+
 
     }
 

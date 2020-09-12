@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
  * todo replace : Adicionais = GrupoAdicionais
+ * todo aninhar as classes
+ * todo adicionar a uma lista de include o adicional incluso ao inves de @calcTotal
  * * public static float calcTotal (): Calcula o preço final do prato (Adicionais).
  * * public static List <Adicionais> getIncludeAicionaisList () : Retorna a lista de Adicionais, com apenas os Adicional's incluso
  * public void adicionarComanda (int x) : Adiciona na comanda, a quantidade x deste prato.
