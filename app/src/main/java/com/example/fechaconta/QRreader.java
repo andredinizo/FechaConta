@@ -401,7 +401,7 @@ public class QRreader extends AppCompatActivity {
      *
      * */
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+   // @RequiresApi(api = Build.VERSION_CODES.O)
     private void RealizaCheckIn() {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
