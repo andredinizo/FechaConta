@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
        //FirebaseAuth.getInstance().signOut();
 
 
-
         AppCenter.start(getApplication(), "ace1eef7-0e90-4635-81c1-9e40d8323a8b", Analytics.class, Crashes.class);
 
         setContentView(R.layout.activity_main);
@@ -167,6 +166,8 @@ public class MainActivity extends AppCompatActivity {
 
         UsuarioComandaAdapter usuarioLogadoAdapter = new UsuarioComandaAdapter();
         usuarioLogadoAdapter.notifyDataSetChanged();
+        recyclerUsuariosComanda.setNestedScrollingEnabled(false);
+        recyclerUsuariosComanda.setHasFixedSize(true);
         recyclerUsuariosComanda.setAdapter(usuarioLogadoAdapter);
 
 

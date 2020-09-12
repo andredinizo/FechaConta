@@ -88,6 +88,19 @@ public class Usuario {
 
         dbrealtime.child("checkin").child(user.getUid()).setValue(CheckIn.getInstance());
 
+        List<String> listaUsuariosMesaAtualizada = mesa.getUser_id();
+        listaUsuariosMesaAtualizada.add(user.getUid());
+        //ATUALIZA LISTA DE USUARIO NA MESA FIRESTORE
+        db.collection("Restaurant").document(restauranteId).collection("Mesas").document(mesa.getMesaId()).update("user_id",listaUsuariosMesaAtualizada);
+
+        //Atualiza respectivos Check-ins no realTime
+        CheckIn.getInstance().setListaUsuarioMesa(listaUsuariosMesaAtualizada);
+        for(int position=0;position==listaUsuariosMesaAtualizada.size();position++){
+
+            dbrealtime.child("checkin").child(listaUsuariosMesaAtualizada.get(position)).setValue(CheckIn.getInstance());
+
+        }
+
 
     }
 
