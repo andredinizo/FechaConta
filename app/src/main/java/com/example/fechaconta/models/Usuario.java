@@ -97,7 +97,7 @@ public class Usuario {
         //Atualiza respectivos Check-ins no realTime
         CheckIn.getInstance().setListaUsuarioMesa(listaUsuariosMesaAtualizada);
 
-        for(int position = 0 ;position < listaUsuariosMesaAtualizada.size(); position++){
+        for(int position = 0; position < listaUsuariosMesaAtualizada.size(); position ++){
 
             dbrealtime.child("checkin").child(listaUsuariosMesaAtualizada.get(position)).setValue(CheckIn.getInstance());
 
@@ -196,6 +196,7 @@ public class Usuario {
             }
 
         }
+
 
         public static CheckIn getInstance() {
             if (sCheckin == null) {
