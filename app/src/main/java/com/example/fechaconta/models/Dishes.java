@@ -9,7 +9,7 @@ import java.util.List;
  * * public static float calcTotal (): Calcula o preço final do prato (Adicionais).
  * * public static List <Adicionais> getIncludeAicionaisList () : Retorna a lista de Adicionais, com apenas os Adicional's incluso
  * public void adicionarComanda (int x) : Adiciona na comanda, a quantidade x deste prato.
- *
+ * <p>
  * FireBase
  * - name
  * - description
@@ -22,9 +22,8 @@ import java.util.List;
  * - numratings
  * - isHighlight
  * - urlImagem
- *
  */
-public class Dishes extends Restaurant{
+public class Dishes extends Restaurant {
 
     //Atributos
     private String ID;
@@ -40,19 +39,24 @@ public class Dishes extends Restaurant{
     private int isHighlight;
     private String urlImagem;
 
+    public Dishes() {
+    }
+
+    //RealTime Variables
+    private int statusPedido;
+    private List<String> dividirCom;
+
     //Ambiente
     private DocumentReference reference;
     private List<Adicionais> adicionais;
-    private  int quantidade = 1;
+    private int quantidade = 1;
 
 
     //Métodos
-    public void adicionarComanda (){
-        if(Usuario.CheckIn.verificaCheckIn()) {
-
-            if (Usuario.CheckIn.getInstance().getRestaurante().equals(super.getID_restaurante()));
-
-        }
+    public void adicionarComanda() {
+        if (Usuario.CheckIn.verificaCheckIn())
+            if (Usuario.CheckIn.getInstance().getRestaurante().equals(super.getID_restaurante()))
+                Usuario.CheckIn.adicionarPratoComanda(this);
     }
 
     /**
@@ -60,19 +64,24 @@ public class Dishes extends Restaurant{
      * use as duas constantes a seguir para selecionar
      * qual ação será executada
      */
-    public static final int /** Adiciona Qunatidade ++ */ADICIONAR = 0;
-    public static final int /** Retira a Quantidade -- */RETIRAR   = 1; /** apenas quantidade > 1
+    public static final int /** Adiciona Qunatidade ++ */
+            ADICIONAR = 0;
+    public static final int /** Retira a Quantidade -- */
+            RETIRAR = 1;
+
+    /**
+     * apenas quantidade > 1
      *
      * @param addOrRetirar 0 Adiciona
      *                     1 Retira
      */
-    public void altQuantidade (int addOrRetirar) {
-        switch (addOrRetirar){
-            case 0 :
-                quantidade ++;
+    public void altQuantidade(int addOrRetirar) {
+        switch (addOrRetirar) {
+            case 0:
+                quantidade++;
                 break;
-            case 1 :
-                if(quantidade > 1) quantidade --;
+            case 1:
+                if (quantidade > 1) quantidade--;
                 break;
         }
     }
@@ -82,6 +91,7 @@ public class Dishes extends Restaurant{
      * Calcula o total, segundo o valor do prato,
      * e os adicionais selecionados, e multiplica
      * tudo pela quantidade deste prato que queremos.
+     *
      * @return - Retorna o valor total.
      */
     public float calcularTotal() {
@@ -90,10 +100,10 @@ public class Dishes extends Restaurant{
         float total = this.getValue();
 
         // Percorremos nossa lista de GruposAdicionais
-        for(Adicionais adicionais : this.getAdicionais()) { /*Perceba que como usamos a mesma instância de Dishes,
+        for (Adicionais adicionais : this.getAdicionais()) { /*Perceba que como usamos a mesma instância de Dishes,
                                                                     quando mexemos no prato dentro do adapter, mexemos no
             //Percorremos as listas de Adicionais                         no do ItemFragment tbm, já que ambos tem a mesma istância.*/
-            for(Adicional adicional : adicionais.getAdicionals()){
+            for (Adicional adicional : adicionais.getAdicionals()) {
 
                 // Pegamos apenas os Inclusos
                 if (adicional.isInclude())
@@ -109,8 +119,6 @@ public class Dishes extends Restaurant{
         // Retornamos o total (Valor do prato + Adicionais) multiplicado pela quantidade.
         return total * quantidade;
     }
-
-
 
 
     //Getters e Setters
@@ -236,5 +244,19 @@ public class Dishes extends Restaurant{
         this.numratings = numratings;
     }
 
+    public int getStatusPedido() {
+        return statusPedido;
+    }
 
+    public void setStatusPedido(int statusPedido) {
+        this.statusPedido = statusPedido;
+    }
+
+    public List<String> getDividirCom() {
+        return dividirCom;
+    }
+
+    public void setDividirCom(List<String> dividirCom) {
+        this.dividirCom = dividirCom;
+    }
 }

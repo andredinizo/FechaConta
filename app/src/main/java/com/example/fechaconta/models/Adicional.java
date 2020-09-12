@@ -1,5 +1,7 @@
 package com.example.fechaconta.models;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
  *
  *
  */
+@IgnoreExtraProperties
 public class Adicional {
 
     /**
@@ -51,6 +54,8 @@ public class Adicional {
 
     //Ambiente:
     private boolean include;
+
+    @Exclude
     private DocumentReference reference;
 
     //Construtores

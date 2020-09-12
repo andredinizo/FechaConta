@@ -42,6 +42,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
+    private View includeBottomSheet;
     private TextView inicioBottom;
     private HomeFragment homeFragment;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -105,8 +106,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       //FirebaseAuth.getInstance().signOut();
+        //FirebaseAuth.getInstance().signOut();
 
+        bottomsheetComanda = findViewById(R.id.bottomsheet_comanda);
 
         AppCenter.start(getApplication(), "ace1eef7-0e90-4635-81c1-9e40d8323a8b", Analytics.class, Crashes.class);
 
@@ -409,5 +411,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+    }
+
+    public CoordinatorLayout getBottomsheetComanda() {
+        return bottomsheetComanda;
+    }
+
+    public void setBottomsheetComanda(CoordinatorLayout bottomsheetComanda) {
+        this.bottomsheetComanda = bottomsheetComanda;
     }
 }

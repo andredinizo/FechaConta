@@ -49,11 +49,17 @@ public class UsuarioComandaAdapter extends RecyclerView.Adapter<UsuarioComandaAd
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                        usuarioDaVez = Objects.requireNonNull(task.getResult()).toObject(Usuario.class);
-                        Log.d("UsuarioDaVez", usuarioDaVez.getEmail());
-                        assert usuarioDaVez != null;
-                        holder.nomeUser.setText(usuarioDaVez.getNome());
-                        Picasso.get().load(usuarioDaVez.getPhotoUrl()).fit().into(holder.imagemUser);
+                        if(task.isSuccessful()){
+                            usuarioDaVez = Objects.requireNonNull(task.getResult()).toObject(Usuario.class);
+                            /**
+                             * Esta dando nulo as vezes, principalmente quando sai e entra de novo,
+                             * diz que o UsuariodaVez,getEmail(), é nullo.
+                             */
+                            //if (usuarioDaVez.getEmail() != null) Log.d("UsuarioDaVez", usuarioDaVez.getEmail());
+                            assert usuarioDaVez != null;
+                            holder.nomeUser.setText(usuarioDaVez.getNome());
+                            Picasso.get().load(usuarioDaVez.getPhotoUrl()).fit().into(holder.imagemUser);
+                        }
 
                     }
                 });

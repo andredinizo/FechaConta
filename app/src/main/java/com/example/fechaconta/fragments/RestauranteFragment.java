@@ -24,6 +24,7 @@ import com.example.fechaconta.adapter.CardapioAdapter;
 import com.example.fechaconta.adapter.HighlightsAdapter;
 import com.example.fechaconta.models.Dishes;
 import com.example.fechaconta.models.Restaurant;
+import com.example.fechaconta.utilitys.Aplotoso;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -83,11 +84,9 @@ public class RestauranteFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                List<Dishes> cardapio = new ArrayList<>();
-                List<Dishes> highlights = new ArrayList<>();
-                List<String> categorias = new ArrayList<>();
-                List<Integer> indexCategorias = new ArrayList<>();
-                int position = 0;
+                if (task.isSuccessful()){
+
+                /*int position = 0;
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
                         cardapio.add(document.toObject(Dishes.class));
@@ -115,7 +114,12 @@ public class RestauranteFragment extends Fragment {
 
                         }
                         position++;
-                    }
+                    }*/
+
+                    List<Dishes> cardapio = Aplotoso.pullDishesCardapio(task, restaurant);
+                    List<Dishes> highlights = Aplotoso.pullDisheshighlights(task, restaurant);
+                    List<String> categorias = Aplotoso.pullDishesCategorias(task, restaurant);
+                    List<Integer> indexCategorias = Aplotoso.pullDishesIndexCategorias(task, restaurant);
 
                     HighlightsAdapter highlightsadapter = new HighlightsAdapter(highlights, restaurante.getID_restaurante());
                     highlightsadapter.notifyDataSetChanged();

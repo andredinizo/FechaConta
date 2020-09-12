@@ -37,42 +37,40 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Objects;
 
 /**
- *
- *
  * Pendencias e Conflitos:
- *
+ * <p>
  * -> CheckIn : Verificação de Checkin está sendo
  * feita pela variavel MainActivity.Check
  * e dou gone no botão de checkIn, entretanto não
  * acho que seja o lugar certo.
- *
  */
 public class ItemsFragment extends Fragment {
     public static final String TAG = "ITEMS_FRAGMENT";
 
 
-
     private Dishes dishes;
 
-    private MaterialButton  plussButton;
-    private MaterialButton  lessButton;
-    private TextView        textViewQuantidade;
-    private TextView        textViewItem;
-    private TextView        textViewItemDescr;
-    private TextView        textViewItemValor;
-    private TextView        textViewItemTempo;
-    private TextView        textViewItemTotal;
-    private ImageView       imageViewItem;
-    private RecyclerView    recyclerViewItems;
-    private Toolbar         toolbar;
-    private BottomAppBar    bottomBar;
-    private LinearLayout    linearLayoutRecycler;
-    private LinearLayout    buttonAddItem;
+    private MaterialButton plussButton;
+    private MaterialButton lessButton;
+    private TextView textViewQuantidade;
+    private TextView textViewItem;
+    private TextView textViewItemDescr;
+    private TextView textViewItemValor;
+    private TextView textViewItemTempo;
+    private TextView textViewItemTotal;
+    private ImageView imageViewItem;
+    private RecyclerView recyclerViewItems;
+    private Toolbar toolbar;
+    private BottomAppBar bottomBar;
+    private LinearLayout linearLayoutRecycler;
+    private LinearLayout buttonAddItem;
 
     public ItemsFragment(Dishes dishes) {
         this.dishes = dishes;
@@ -86,19 +84,19 @@ public class ItemsFragment extends Fragment {
         bottomBar = view.findViewById(R.id.bottombar);
         MainActivity mainActivity = (MainActivity) getActivity();
 
-        textViewQuantidade   = view.findViewById(R.id.textview_quantidade_item);
+        textViewQuantidade = view.findViewById(R.id.textview_quantidade_item);
         linearLayoutRecycler = view.findViewById(R.id.linearlayout_item_recycler);
-        textViewItemDescr    = view.findViewById(R.id.textview_itemdescr);
-        textViewItemTempo    = view.findViewById(R.id.textview_itemtempo);
-        textViewItemTotal    = view.findViewById(R.id.textview_item_total);
-        textViewItemValor    = view.findViewById(R.id.textview_itemvalor);
-        recyclerViewItems    = view.findViewById(R.id.recycler_itens);
-        imageViewItem        = view.findViewById(R.id.imagem_item);
-        buttonAddItem        = view.findViewById(R.id.btn_additem);
-        textViewItem         = view.findViewById(R.id.textview_item);
-        plussButton          = view.findViewById(R.id.button_pluss_item);
-        lessButton           = view.findViewById(R.id.button_less_item);
-        toolbar              = view.findViewById(R.id.toolbar_item);
+        textViewItemDescr = view.findViewById(R.id.textview_itemdescr);
+        textViewItemTempo = view.findViewById(R.id.textview_itemtempo);
+        textViewItemTotal = view.findViewById(R.id.textview_item_total);
+        textViewItemValor = view.findViewById(R.id.textview_itemvalor);
+        recyclerViewItems = view.findViewById(R.id.recycler_itens);
+        imageViewItem = view.findViewById(R.id.imagem_item);
+        buttonAddItem = view.findViewById(R.id.btn_additem);
+        textViewItem = view.findViewById(R.id.textview_item);
+        plussButton = view.findViewById(R.id.button_pluss_item);
+        lessButton = view.findViewById(R.id.button_less_item);
+        toolbar = view.findViewById(R.id.toolbar_item);
 
         //Configura o Total do Botão de Adicionar pedido, a primeira vez.
         textViewItemTotal.setText(StringStuff.converterString(dishes.getValue(), StringStuff.FORMATAR_VALOR));
@@ -108,10 +106,15 @@ public class ItemsFragment extends Fragment {
 
         //Ajusta o layout segundo,
         //a variavel CheckIn.
-        if(true){
-            bottomBar.setVisibility(View.VISIBLE);
 
-        }else {
+        if (Usuario.CheckIn.verificaCheckIn()) {
+            if(Usuario.CheckIn.getInstance().getRestaurante().equals(dishes.getID_restaurante())) {
+                bottomBar.setVisibility(View.VISIBLE);
+                ((MainActivity) getActivity()).getBottomsheetComanda().setVisibility(View.GONE);
+            }else {
+                bottomBar.setVisibility(View.GONE);
+            }
+        } else {
             bottomBar.setVisibility(View.GONE);
 
         }
@@ -140,7 +143,7 @@ public class ItemsFragment extends Fragment {
         // Carrega a imagem.
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference imagem = storage.getReference()
-                .child("Restaurantes/Pratos/"+dishes.getUrlImagem());
+                .child("Restaurantes/Pratos/" + dishes.getUrlImagem());
 
         imagem.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -179,6 +182,10 @@ public class ItemsFragment extends Fragment {
 
                 dishes.adicionarComanda();
 
+                // Colocar uma verificação que a ação foi concluida
+                finaliza(view);
+
+
 
             }
         });
@@ -186,28 +193,36 @@ public class ItemsFragment extends Fragment {
         return view;
     }
 
+    private void finaliza(View view) {
+        //Verificar se todas as ações foram bem sussedidas
+        if (true){
+            getActivity().getSupportFragmentManager().popBackStack();
+
+        }
+
+    }
+
     /**
-     *  ~Soneca~
-     *  Passa por cada item da Lista de ADICIONAIS
-     *  e recupera os ADICIONAL's por meio do get() e
-     *  seta o Tipo de Adicional e etc... Dentro de cada
-     *  Snapshot verificamos se as listas estão completas
-     *  e se sim chamamos o metodo @configurarAdapter()...
-     *
+     * ~Soneca~
+     * Passa por cada item da Lista de ADICIONAIS
+     * e recupera os ADICIONAL's por meio do get() e
+     * seta o Tipo de Adicional e etc... Dentro de cada
+     * Snapshot verificamos se as listas estão completas
+     * e se sim chamamos o metodo @configurarAdapter()...
+     * <p>
      * collectionGroup() : Retorna todos os documentos
      * de todas as coleções que tem o mesmo ID.
-     *
+     * <p>
      * * Não usei o Collection Group, pois ele recupera todos as coleçoes com
-     *   mesmo ID desde da RAIZ ou seja recuperaria de dodos os pratos e restaurantes.
-     *
-     *  -> Verificamos se a lista está completa, garantindo que o metodo @configurarAdapter()
-     *     seja chamdo apenas quando, o ultimo item de @param listAd for o mesmo que o o
-     *     adicional do nosso for, ou seja se estamos no ultimo item da lista, em seguida
-     *     verificamos por meio de um contador se estamos no ultimo item do nosso TASK. se sim
-     *     Atualizamos a UI.
-     *
+     * mesmo ID desde da RAIZ ou seja recuperaria de dodos os pratos e restaurantes.
+     * <p>
+     * -> Verificamos se a lista está completa, garantindo que o metodo @configurarAdapter()
+     * seja chamdo apenas quando, o ultimo item de @param listAd for o mesmo que o o
+     * adicional do nosso for, ou seja se estamos no ultimo item da lista, em seguida
+     * verificamos por meio de um contador se estamos no ultimo item do nosso TASK. se sim
+     * Atualizamos a UI.
      */
-    private void buscaAdicional(final List<Adicionais> listAd) {
+    private void buscaAdicional(@NotNull final List<Adicionais> listAd) {
 
 
         for (final Adicionais adicionais : listAd) {
@@ -221,7 +236,7 @@ public class ItemsFragment extends Fragment {
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
                     if (task.isSuccessful()) { // Aqui a tarefa já ta concluida, ou seja
-                                                //o codigo aqui dentro é sicrono.
+                        //o codigo aqui dentro é sicrono.
 
                         // Assim  colocamos a nossa lita na @ListaAd
                         //
@@ -230,22 +245,20 @@ public class ItemsFragment extends Fragment {
                         // Para garantir que o adapter sera chamado
                         // apenas no ultimo item de
                         // @listAd, seguimos com :
-                            if (listAd.size() -1 == listAd.lastIndexOf(adicionais)){   // Se estivermos no ultimo ADICIONAIS
+                        if (listAd.size() - 1 == listAd.lastIndexOf(adicionais)) {   // Se estivermos no ultimo ADICIONAIS
 
-                                configurarAdapter(listAd);            // Configuramos nosso Adapter
-
-
-                            }
+                            configurarAdapter(listAd);            // Configuramos nosso Adapter
 
 
-                    }
-                    else {
+                        }
+
+
+                    } else {
                         Log.d(TAG, "onComplete: Falha ao Carregar os Documentos ADIOCIONAL");
 
                     }
                 }
             });
-
 
 
         }
@@ -254,7 +267,6 @@ public class ItemsFragment extends Fragment {
     /**
      * Atualiza a UI, setando os
      * adapters e etc...
-     *
      */
     private void configurarAdapter(List<Adicionais> listAd) {
 
@@ -286,78 +298,35 @@ public class ItemsFragment extends Fragment {
 
     }
 
+    public Dishes getDishes() {
+        return dishes;
+    }
 
+    public void setDishes(Dishes dishes) {
+        this.dishes = dishes;
+    }
 
 
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // Codigo 1.0
-    // Retornava pra de todos os pratos.
-    /*   /**
-     * @Soneca
-     * Recupera os Items por meio do @collectionGroup
-     * e seta o Tipo de Adicional dentro de cada Snapshot
-     * buscando o getParent().getParent da referência do item,
-     * ou seja volta pro documento de Adicionais, e seta o nosso item
-     * com suas caracteristicas.
-     *
-     * @collectionGroup() : Retorna todos os documentos de todas as
-     * coleções que tem o mesmo ID.
-     *
-     *  -> Depois chamamos o Recycler e setamos o Adapter, e garantimos
-     *    que não vamos chamalo mais de uma vez, verificando se o numero
-     *    de item na lista equivale ao de resultados.
-     *//*
+// Codigo 1.0
+// Retornava pra de todos os pratos.
+/*   /**
+ * @Soneca
+ * Recupera os Items por meio do @collectionGroup
+ * e seta o Tipo de Adicional dentro de cada Snapshot
+ * buscando o getParent().getParent da referência do item,
+ * ou seja volta pro documento de Adicionais, e seta o nosso item
+ * com suas caracteristicas.
+ *
+ * @collectionGroup() : Retorna todos os documentos de todas as
+ * coleções que tem o mesmo ID.
+ *
+ *  -> Depois chamamos o Recycler e setamos o Adapter, e garantimos
+ *    que não vamos chamalo mais de uma vez, verificando se o numero
+ *    de item na lista equivale ao de resultados.
+ *//*
     private void buscaItems() {
 
 

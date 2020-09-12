@@ -44,6 +44,7 @@
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </FrameLayout>
 
-    <include layout="@layout/bottom_sheet_comanda"/>
+    <include
+        layout="@layout/bottom_sheet_comanda"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

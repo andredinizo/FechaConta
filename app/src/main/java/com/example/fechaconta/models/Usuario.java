@@ -4,6 +4,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.fechaconta.utilitys.Aplotoso;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -96,7 +97,7 @@ public class Usuario {
         //Atualiza respectivos Check-ins no realTime
         CheckIn.getInstance().setListaUsuarioMesa(listaUsuariosMesaAtualizada);
 
-        for(int position=0;position<=listaUsuariosMesaAtualizada.size();position++){
+        for(int position = 0 ;position < listaUsuariosMesaAtualizada.size(); position++){
 
             dbrealtime.child("checkin").child(listaUsuariosMesaAtualizada.get(position)).setValue(CheckIn.getInstance());
 
@@ -172,6 +173,9 @@ public class Usuario {
         static private List<String> listaUsuarioMesa;
         static private int estado; // 0 - Esperando confirmação; 1- Check-in Aceito ; 2- Check-in Recusado; 3 - Tempo de Checkin esgotado ; 4- Check-in Concluido c/ Pagamento; 5 - Checkin concluido s/ pagamento
 
+        static private DatabaseReference dbrealtime = FirebaseDatabase.getInstance().getReference();
+        static private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         static private volatile CheckIn sCheckin;
 
         private CheckIn() {/*CONSTRUTOR VAZIO PARA CRIAR OBJETO A PRTIR DO FIREBASE*/}
@@ -192,7 +196,6 @@ public class Usuario {
             }
 
         }
-
 
         public static CheckIn getInstance() {
             if (sCheckin == null) {
@@ -215,14 +218,17 @@ public class Usuario {
         }
 
         public void AtualizaCheckin() {
-            DatabaseReference dbrealtime = FirebaseDatabase.getInstance().getReference();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
             assert user != null;
             dbrealtime.child("checkin").child(user.getUid()).setValue(this);
 
         }
+
+        public static void adicionarPratoComanda(Dishes dishes){
+            if(CheckIn.verificaCheckIn())
+                if(CheckIn.getInstance().getRestaurante().equals(dishes.getID_restaurante()))
+                    Aplotoso.pushPedido(user.getUid(), dishes);
+            }
 
         /** Verifica se posso ou não prosseguir
          * segundo o estado do CheckIn.

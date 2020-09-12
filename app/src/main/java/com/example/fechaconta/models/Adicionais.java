@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.example.fechaconta.utilitys.StringStuff;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.radiobutton.MaterialRadioButton;
+import com.google.firebase.database.Exclude;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
@@ -69,6 +70,7 @@ public class Adicionais {
         private int index;    */
 
     /* Ambiente */
+    @Exclude
     private DocumentReference reference;
     private List <Adicional> adicionals;
     /*  UI - Stuff */
