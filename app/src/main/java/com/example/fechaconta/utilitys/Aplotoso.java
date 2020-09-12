@@ -527,7 +527,7 @@ public class Aplotoso {
 
         //Atributos
         pedidoPath.child("ID").setValue(dishes.getID());
-        //pedidoPath.child("name").setValue(dishes.getName());
+        pedidoPath.child("name").setValue(dishes.getName());
         //pedidoPath.child("description").setValue(dishes.getDescription());
         //pedidoPath.child("isVegan").setValue(dishes.getIsVegan());
         //pedidoPath.child("isVeg").setValue(dishes.getIsVeg());

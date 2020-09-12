@@ -55,6 +55,7 @@ public class ItemsFragment extends Fragment {
     public static final String TAG = "ITEMS_FRAGMENT";
 
 
+
     private Dishes dishes;
 
     private MaterialButton plussButton;
@@ -197,7 +198,7 @@ public class ItemsFragment extends Fragment {
         //Verificar se todas as ações foram bem sussedidas
         if (true){
             getActivity().getSupportFragmentManager().popBackStack();
-
+            ((MainActivity) getActivity()).getBottomsheetComanda().setVisibility(View.VISIBLE);
         }
 
     }
