@@ -1,7 +1,9 @@
 package com.example.fechaconta.models;
 
+import android.net.Uri;
 import android.content.ClipData;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -23,13 +25,16 @@ public class Usuario {
     //Atributos
     private String nome;
     private String sobrenome;
+    private String displayName;
     private String email;
     private String cpf;
     private String telefone;
     private String photoUrl;
+    private boolean isEmailVerified;
     private DatabaseReference dbrealtime = FirebaseDatabase.getInstance().getReference();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    final private String TAG = "USUARIO";
 
 
     public Usuario() {
@@ -49,15 +54,13 @@ public class Usuario {
         String hora;
 
 
-
-        if (Build.VERSION.SDK_INT >= 26){
+        if (Build.VERSION.SDK_INT >= 26) {
             DateTimeFormatter dataformato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             DateTimeFormatter horaformato = DateTimeFormatter.ofPattern("HH:mm");
             LocalDateTime dateTime = LocalDateTime.now();
             data = dateTime.format(dataformato);
             hora = dateTime.format(horaformato);
-        } else
-        {
+        } else {
             SimpleDateFormat dataformato = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat horaformato = new SimpleDateFormat("HH:mm");
 
@@ -71,7 +74,7 @@ public class Usuario {
 
         //ID USUARIO
 
-        if (CheckIn.getInstance() == null) {
+        if (Usuario.CheckIn.getInstance() == null) {
             Usuario.CheckIn checkin = new Usuario.CheckIn(restauranteId, nmesa, hora, data, user.getUid(), mesa.getUser_id(), mesa.getMesaId());
         } else {
 
@@ -84,11 +87,11 @@ public class Usuario {
             checkin.setListaUsuarioMesa(mesa.getUser_id());
             checkin.setMesaId(mesa.getMesaId());
 
+
+            //CRIA INSTANCIA DE CHECKIN FIREBASE REALTIME COM ID DO USUARIO
+
+            dbrealtime.child("checkin").child(user.getUid()).setValue(Usuario.CheckIn.getInstance());
         }
-
-        //CRIA INSTANCIA DE CHECKIN FIREBASE REALTIME COM ID DO USUARIO
-
-        dbrealtime.child("checkin").child(user.getUid()).setValue(CheckIn.getInstance());
 
         List<String> listaUsuariosMesaAtualizada = mesa.getUser_id();
         listaUsuariosMesaAtualizada.add(user.getUid());
@@ -104,7 +107,31 @@ public class Usuario {
 
         }
 
+    }
 
+    public void criarUsuarioBD(Usuario usuario) {
+
+        db.collection("User").document(user.getUid()).set(usuario);
+        Log.d(TAG, "criarUsuarioBD");
+
+    }
+
+
+
+    public void criarUsuarioBDpeloFirebase(Usuario usuario) {
+        Log.d(TAG, "criarUsuarioBDpeloFirebase");
+        usuario.setEmail(user.getEmail());
+        usuario.setDisplayName(user.getDisplayName());
+        usuario.setPhotoUrl(user.getPhotoUrl().toString());
+        usuario.setEmailVerified(user.isEmailVerified());
+        /*
+        Log.d(TAG, "email = "+usuario.getEmail());
+        Log.d(TAG, "nome = "+usuario.getDisplayName());
+        Log.d(TAG, "photourl = "+usuario.getPhotoUrl());
+        Log.d(TAG, "emailverified = "+usuario.isEmailVerified());
+        Log.d(TAG, "uid firebase = "+user.getUid());
+        */
+        db.collection("User").document(user.getUid()).set(usuario);
     }
 
     //Getter e Setter
@@ -123,6 +150,14 @@ public class Usuario {
 
     public void setSobrenome(String sobrenome) {
         this.sobrenome = sobrenome;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getEmail() {
@@ -157,10 +192,15 @@ public class Usuario {
         this.photoUrl = photoUrl;
     }
 
-    public void criarUsuarioBD(Usuario usuario) {
-
-        db.collection("User").document(user.getUid()).set(usuario);
+    public boolean isEmailVerified() {
+        return isEmailVerified;
     }
+
+
+    public void setEmailVerified(boolean emailVerified) {
+        isEmailVerified = emailVerified;
+    }
+
 
     public static class CheckIn {
 
@@ -227,6 +267,8 @@ public class Usuario {
 
         }
 
+        /**
+         * Verifica se posso ou não prosseguir
         public static void adicionarPratoComanda(Dishes dishes){
             if(CheckIn.verificaCheckIn())
                 if(CheckIn.getInstance().getRestaurante().equals(dishes.getID_restaurante()))
@@ -235,8 +277,8 @@ public class Usuario {
 
         /** Verifica se posso ou não prosseguir
          * segundo o estado do CheckIn.
-         *
-         *  =-=-+ Estados +-=-=
+         * <p>
+         * =-=-+ Estados +-=-=
          * 0 - Esperando confirmação;
          * 1 - Check-in Aceito;
          * 2 - Check-in Recusado;
@@ -246,18 +288,18 @@ public class Usuario {
          *
          * @return - True - False.
          */
-        public static boolean verificaCheckIn () {
+        public static boolean verificaCheckIn() {
 
             switch (CheckIn.estado) {
 
-                case 0 :
-                case 2 :
-                case 3 :
-                case 4 :
-                case 5 :
+                case 0:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
                     return false;
 
-                case 1 :
+                case 1:
                     return true;
 
 

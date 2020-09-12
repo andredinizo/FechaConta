@@ -6,15 +6,20 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.fechaconta.fragments.LoginEmailFragment;
 import com.example.fechaconta.fragments.LoginFragment;
+import com.example.fechaconta.fragments.Registro1Fragment;
+import com.example.fechaconta.fragments.Registro2Fragment;
+import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -25,18 +30,16 @@ import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
 
+import java.util.Objects;
+
 public class Login extends AppCompatActivity {
 
-    public TextView logo;
+    final private String TAG="LOGIN";
+    public ImageView logo;
     private FirebaseAuth mAuth;
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        verifyAuth();
-    }
-
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +69,8 @@ public class Login extends AppCompatActivity {
         handler2.postDelayed(r2,1500);
 
 
+        //Tirar esse signout daqui
+        FirebaseAuth.getInstance().signOut();
     }
 
 
@@ -77,7 +82,7 @@ public class Login extends AppCompatActivity {
         @Override
         public void run() {
             //movimento do logo
-            ObjectAnimator animation = ObjectAnimator.ofFloat(logo,"translationY", 0f, -520f);
+            ObjectAnimator animation = ObjectAnimator.ofFloat(logo,"translationY", 0f, -600f);
             animation.setDuration(300);
             animation.start();
 
@@ -88,48 +93,92 @@ public class Login extends AppCompatActivity {
     final Runnable r2 = new Runnable() {
         @Override
         public void run() {
-            // logo.setVisibility(View.GONE);
-            //getSupportFragmentManager().beginTransaction().add(R.id.FragContainer, new LoginFragment()).commit();
+            verifyAuth();
         }
     };
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+
+    public void verifyAuth () {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+
+        //Esse trecho está aqui apenas para testarmos como a conta está logada
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        Log.d(TAG, "mAuth current user = "+ currentUser);
+        Log.d(TAG, "FacebookAccessToken = "+ accessToken);
+        Log.d(TAG, "GoogleLastSignedInAccount = "+ account);
+        //Esse trecho está aqui apenas para testarmos como a conta está logada
+
+
+        if(currentUser != null){
+            /*
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            this.finish();
+             */
+            entrar();
+        }else
+            trocaFragParaMetodo();
+    }
 
 
 
     public void trocaFragParaEmail(){
         FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
-        fragmentManager.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        fragmentManager.replace(R.id.FragContainer, new LoginEmailFragment()).commit();
+        fragmentManager.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+        fragmentManager.replace(R.id.FragContainer, new LoginEmailFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     public void trocaFragParaMetodo(){
         FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
-        fragmentManager.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        fragmentManager.replace(R.id.FragContainer, new LoginFragment()).commit();
+        fragmentManager.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+        fragmentManager.replace(R.id.FragContainer, new LoginFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
-    public void verifyAuth () {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.d("LOGIN", "verifyAuth - current user = "+ currentUser);
-        if(currentUser != null){
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                this.finish();
-            }else{
-                getSupportFragmentManager().beginTransaction().add(R.id.FragContainer, new LoginFragment()).commit();
-            }
+    public void trocaFragParaRegistro1(){
+        FragmentTransaction fragmentManager = getSupportFragmentManager().beginTransaction();
+        fragmentManager.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+        fragmentManager.replace(R.id.FragContainer, new Registro1Fragment())
+                .addToBackStack(null)
+                .commit();
     }
 
+    public void trocaFragParaRegistro2(String email){
+        Registro2Fragment registro2Fragment = new Registro2Fragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("email", email);
+        registro2Fragment.setArguments(bundle);
 
-
-    /*
-    //onActivityResult do fb
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            fragment.onActivityResult(requestCode, resultCode, data);
-        }
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                .add(R.id.FragContainer, registro2Fragment)
+                .addToBackStack(null)
+                .commit();
     }
-    */
 
+    public void trocaFragParaFimCadastro(){
+        Registro2Fragment registro2Fragment = new Registro2Fragment();
+
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                .add(R.id.constraint, registro2Fragment)
+                .addToBackStack(null).commit();
+    }
+
+    public void entrar(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        this.finish();
+    }
 }

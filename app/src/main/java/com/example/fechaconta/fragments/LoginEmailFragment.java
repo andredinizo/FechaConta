@@ -131,13 +131,14 @@ public class LoginEmailFragment extends Fragment {
         });
 
 
+                /*                todo: consertar esse botão ou criar outro método para voltar p/ tella anterior
         //botão voltar troca para fragmento método de login
         botao_voltar = view.findViewById(R.id.botao_voltar);
         botao_voltar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 ((Login) getActivity()).trocaFragParaMetodo();
             }
-        });
+        });     */
 
         return view;
     }

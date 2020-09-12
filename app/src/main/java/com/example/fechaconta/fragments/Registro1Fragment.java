@@ -1,13 +1,20 @@
-package com.example.fechaconta;
+package com.example.fechaconta.fragments;
 
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
+import com.example.fechaconta.Login;
+import com.example.fechaconta.R;
 import com.example.fechaconta.utilitys.StringStuff;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -15,10 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
-
-           // APAGAR ESSA ACTIVITY
-
-public class ActivityRegistro extends AppCompatActivity {
+public class Registro1Fragment extends Fragment {
 
     private final String TAG = "Activity registro";
     private TextInputEditText cadastroEmail;
@@ -37,19 +41,19 @@ public class ActivityRegistro extends AppCompatActivity {
     private boolean permiteErroRepeteSenha = false;
     private FirebaseAuth mAuth;
 
+    @Nullable
+    @Override                                       //adequar layout dessa classe (nome do layout
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.registro1_fragment, container, false);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.registro1_fragment);
         mAuth = FirebaseAuth.getInstance();
-        cadastroEmail = findViewById(R.id.cadastroEmail);
-        cadastroSenha = findViewById(R.id.cadastroSenha);
-        cadastroRepeteSenha = findViewById(R.id.cadastroRepeteSenha);
-        erroEmail = findViewById(R.id.cadastroEmailErro);
-        erroSenha = findViewById(R.id.cadastroSenhaErro);
-        erroRepeteSenha = findViewById(R.id.cadastroRepeteSenhaErro);
-        Button botaoProximo = findViewById(R.id.botao_proximo);
+        cadastroEmail = view.findViewById(R.id.cadastroEmail);
+        cadastroSenha = view.findViewById(R.id.cadastroSenha);
+        cadastroRepeteSenha = view.findViewById(R.id.cadastroRepeteSenha);
+        erroEmail = view.findViewById(R.id.cadastroEmailErro);
+        erroSenha = view.findViewById(R.id.cadastroSenhaErro);
+        erroRepeteSenha = view.findViewById(R.id.cadastroRepeteSenhaErro);
+        Button botaoProximo = view.findViewById(R.id.botao_proximo);
 
 
         cadastroEmail.addTextChangedListener(new TextWatcher() {
@@ -143,16 +147,17 @@ public class ActivityRegistro extends AppCompatActivity {
                     if(task.isSuccessful()){
                         //Deu certo
                         mAuth.signInWithEmailAndPassword(email,senha);
-                        //abreRegistro2();
+                        ((Login) Objects.requireNonNull(getActivity())).trocaFragParaRegistro2(email);
 
                     }else{
 
-                        Toast.makeText(ActivityRegistro.this,"Não foi possível realizar cadastro", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),"Não foi possível realizar cadastro", Toast.LENGTH_SHORT).show();
 
                     }
                 });
             }
         });
+        return view;
     }
 
     private void atualizaErro(){
@@ -171,19 +176,4 @@ public class ActivityRegistro extends AppCompatActivity {
         else
             erroRepeteSenha.setError(null);
     }
-
-
-    /*private void abreRegistro2(){
-        Registro2Fragment registro2Fragment = new Registro2Fragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("email", Objects.requireNonNull(cadastroEmail.getText()).toString());
-        registro2Fragment.setArguments(bundle);
-
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-                .add(R.id.registroContainer, registro2Fragment)
-                .addToBackStack(null).commit();
-    }*/
-
-
 }

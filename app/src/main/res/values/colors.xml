@@ -13,7 +13,18 @@
     <color name="colorOnError">#FF0000</color>
     <color name="colorError">#FF0000</color>
     <color name="verdeStatusBar">#314A2E</color>
-    <color name="verdePrimario">#52704F</color>
+    <color name="verdePrimario">#52704f</color>
+    <color name="paletaVerde1">#12b2a0</color>
+    <color name="paletaVerde2">#009e8f</color>
+    <color name="paletaVerde3">#1b9586</color>
+    <color name="paletaVerde4">#0f8f82</color>
+    <color name="paletaVerde5">#00887a</color>
+    <color name="paletaLaranja1">#ff882e</color>
+    <color name="paletaLaranja2">#fe7b19</color>
+    <color name="paletaLaranja3">#e76f18</color>
+    <color name="paletaLaranja4">#ff6d00</color>
+    <color name="paletaLaranja5">#db5d00</color>
+
     <color name="com_facebook_button_background_color_focused_disabled">#3C5A99</color>
     <color name="com_facebook_button_background_color_focused">#3C5A99</color>
     <color name="com_facebook_button_border_color_focused">#3C5A99</color>

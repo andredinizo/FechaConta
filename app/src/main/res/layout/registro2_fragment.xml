@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:mask="http://schemas.android.com/tools"
     android:background="@color/verdePrimario"
     android:gravity="center"
     android:orientation="vertical">
@@ -10,15 +11,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
         android:orientation="horizontal">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/cadastroNomeErro"
             android:layout_width="184dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
             android:layout_marginTop="40dp"
-            android:layout_marginRight="6dp"
+            android:layout_marginEnd="6dp"
             android:layout_marginBottom="24dp"
             android:elevation="20dp"
             android:hint="Nome"
@@ -27,24 +29,23 @@
             app:boxCornerRadiusBottomStart="10dp"
             app:boxCornerRadiusTopEnd="10dp"
             app:boxCornerRadiusTopStart="10dp"
-            app:helperText="Problemas com nome"
+            app:helperText=" "
             app:helperTextEnabled="true"
             app:helperTextTextColor="#ffffff">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
                 android:id="@+id/cadastroNome"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="20dp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/cadastroSobrenomeErro"
-            android:layout_width="184dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
+            android:layout_marginStart="6dp"
             android:layout_marginTop="40dp"
-            android:layout_marginRight="6dp"
             android:layout_marginBottom="24dp"
             android:elevation="20dp"
             android:hint="Sobrenome"
@@ -58,8 +59,8 @@
             app:helperTextTextColor="#ffffff">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
                 android:id="@+id/cadastroSobrenome"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="20dp" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -79,19 +80,21 @@
         app:boxCornerRadiusBottomStart="10dp"
         app:boxCornerRadiusTopEnd="10dp"
         app:boxCornerRadiusTopStart="10dp"
-        app:helperText="Problemas da senha"
+        app:helperText=" "
         app:helperTextEnabled="true"
         app:helperTextTextColor="#ffffff">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
+            android:digits="1234567890.-"
+            android:maxLength="14"
             android:id="@+id/cadastroCpf"
             android:layout_height="wrap_content"
             android:paddingTop="20dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/cadastroTelefoneErro"
+        android:id="@+id/cadastroCelularErro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
@@ -104,13 +107,15 @@
         app:boxCornerRadiusBottomStart="10dp"
         app:boxCornerRadiusTopEnd="10dp"
         app:boxCornerRadiusTopStart="10dp"
-        app:helperText="Problemas da senha de novo"
+        app:helperText=" "
         app:helperTextEnabled="true"
         app:helperTextTextColor="#ffffff">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:id="@+id/cadastroTelefone"
+            android:digits="1234567890()-"
+            android:maxLength="14"
+            android:id="@+id/cadastroCelular"
             android:layout_height="wrap_content"
             android:paddingTop="20dp" />
     </com.google.android.material.textfield.TextInputLayout>
