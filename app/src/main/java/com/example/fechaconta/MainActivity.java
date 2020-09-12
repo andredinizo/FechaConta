@@ -354,24 +354,32 @@ public class MainActivity extends AppCompatActivity {
         TimerTask atualizaUI = new TimerTask() {
             @Override
             public void run() {
-                tempolimiteCheckin = tempolimiteCheckin - 1;
 
-                if (tempolimiteCheckin > 9) {
-                    txtTempo.setText("0:" + String.valueOf(tempolimiteCheckin));
-                } else {
-                    txtTempo.setText("0:0" + String.valueOf(tempolimiteCheckin));
-                }
+                runOnUiThread(new Runnable() {
 
+                    @Override
+                    public void run() {
 
-                if (tempolimiteCheckin == 0) {
+                        tempolimiteCheckin = tempolimiteCheckin - 1;
 
-
-                    checkin.setEstado(3); //ESTADO DE CHECKIN TEMPO ESGOTADO
-                    checkin.AtualizaCheckin();
-                    timer.cancel();
+                        if (tempolimiteCheckin > 9) {
+                            txtTempo.setText("0:" + String.valueOf(tempolimiteCheckin));
+                        } else {
+                            txtTempo.setText("0:0" + String.valueOf(tempolimiteCheckin));
+                        }
 
 
-                }
+                        if (tempolimiteCheckin == 0) {
+
+                            checkin.setEstado(3); //ESTADO DE CHECKIN TEMPO ESGOTADO
+                            checkin.AtualizaCheckin();
+                            timer.cancel();
+
+
+                        }
+
+                    }
+                });
 
             }
         };

@@ -9,8 +9,22 @@ import java.util.List;
  * * public static float calcTotal (): Calcula o preço final do prato (Adicionais).
  * * public static List <Adicionais> getIncludeAicionaisList () : Retorna a lista de Adicionais, com apenas os Adicional's incluso
  * public void adicionarComanda (int x) : Adiciona na comanda, a quantidade x deste prato.
+ *
+ * FireBase
+ * - name
+ * - description
+ * - isVegan
+ * - isVeg
+ * - isGlutenFree
+ * - value
+ * - category
+ * - avgrating
+ * - numratings
+ * - isHighlight
+ * - urlImagem
+ *
  */
-public class Dishes{
+public class Dishes extends Restaurant{
 
     //Atributos
     private String ID;
@@ -25,16 +39,20 @@ public class Dishes{
     private int numratings;
     private int isHighlight;
     private String urlImagem;
-    private DocumentReference reference;
 
     //Ambiente
+    private DocumentReference reference;
     private List<Adicionais> adicionais;
     private  int quantidade = 1;
 
 
     //Métodos
     public void adicionarComanda (){
+        if(Usuario.CheckIn.verificaCheckIn()) {
 
+            if (Usuario.CheckIn.getInstance().getRestaurante().equals(super.getID_restaurante()));
+
+        }
     }
 
     /**

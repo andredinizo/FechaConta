@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.fechaconta.models.Adicionais;
 import com.example.fechaconta.models.Adicional;
+import com.example.fechaconta.models.Dishes;
 import com.example.fechaconta.models.Restaurant;
 import com.example.fechaconta.models.Usuario;
 import com.google.android.gms.tasks.Task;
@@ -147,6 +148,261 @@ public class Aplotoso {
 
     }/*
      ===============================================================================</ Adicionais>*/
+
+    /*===============================================================================< Dishes >
+
+       -Firestore
+           * ID --- [Document ID]
+           * name
+           * description
+           * isVegan
+           * isVeg
+           * isGlutenFree
+           * value
+           * category
+           * avgrating
+           * numratings
+           * isHighlight
+           * urlImagem
+
+       -Ambiente
+           * reference
+           * adicionais [Não Incluir]
+           * quantidade [Não Incluir]
+
+       -Parent
+          * categoria
+          * cidade
+          * des
+          * ender
+          * estado
+          * id_restaurante --- [Id do documento!]
+          * media
+          * nome
+          * taval
+          * urlheader
+          * urlicon
+
+    */
+
+    public static final int DISHES_CARDAPIO_LIST        = 0;
+    public static final int DISHES_HIGHLIGHTS_LIST      = 1;
+    public static final int DISHES_CATEGORIAS_LIST      = 2;
+    public static final int DISHES_INDEXCATEGORIAS_LIST = 3;
+
+
+
+    public List<Dishes> pullDishesCardapio (Task<QuerySnapshot> task, Dishes restaurant) {
+
+        //Lista Pricipal
+        List<Dishes> cardapio = new ArrayList<>();
+
+        //Posição do for.
+        int position = 0;
+
+        for (DocumentSnapshot document : task.getResult()) {
+
+            //Nosso Objeto editavel de Dishes.
+            Dishes dishes = document.toObject(Dishes.class);
+            dishes.setID(document.getId());
+
+            //Ambiente
+            dishes.setReference(document.getReference());
+
+            //Parente
+            dishes.setCategoria(restaurant.getCategoria());
+            dishes.setCidade(restaurant.getCidade());
+            dishes.setDes(restaurant.getDes());
+            dishes.setCidade(restaurant.getCidade());
+            dishes.setEnder(restaurant.getEnder());
+            dishes.setEstado(restaurant.getEstado());
+            dishes.setID_restaurante(restaurant.getID_restaurante());
+            dishes.setMedia(restaurant.getMedia());
+            dishes.setNome(restaurant.getNome());
+            dishes.setTaval(restaurant.getTaval());
+            dishes.setUrlheader(restaurant.getUrlheader());
+            dishes.setUrlicon(restaurant.getUrlicon());
+
+            //Adiciona a Lista Principal
+            cardapio.add(dishes);
+
+            /*switch (qualList){
+
+                case 0 :
+                    return cardapio;
+                case 1 :
+                    return highlights;
+                case 2 :
+                    return categorias;
+                case 3 :
+                    return indexCategorias;
+
+            }*/
+
+        }
+
+        return cardapio;
+    }
+
+    /*public List<String> pullDishes (Task<QuerySnapshot> task, Dishes restaurant) {
+
+        //Lista Pricipal
+        List<Dishes> cardapio = new ArrayList<>();
+
+        //Lista de Highlights
+        List<Dishes> highlights = new ArrayList<>();
+
+        //Lista de Categorias
+        List<String> categorias = new ArrayList<>();
+
+        //Lista de Index, dos primeiros pratos de uma categoria.
+        List<Integer> indexCategorias = new ArrayList<>();
+
+        //Posição do for.
+        int position = 0;
+
+        for (DocumentSnapshot document : task.getResult()) {
+
+            //Nosso Objeto editavel de Dishes.
+            Dishes dishes = document.toObject(Dishes.class);
+            dishes.setID(document.getId());
+
+            //Ambiente
+            dishes.setReference(document.getReference());
+
+            //Parente
+            dishes.setCategoria(restaurant.getCategoria());
+            dishes.setCidade(restaurant.getCidade());
+            dishes.setDes(restaurant.getDes());
+            dishes.setCidade(restaurant.getCidade());
+            dishes.setEnder(restaurant.getEnder());
+            dishes.setEstado(restaurant.getEstado());
+            dishes.setID_restaurante(restaurant.getID_restaurante());
+            dishes.setMedia(restaurant.getMedia());
+            dishes.setNome(restaurant.getNome());
+            dishes.setTaval(restaurant.getTaval());
+            dishes.setUrlheader(restaurant.getUrlheader());
+            dishes.setUrlicon(restaurant.getUrlicon());
+
+            //Adiciona a Lista Principal
+            cardapio.add(dishes);
+
+            //Se for o primeiro resultado
+            if (position==0){
+
+                //Adiciona a Categora do prato a lista de categoria.
+                categorias.add(cardapio.get(position).getCategory());
+                //Adiciona a posição do primeiro prato da categoria na lista de index.
+                indexCategorias.add(position);
+
+            //Senão, Verifica se a cadegoria do prato atual, é diferente da anterior.
+            } else if (!cardapio.get(position).getCategory().equals(cardapio.get(position - 1).getCategory())) {
+
+                //Se o for, adiciona a nova categoria de prato a lista.
+                categorias.add(cardapio.get(position).getCategory());
+                //Salva na lista o index deste primeiro prato de uma nova categoria.
+                indexCategorias.add(position);
+
+            }
+
+            //Se o item do cardapio for HighLight
+            if (cardapio.get(cardapio.size() - 1).getIsHighlight() == 1) {
+
+                //Adiciona ele a lista de HighLight.
+                highlights.add(cardapio.get(cardapio.size() - 1));
+
+                Log.d("DISHESsize", "onComplete: " + highlights.size());
+
+                //Encerra-se o for, e portanto acrescentamos a Posição do for.
+                position++;
+            }
+        }
+
+        //Nosso Interpolador de Qual lista será Mandado.
+
+    }
+
+    public List<Integer> pullDishes (Task<QuerySnapshot> task, Dishes restaurant) {
+
+        //Lista Pricipal
+        List<Dishes> cardapio = new ArrayList<>();
+
+        //Lista de Highlights
+        List<Dishes> highlights = new ArrayList<>();
+
+        //Lista de Categorias
+        List<String> categorias = new ArrayList<>();
+
+        //Lista de Index, dos primeiros pratos de uma categoria.
+        List<Integer> indexCategorias = new ArrayList<>();
+
+        //Posição do for.
+        int position = 0;
+
+        for (DocumentSnapshot document : task.getResult()) {
+
+            //Nosso Objeto editavel de Dishes.
+            Dishes dishes = document.toObject(Dishes.class);
+            dishes.setID(document.getId());
+
+            //Ambiente
+            dishes.setReference(document.getReference());
+
+            //Parente
+            dishes.setCategoria(restaurant.getCategoria());
+            dishes.setCidade(restaurant.getCidade());
+            dishes.setDes(restaurant.getDes());
+            dishes.setCidade(restaurant.getCidade());
+            dishes.setEnder(restaurant.getEnder());
+            dishes.setEstado(restaurant.getEstado());
+            dishes.setID_restaurante(restaurant.getID_restaurante());
+            dishes.setMedia(restaurant.getMedia());
+            dishes.setNome(restaurant.getNome());
+            dishes.setTaval(restaurant.getTaval());
+            dishes.setUrlheader(restaurant.getUrlheader());
+            dishes.setUrlicon(restaurant.getUrlicon());
+
+            //Adiciona a Lista Principal
+            cardapio.add(dishes);
+
+            //Se for o primeiro resultado
+            if (position==0){
+
+                //Adiciona a Categora do prato a lista de categoria.
+                categorias.add(cardapio.get(position).getCategory());
+                //Adiciona a posição do primeiro prato da categoria na lista de index.
+                indexCategorias.add(position);
+
+            //Senão, Verifica se a cadegoria do prato atual, é diferente da anterior.
+            } else if (!cardapio.get(position).getCategory().equals(cardapio.get(position - 1).getCategory())) {
+
+                //Se o for, adiciona a nova categoria de prato a lista.
+                categorias.add(cardapio.get(position).getCategory());
+                //Salva na lista o index deste primeiro prato de uma nova categoria.
+                indexCategorias.add(position);
+
+            }
+
+            //Se o item do cardapio for HighLight
+            if (cardapio.get(cardapio.size() - 1).getIsHighlight() == 1) {
+
+                //Adiciona ele a lista de HighLight.
+                highlights.add(cardapio.get(cardapio.size() - 1));
+
+                Log.d("DISHESsize", "onComplete: " + highlights.size());
+
+                //Encerra-se o for, e portanto acrescentamos a Posição do for.
+                position++;
+            }
+        }
+
+        //Nosso Interpolador de Qual lista será Mandado.
+
+    }
+*/
+    /*===============================================================================< Dishes >
+    */
+
 
      /*===============================================================================< Restaurant >
      * Objeto

@@ -10,8 +10,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 
 public class Usuario {
@@ -34,7 +36,7 @@ public class Usuario {
 
     //METODOS
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     public void FazCheckin(Restaurant restaurante, Mesa mesa) {
 
 
@@ -198,15 +200,15 @@ public class Usuario {
             return getInstance();
         }
 
-        public void AtualizaCheckin(CheckIn checkIn) {
+        public void AtualizaCheckin() {
             DatabaseReference dbrealtime = FirebaseDatabase.getInstance().getReference();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
             assert user != null;
-            dbrealtime.child("checkin").child(user.getUid()).setValue(checkIn);
+            dbrealtime.child("checkin").child(user.getUid()).setValue(this);
 
-
+        }
 
         /** Verifica se posso ou não prosseguir
          * segundo o estado do CheckIn.
@@ -223,7 +225,7 @@ public class Usuario {
          */
         public static boolean verificaCheckIn () {
 
-            switch (CheckIn.getEstado()) {
+            switch (CheckIn.estado) {
 
                 case 0 :
                 case 2 :
