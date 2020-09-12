@@ -170,8 +170,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerUsuariosComanda.setHasFixedSize(true);
         recyclerUsuariosComanda.setAdapter(usuarioLogadoAdapter);
 
-
     }
+
+
+
 
 
     //Busca Mesa
