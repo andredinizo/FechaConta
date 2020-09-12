@@ -1,5 +1,6 @@
 package com.example.fechaconta.models;
 
+import android.content.ClipData;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -171,6 +172,7 @@ public class Usuario {
         static private String mesaId;
         static private String userId;
         static private List<String> listaUsuarioMesa;
+        static private List<ItemComanda> listaPedidos;
         static private int estado; // 0 - Esperando confirmação; 1- Check-in Aceito ; 2- Check-in Recusado; 3 - Tempo de Checkin esgotado ; 4- Check-in Concluido c/ Pagamento; 5 - Checkin concluido s/ pagamento
 
         static private DatabaseReference dbrealtime = FirebaseDatabase.getInstance().getReference();
@@ -338,6 +340,17 @@ public class Usuario {
         public void setUserId(String userId) {
             CheckIn.userId = userId;
         }
+
+        public static List<ItemComanda> getListaPedidos() {
+            return listaPedidos;
+        }
+
+        public static void setListaPedidos(ItemComanda item) {
+            CheckIn.listaPedidos.add(item);
+        }
+
+
+
     }
 
 }

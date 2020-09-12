@@ -9,13 +9,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fechaconta.adapter.PratosComandaAdapter;
 import com.example.fechaconta.adapter.UsuarioComandaAdapter;
 import com.example.fechaconta.fragments.HomeFragment;
+import com.example.fechaconta.models.ItemComanda;
 import com.example.fechaconta.models.Mesa;
 import com.example.fechaconta.models.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private Timer timer;
     private CoordinatorLayout bottomsheetComanda;
     private RecyclerView recyclerUsuariosComanda;
+    private RecyclerView recyclerItensComanda;
     private Mesa mesaCheckin;
 
 
@@ -117,12 +122,18 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_fragment, homeFragment, homeFragment.getTag()).commit();
 
 
-        //Instancia os layout Manager e configura os recycler
+        //Instancia os layout Manager e configura os recycler USUARIOS
         recyclerUsuariosComanda = findViewById(R.id.pessoasNaMesaRecycler);
         RecyclerView.LayoutManager layManagerUserComanda = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerUsuariosComanda.setLayoutManager(layManagerUserComanda);
-        recyclerUsuariosComanda.setHasFixedSize(true);
+        recyclerUsuariosComanda.setHasFixedSize(false);
         recyclerUsuariosComanda.setNestedScrollingEnabled(true);
+
+        //INSTANCIA OS LAYOUTMANAGER E CONFIGURA O RECYCLER ITENS
+        recyclerItensComanda = findViewById(R.id.ItensRecycler);
+        RecyclerView.LayoutManager layManagerItensComanda = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerItensComanda.setLayoutManager(layManagerItensComanda);
+        recyclerItensComanda.setHasFixedSize(false);
 
         bottomsheetComanda = findViewById(R.id.bottomsheet_comanda);
         btnCheckin = findViewById(R.id.btnCheckin);
@@ -174,8 +185,47 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void AtualizaItensComanda() {
+
+        DatabaseReference dbrealtime = FirebaseDatabase.getInstance().getReference();
+        ;
+
+        dbrealtime.child("comanda").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                Usuario.CheckIn.setListaPedidos(snapshot.getValue(ItemComanda.class));
+                PratosComandaAdapter pratosComanda = new PratosComandaAdapter(Usuario.CheckIn.getListaPedidos());
+                pratosComanda.notifyDataSetChanged();
+                recyclerItensComanda.setAdapter(pratosComanda);
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                Usuario.CheckIn.setListaPedidos(snapshot.getValue(ItemComanda.class));
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
+    }
 
 
     //Busca Mesa
@@ -192,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
                             assert mesaCheckin != null;
                             Log.d("MESA", mesaCheckin.toString());
                             AtualizaUsuarios();
+                            AtualizaItensComanda();
                         }
                     }
                 });
@@ -312,6 +363,7 @@ public class MainActivity extends AppCompatActivity {
         linearRecusado.setVisibility(View.GONE);
         linearTimedOut.setVisibility(View.GONE);
         BuscaMesa();
+
 
 
     }
